@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Installation Guide</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Installation Guide</h1>
+    </header>
+
+    <main>
+
+        <section>
+            <h2>Installtion of ProteomIQon as Pipeline</h2>
+            <div class="description_box">
+                <p>
+                    To install ProteomIQon as a whole Pipeline with all the tools <a href="./tools/index_tools.html">overview ProteomIQon Tools</a> 
+                    the easiest way is to use Nuget.org <a href="https://www.nuget.org/packages/ProteomIQon/">ProteomIQon Nuget.org</a>. 
+                    Alternatively, you can install ProteomIQon as a whole Pipeline with all the tools from the command line using the following command: 
+                    <div class="mockup-code w-full">
+                        <pre data-prefix="$"><code>dotnet add package ProteomIQon --version 0.0.11</code></pre>
+                    </div>
+                    This approach is for Linux and Windows suitable. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Installation of Individual Tools</h2>
+
+            <div class="description_box">
+                <p>
+                    To install individual tools of ProteomIQon you can use for example, Nuget.org <a href="https://www.nuget.org/packages/ProteomIQon.PeptideSpectrumMatching">PeptideSpectrumMatching</a>. 
+                    Alternatively, you can install individual tools from the command line using the following command: 
+                    <div class="mockup-code w-full">
+                        <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.[ToolName] --version [x.x.x]</code></pre>
+                    </div>
+                    This approach is for Linux and Windows suitable.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>How to build binaries or packages</h2>
+                <div class="description_box">
+                    <p>
+                        he build is a FAKE project under build/. build.cmd and build.sh run it with the target name as the first argument. Without a target it builds the whole solution.
+                    </p>
+                </div>
+            <h2>Building</h2>
+                <div class="description_box">
+                    <p>
+                        The Build target compiles every released tool listed in build/ProjectInfo.fs.
+                        For Windows
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>.\build.cmd build</code></pre>
+                        </div>
+                        For Linux:
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>.\build.sh build</code></pre>
+                        </div>
+                        The Preprocessing project references packages from the CSBiology feed on GitHub Packages. 
+                        nuget.config reads the credentials for that feed from the environment variables GithubUser
+                        and PackageToken. Set both before building the full solution, which includes that project. 
+                        The released tools restore from nuget.org alone. To build a single tool, call dotnet on its project file:
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>dotnet build src/PeptideDB/PeptideDB.fsproj -c Release</code></pre>
+                        </div>
+                    </p>
+                </div>
+            <h2>Packing</h2>
+                <div class="description_box">
+                    <p>
+                        The Pack target creates a NuGet package for every released project in pkg/. 
+                        The version comes from the top entry of each project's RELEASE_NOTES.md that has a 
+                        version, so bump that file first. A leading #### Unreleased section without a version 
+                        collects changes until the next release and is skipped; replace it with the version and 
+                        the date when you release:
+                        For Windows:
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>.\build.cmd pack</code></pre>
+                        </div>
+                        For Linux: 
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>.\build.sh pack</code></pre>
+                        </div>
+                        PackPrerelease does the same with a suffix it asks for on the console. 
+                        Every tool packs as a .NET tool with the package id ProteomIQon.<ToolName> 
+                        and the command name proteomiqon-<toolname>. A package from pkg/ can be installed 
+                        locally to try it out before publishing:
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.PeptideDB --add-source ./pkg --version 0.0.10</code></pre>
+                        </div>
+                        Published versions are on <a href="https://www.nuget.org/">Nuget.org</a>
+                    </p>
+                </div>
+            <h2>Tests</h2>
+                <div class="description_box">
+                    <p>
+                        RunTests builds and runs tests/ProteomIQon.Tests.fsproj. 
+                        The end to end pipeline tests start the tool assemblies, so this target 
+                        needs the full build to succeed first:
+                        For Windows:
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>.\build.cmd runtests</code></pre>
+                        </div>
+                        For Linux:
+                        <div class="mockup-code w-full">
+                            <pre data-prefix="$"><code>.\build.sh runtests</code></pre>
+                        </div>
+                    </p>
+                </div>
+        </section>
+
+    </main>
+
+</body>
+</html>
