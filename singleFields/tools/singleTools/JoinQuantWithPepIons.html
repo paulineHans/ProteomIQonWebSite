@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - JoinQuantPepIonsWithProteins</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - JoinQuantPepIonsWithProteins</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    A .quant file knows the intensity of every peptide ion, and a .prot file knows which 
+                    protein group each peptide sequence belongs to and how confident that assignment is. 
+                    JoinQuantPepIonsWithProteins puts the two together.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    It reads the protein table, 
+                    splits its semicolon separated peptide list into one row per sequence, and attaches the protein 
+                    group and its q-value to every quantified ion with the same sequence. The result is one 
+                    .quantAndProt file per run, which is what LabelFreeProteinQuantification and 
+                    LabeledProteinQuantification read.
+                </p>
+            </div>
+        </section>
+    </main>

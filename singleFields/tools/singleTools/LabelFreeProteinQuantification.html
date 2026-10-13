@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - LabelFreeProteinQuantification</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - LabelFreeProteinQuantification</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    After JoinQuantPepIonsWithProteins every quantified peptide ion carries its protein group. 
+                    LabelFreeProteinQuantification turns these ion intensities into one intensity per protein 
+                    group and run. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    It works in up to three steps. The first merges the charge states of a peptide, 
+                    the second merges the modified forms of a peptide, and the third merges all peptides of a 
+                    protein group. The first two steps are optional. Each step has the same shape: transform the values, 
+                    drop single values or outliers within a group, then aggregate what is left. 
+                    Only light rows (GlobalMod 0) go in, so this tool is for unlabeled samples. 
+                    
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Good to know!</h2>
+            <div class="description_box">
+                <p>
+                    For labeled samples use LabeledProteinQuantification. <a href="./LabeledProteinQuantification.html">LabeledProteinQuantification</a>
+                </p>
+            </div>
+        </section>
+    </main>

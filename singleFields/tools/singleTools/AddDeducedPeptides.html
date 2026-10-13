@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,20 +6,87 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
+
     <title>ProteomIQon - Add Deduced Peptides</title>
-    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="../../../style.css">
 </head>
 
 <body>
-    <header> 
+
+    <header>
         <h1>ProteomIQon - Add Deduced Peptides</h1>
-        <h2>Tool Description</h2>
-        <div class="description_box"> 
-            After alignment and AlignmentBasedQuantification a run's .quant file holds peptides 
-            that were never identified in that run, so the run's .prot file from ProteinInference 
-            does not list them. AddDeducedPeptides takes the protein groups of the combined inference 
-            and assigns them to every peptide present in each aligned .quant file, so that 
-            JoinQuantPepIonsWithProteins can join the transferred quantifications to proteins.
-        </div>
     </header>
+
+    <main>
+
+        <section>
+            <h2>Tool Description</h2>
+
+            <div class="description_box">
+                <p>
+                    After alignment and AlignmentBasedQuantification
+                    a run's .quant file holds peptides that were
+                    never identified in that run, so the run's
+                    .prot file from ProteinInference does not list
+                    them.
+
+                    AddDeducedPeptides takes the protein groups
+                    of the combined inference and assigns them
+                    to every peptide present in each aligned
+                    .quant file, so that JoinQuantPepIonsWithProteins
+                    can join the transferred quantifications
+                    to proteins.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2>What's happening?</h2>
+
+            <div class="description_box">
+                <p>
+                    The tool reads all .prot files as one combined
+                    inference and does not pair them with the
+                    .quant files by name.
+
+                    This only works when ProteinInference ran
+                    over all runs together (GroupFiles set to true),
+                    because then every run's .prot file carries
+                    the same scores and Q-value for a protein group.
+
+                    If a protein group turns up with different
+                    scores, the tool stops with the message
+                    "If you are running this tool please infer
+                    proteins over all files".
+
+                    For every input .quant file the tool writes
+                    a corresponding .prot file into the output
+                    directory, a tab-separated table with the
+                    columns of a ProteinInference result.
+
+                    Each protein group keeps its scores and
+                    q-value, and its PeptideSequence column lists
+                    only the peptides that occur in that .quant file.
+
+                    Protein groups without any peptide in the
+                    file are dropped.
+
+                    JoinQuantPepIonsWithProteins reads the new
+                    .prot file together with the scored .quant
+                    file of the same run.
+
+                    There is no parameter file.
+
+                    Delete an existing output .prot file before
+                    a rerun, because the tool appends to it.
+
+                    Logs go to AddDeducedPeptides_log.txt.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
 </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - MzMLToMzLite</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - MzMLToMzLite</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    MzMLToMzLite converts an mzML file into an mzlite file. 
+                    
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    It is the first tool of the chain, every later tool reads the mzlite it writes .mzlite 
+                    is the SQLite based storage format of MzIO. It holds the same spectra and metadata as 
+                    the mzML, in a form that supports random access to single spectra. To get mzML from 
+                    vendor raw files, use msconvert. Galaxy Europe runs msconvert in the browser without a 
+                    local install, see their guide. During the conversion the tool can restrict the spectra 
+                    to a retention time window and can centroid profile spectra with a wavelet peak picker. 
+                    Centroiding replaces the many points that describe one peak by a single m/z and 
+                    intensity pair. The algorithm is described in the BioFSharp.Mz documentation.
+
+                    -f rewrites every input file in place and removes the string &quot from it. 
+                    Some mzML exports contain that string in places where the XML reader cannot handle it. 
+                    Leave the flag off unless the conversion fails on such a file. The tool writes one <run>.mzlite per 
+                    input <run>.mzML into the output directory. Only spectra with MS level 1 or 2 are copied, 
+                    and spectra whose peak array is empty after peak picking are skipped. Scan times in the mzlite 
+                    are stored in minutes, whatever unit the mzML used. The mzlite is read by PeptideSpectrumMatching, 
+                    PSMBasedQuantification and AlignmentBasedQuantification. The output directory also receives 
+                    MzMLToMzLite_log.txt and one <run>_log.txt per input.
+                </p>
+            </div>
+        </section>
+    </main>

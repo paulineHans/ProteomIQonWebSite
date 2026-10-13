@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - JoinQuantPepIonsWithProteins</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - AlignmentsBasedQuantification</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    QuantBasedAlignment predicts where a peptide ion identified in another run should 
+                    elute in this run. AlignmentBasedQuantification goes to that place.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    For every peptide ion 
+                    in the .align file it extracts an ion chromatogram from the .mzlite file around the predicted 
+                    scan time, and, with PerformLocalWarp set, moves the scan time estimate by dynamic time 
+                    warping of the extracted chromatogram against the chromatogram the ion had in the source run. 
+                    Baseline correction, peak detection, peak fitting and the labeled counterpart work as in 
+                    PSMBasedQuantification. The result is a .quant file that holds the quantifications of this 
+                    run's own identifications together with the transferred ones.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Good to know!</h2>
+            <div class="description_box">
+                <p>
+                    Further processing can be done with the <a href="./AlignmentBasedQuantStatistics.html">AlignmentBasedQuantStatistics</a> tool
+                </p>
+            </div>
+        </section>
+    </main>

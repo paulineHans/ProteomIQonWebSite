@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - PSMBased Quantification</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - PSMBased Quantification</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    PSMBasedQuantification turns the identifications from PSMStatistics into peptide ion intensities. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    For every identified peptide ion (sequence, modification state and charge) it takes the scan times 
+                    of its MS/MS identifications, extracts an ion chromatogram of the monoisotopic m/z in a window around 
+                    them, detects the peaks in that trace and fits the peak closest to the identification. The fitted area 
+                    is the reported quantity. For metabolically labeled samples the tool computes the m/z of the partner ion 
+                    (the heavy form of a light identification, or the other way round) and quantifies that trace as well, 
+                    so every row can carry a light and a heavy value.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Good to know!</h2>
+            <div class="description_box">
+                <p>
+                    For timsTOF data ProteomIQon serves a special tool for the quantification tool, that you can find here <a href="./PSBasedQuantificaitonTIMs.html">PSMBasedQuantificationTIMs</a>
+                </p>
+            </div>
+        </section>
+    </main>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - AlignmentBasedQuantStatistics</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - AlignmentBasedQuantStatistics</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    AlignmentBasedQuantStatistics gives every transferred quantification an alignment score 
+                    and an alignment Q-value, so downstream tools can filter transferred quantifications the way identifications 
+                    are filtered by Q-value.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    A peptide ion transferred by alignment and quantified by AlignmentBasedQuantification has no 
+                    identification behind it, so nothing says yet whether the peak found at the predicted scan time is 
+                    the peptide. It learns from peptide ions where the truth is known: the .align file also predicts 
+                    ions the run had identified itself, and for those the transferred quantification can be compared with the 
+                    quantification of the identified ion. Ions where m/z and intensity agree closely are positive training 
+                    examples, ions where they disagree are negative ones. A gradient boosted tree classifier trained on them 
+                    scores every transferred ion, and the Q-value follows from the score distribution of the negative examples.
+                </p>
+            </div>
+        </section>
+    </main>

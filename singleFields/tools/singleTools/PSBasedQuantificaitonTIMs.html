@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - PSMBased Quantification TIMs</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - PSMBased Quantification TIMs</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    PSMBasedQuantificationTIMs is the PSMBasedQuantification variant for timsTOF runs. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    On these instruments a peptide ion is a peak in two dimensions, retention time and ion 
+                    mobility, so the tool extracts an intensity grid over that plane around every 
+                    identification instead of a one dimensional ion chromatogram. By default it locates the 
+                    peak on the grid with a Gabor filter (a Gaussian envelope multiplied with a cosine wave, 
+                    tuned in size, width, frequency and angle), then fits and integrates it. The output has the 
+                    same layout as the output of PSMBasedQuantification, so the downstream tools do not care 
+                    which of the two produced it.
+                </p>
+            </div>
+        </section>
+    </main>

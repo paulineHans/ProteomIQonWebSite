@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - Peptide Spectrum Matching TIMs</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - Peptide Spectrum Matching TIMs</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    PeptideSpectrumMatchingTIMs identifies peptides in 
+                    timsTOF runs using precursor ion mobility information. 
+                    It accepts mzlite input files and follows a 
+                    peptide spectrum matching approach based on the 
+                    search pattern used by MSFragger. For conventional 
+                    mzlite and mzML files, the corresponding search is 
+                    performed by <a href="./PeptideSpectrumMatching.html">PeptideSpectrumMatching</a>.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    PeptideSpectrumMatchingTIMs combines the mobility scans of each MS2 spectrum in 
+                    an mzlite file into a single spectrum. Starting at the lowest m/z, peaks within the 
+                    specified mobility merge tolerance are combined by summing their intensities and calculating 
+                    an intensity-weighted m/z. Spectra without per-peak ion mobility information are processed 
+                    without merging. Repeated PASEF measurements of the same precursor remain separate spectra.
+
+                    The fragment index contains only target peptide b and y ions. Reversed decoys share this index 
+                    through a water shift: decoy b ions correspond to target y ions minus water, while decoy y ions 
+                    correspond to target b ions plus water. Only peptides within the precursor mass windows, 
+                    accounting for isotope errors and tolerances, are indexed. Fragment masses are limited by the 
+                    heaviest precursor window plus 1 Da or the -f parameter, and never exceed the heaviest database 
+                    peptide plus 1 Da.
+
+                    Each MS2 spectrum is preprocessed by removing precursor-associated peaks, peaks below 
+                    MinimumPeakRatio, and isotope partner peaks. Only the TopNPeaks most intense peaks are retained 
+                    for fragment index searching. Candidates must match the precursor mass within the configured 
+                    isotope errors. Charge states and selected ion m/z values are taken from the mzlite file, with 
+                    FallbackChargeStates used when charge information is missing. The tool reports the ReportedHitsPerLabel best target matches 
+                    and an equal number of decoy matches.
+
+                    Fragment matching uses bins defined by FragmentIndexBinWidth, extending the effective search 
+                    tolerance by up to one bin width on either side. Overlapping tolerance windows separated by 
+                    less than one bin are merged using the higher intensity to prevent duplicate fragment counting.
+
+                    Reported targets and decoys receive the SEQUEST-like score used by PeptideSpectrumMatching, 
+                    along with Andromeda-like and X!Tandem-like scores. NormDeltaBestToRest and NormDeltaNext are 
+                    calculated using the target and decoy forms of all peptides selected during the index pass, including 
+                    candidates removed during exact rescoring.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Good to know!</h2>
+            <div class="description_box">
+                <p>
+                    Ion Mobility Parameters
+                    --mobility-merge-ppm: Defines the m/z tolerance for merging peaks across mobility scans. By default, the value of FragmentTolerancePPM is used.
+                    --mobility-merge-ppm 0: Only peaks with exactly matching m/z values are combined. This does not disable mobility-scan summation.
+                    
+                    Memory Management and Performance
+                    -s: Divides the peptide table into the specified number of slices. Each slice is indexed and searched sequentially, so only one slice must be held in memory at a time.
+                    -k: Keeps preprocessed spectra in memory between slices, requiring approximately 2.4 kB per spectrum and charge state. Without this option, spectra are read again for each additional slice.
+                    -c: Specifies how many runs are searched together, using one thread per run. The default is 1.
+                    
+                    Runs are processed in groups determined by -c. Each group shares a fragment index, which is built using one worker per run. The next group begins after all runs in the current group have finished.
+                    The fragment index requires 4 bytes per fragment entry.
+                    The number of slices does not affect the search results.
+                </p>
+            </div>
+        </section>
+    </main>

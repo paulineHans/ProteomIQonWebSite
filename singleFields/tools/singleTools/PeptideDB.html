@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - PeptideDB</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - PeptideDB</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    PeptideDB digests the proteins of a FASTA file in silico and stores the resulting peptides, 
+                    with their masses and modifications, in a SQLite database. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    The search tools compare measured spectra against these peptides, so the digestion 
+                    settings define the search space of the whole analysis. How the protease, the allowed 
+                    missed cleavages, the length limits and the modifications shape that space is explained in 
+                    the BioFSharp.Mz documentation, and the database layout is described on the same page.
+
+                    The tool writes <Name>.db into the output directory, where Name comes from the parameter file. 
+                    The database is read by PeptideSpectrumMatching, PSMStatistics, MsFraggerToPSM, 
+                    PSMBasedQuantification, PSMBasedQuantificationTIMs, AlignmentBasedQuantification and 
+                    ProteinInference. When a <Name>.db already exists in the output directory and the 
+                    parameters stored inside it equal the parameter file, the tool reuses that database 
+                    and only makes sure its index is present. The output directory also receives 
+                    PeptideDB_log.txt and PeptideDB_<Name>_log.txt.
+                </p>
+            </div>
+        </section>
+    </main>

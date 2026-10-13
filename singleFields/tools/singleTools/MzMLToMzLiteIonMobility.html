@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - MzMLToMzLiteIonMobility</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - MzMLToMzLiteIonMobility</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    MzMLToMzLiteIonMobility converts mzML files from ion mobility instruments such as the 
+                    Bruker timsTOF into mzlite files.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    In these files every peak carries an ion mobility value 
+                    next to its m/z and intensity, and the tool keeps that value in the mzlite. It is the 
+                    ion mobility counterpart of MzMLToMzLite, which also explains how to get mzML from raw files 
+                    and what mzlite is. The tool reads the same parameter record as MzMLToMzLite. The spectra are 
+                    written with their m/z, intensity and ion mobility arrays as they are in the mzML, and 
+                    compress decides how those arrays are stored.
+
+                    The reader fails on mzML without ion mobility data. -f rewrites every input file in place and 
+                    removes the string &quot, for mzML exports where that string breaks the XML reader. The tool 
+                    writes one <run>.mzlite per input into the output directory. Spectra with an MS level other 
+                    than 1 or 2 stop the conversion with an error. Scan times are stored in minutes. 
+                    The mzlite is read by PeptideSpectrumMatchingTIMs and PSMBasedQuantificationTIMs, 
+                    and by MsFraggerToPSM when the identification comes from FragPipe. The output directory 
+                    also receives MzMLToMzLite_log.txt and one <run>_log.txt per input.
+                </p>
+            </div>
+        </section>
+    </main>

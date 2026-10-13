@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - RatioLFQ</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - RatioLFQ</h1>
+    </header>
+
+    <main>
+
+        <section>
+            <h2>Tool Description</h2>
+
+            <div class="description_box">
+                <p>
+                    A labeled experiment gives one light to heavy ratio per protein and run. 
+                    Ratios of different runs are only comparable through their shared reference, 
+                    so RatioLFQ turns them into one intensity per run and protein, the way label free 
+                    quantification would report it. 
+                    of each run.
+                </p>
+            </div>
+        </section>
+
+        <section>
+            <h2>What's happening?</h2>
+
+            <div class="description_box">
+                <p>
+                    For every protein it takes the log2 ratio of each run, 
+                    forms the difference of the log2 ratios for every pair of runs, and solves a least squares 
+                    problem for one log2 value per run that reproduces these differences. The system is 
+                    underdetermined by one degree of freedom, and the tool fixes it with the constraint that the 
+                    sum of the run values equals the mean log2 reference intensity of the protein times the 
+                    number of runs with a ratio. The solution is exponentiated back and written as the LFQ value
+                </p>
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>

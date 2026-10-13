@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - MsFraggerToPSM</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - MsFraggerToPSM</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    MsFraggerToPSM turns the psm.tsv result of an MSFragger search, as written by FragPipe, 
+                    into the .qpsm files that PSMBasedQuantificationTIMs reads. With it, an ion mobility run can 
+                    be identified in FragPipe and quantified in ProteomIQon, in place of the 
+                    PeptideSpectrumMatching and PSMStatistics pair. For each row of the tsv the tool rebuilds the 
+                    modified peptide sequence in ProteomIQon notation, looks it up in the PeptideDB database to 
+                    get the peptide and modified sequence identifiers, and assigns the row to the MS2 spectrum of 
+                    the mzlite whose scan time and precursor m/z lie closest to the values in the tsv. 
+                    The tool has no parameter file. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    The tool writes one <run>.qpsm per mzlite into the output directory, named after the mzlite. 
+                        It is a tab separated table with a header and one row per identified spectrum, with the 
+                        spectrum identifier of the mzlite, the database identifiers, scan time, charge, 
+                        precursor m/z, ion mobility, the MSFragger expectation, hyperscore and probability, 
+                        the sequence and the protein names. An existing .qpsm of the same name is appended to. 
+                        Delete the old file before a rerun. The output directory also receives MSFraggerToPSM_log.txt
+                </p>
+            </div>
+        </section>
+    </main>

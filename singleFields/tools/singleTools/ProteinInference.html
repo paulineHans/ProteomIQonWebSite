@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - Protein Inference</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - Protein Inference</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    A peptide identified by PSMStatistics often fits more than one protein, 
+                    for example two splice variants of the same gene. ProteinInference maps the 
+                    identified peptides back to proteins and reports protein groups: sets of proteins 
+                    that share their peptide evidence. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    Each group gets a score from its peptides and a decoy 
+                    score from the reversed proteins, and from these a protein level Q-value. Two parameters decide how 
+                    groups are formed and which peptides count for them. Take two proteins pA and pB, each found by 
+                    one unique peptide and both by a third shared peptide. Protein (the integration strictness) decides 
+                    whether pA, pB and the group pA;pB are all reported or whether overlapping groups are merged into 
+                    the smallest set that explains every peptide. Peptide (the peptide usage) decides whether the abundance 
+                    of pA;pB later comes from the shared peptide only or also from the peptides unique to pA and pB. The figure 
+                    shows the outcomes for every combination.
+                </p>
+            </div>
+        </section>
+    </main>

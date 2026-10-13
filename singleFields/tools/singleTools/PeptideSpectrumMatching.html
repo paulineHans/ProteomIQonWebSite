@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - Peptide Spectrum Matching</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - Peptide Spectrum Matching</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    PeptideSpectrumMatching identifies the peptides 
+                    behind the MS/MS spectra of a run. For each MS2 
+                    scan it first determines the charge of the precursor 
+                    ion from the isotope pattern in the preceding MS1 scan
+                    (charge state determination). With the charge, the 
+                    precursor m/z becomes a peptide mass, and the tool 
+                    fetches every peptide from the PeptideDB database 
+                    whose mass lies within LookUpPPM of it. For each 
+                    candidate it computes the theoretical fragment ions 
+                    (fragmentation) and compares them with the measured 
+                    spectrum. Each candidate gets a SEQUEST-like score 
+                    and an Andromeda-like score. An X!Tandem-like score 
+                    is computed alongside the Andromeda one. The 
+                    candidates include reversed decoy peptides, which 
+                    PSMStatistics later uses to estimate the false discovery rate 
+                    (what the decoys are for).
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    The tool writes one <run>.psm per input into the output 
+                        directory. It is a tab separated table with a header. 
+                        Each row is one candidate peptide for one spectrum with 
+                        its charge, precursor m/z, theoretical mass, the three 
+                        scores with their delta values to the next candidates, the 
+                        peptide sequence and a Label of 1 for a target peptide and 
+                        -1 for a decoy. The row ends with the five columns 
+                        IonMobility, Hyperscore, Expectscore, MatchedIons and 
+                        TotalIons, which PeptideSpectrumMatchingTIMs fills while 
+                        this tool writes NaN in the float columns and 0 in the 
+                        integer columns. The file is opened in append mode, so 
+                        running the tool twice into the same directory adds a 
+                        second header and a second set of rows. Delete the old file 
+                        first. The .psm is read by PSMStatistics. The output 
+                        directory also receives PeptideSpectrumMatching_log.txt and 
+                        one <run>_log.txt per input.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Good to know!</h2>
+            <div class="description_box">
+                <p>
+                    PeptideSpectrumMatchingTIMs is a variant of this tool
+                    which identifies peptides in timsTOF runs with precurso ion mobility. 
+                    Follow this link to get there <a href="./PeptideSpectrumMatchingTIMs.html">PeptideSpectrumMatchingTIMs</a>.
+                </p>
+            </div>
+        </section>
+    </main>

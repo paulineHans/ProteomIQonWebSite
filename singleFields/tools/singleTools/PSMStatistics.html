@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - PSMStatistics</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - PSMStatistics</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    PeptideSpectrumMatching reports several scores for every spectrum (SEQUEST-like, 
+                    Andromeda-like, X!Tandem-like, plus mass error, peptide length and how far the best 
+                    candidate is ahead of the next one). PSMStatistics learns one combined score from these columns.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    It uses the target and decoy labels of the matches as training signal, retrains in 
+                    iterations while the set of confident targets grows (semi supervised), and stops when an 
+                    iteration adds too few new positives or the iteration limit is reached. From the combined 
+                    score it computes a q-value and a PEP value per match and keeps the PSMs under both 
+                    thresholds. PSMStatistics also reads the output of PeptideSpectrumMatchingTIMs. Both tools 
+                    write the 28 column layout of this release, and .psm files written by earlier releases 
+                    (23 columns) have to be regenerated before this release of PSMStatistics reads them. When 
+                    every row carries finite Hyperscore and Expectscore values, it uses both as model features, 
+                    with Expectscore represented by its negative log10, and seeds the first training round with 
+                    the expectation value. Without them the SEQUEST-like score seeds it, as before.
+                </p>
+            </div>
+        </section>
+    </main>

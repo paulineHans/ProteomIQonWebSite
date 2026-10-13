@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ProteomIQon - LabeledProteinQuantification</title>
+
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ProteomIQon - LabeledProteinQuantification</h1>
+    </header>
+
+    <main>
+        <section>
+            <h2> Tool Description</h2>
+            <div class="description_box">
+                <p>
+                    LabeledProteinQuantification takes the .quantAndProt rows from 
+                    JoinQuantPepIonsWithProteins and aggregates them to one light intensity, one heavy intensity 
+                    and one ratio per protein group and run. 
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>What's happening?</h2>
+            <div class="description_box">
+                <p>
+                    In a 15N metabolic labeling experiment one sample grows on 15N, is mixed with the 14N sample, 
+                    and both versions of every peptide are measured in the same run, so the ratio of the light 
+                    and the heavy peak is a direct comparison of the two samples. How the label enters the search 
+                    is described in BioFSharp.Mz, and how the ratio is formed from the two peaks in the 
+                    quantification chapter. It works in up to four steps. The first step is 
+                    mandatory: every row already holds a light and a heavy intensity, the step divides them into 
+                    Ratio_LightByHeavy and merges the rows identified from the light and from the heavy form of 
+                    the same peptide ion. The second step merges charge states and the third merges modified 
+                    forms of a peptide, both optional. The fourth merges all peptides of a protein group.
+                    Every step transforms, filters and aggregates light, heavy and ratio separately.
+                </p>
+            </div>
+        </section>
+        <section>
+            <h2>Good to know!</h2>
+            <div class="description_box">
+                <p>
+                    For label-free samples use LabelFreeProteinQuantification. <a href="./LabelFreeProteinQuantification.html">LabelFreeProteinQuantification</a>
+                </p>
+            </div>
+        </section>
+    </main>
