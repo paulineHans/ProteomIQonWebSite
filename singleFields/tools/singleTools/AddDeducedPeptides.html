@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>ProteomIQon - Add Deduced Peptides</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header> 
+        <h1>ProteomIQon - Add Deduced Peptides</h1>
+        <h2>Tool Description</h2>
+        <div class="description_box"> 
+            After alignment and AlignmentBasedQuantification a run's .quant file holds peptides 
+            that were never identified in that run, so the run's .prot file from ProteinInference 
+            does not list them. AddDeducedPeptides takes the protein groups of the combined inference 
+            and assigns them to every peptide present in each aligned .quant file, so that 
+            JoinQuantPepIonsWithProteins can join the transferred quantifications to proteins.
+        </div>
+    </header>
+</body>
