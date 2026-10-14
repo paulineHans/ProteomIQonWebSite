@@ -47,6 +47,7 @@
             <details class="accordion">
             <summary>What's happening?</summary>
                 <div class="accordion-content">
+                    <p>
                         <ol>
                             <li>The tool reads all .prot files as one combined
                                 inference and does not pair them with the
@@ -87,6 +88,8 @@
                         
                         
 
+                        
+                    </p>
                 </div>
             </details>
         </section>
@@ -96,8 +99,7 @@
                 <div class="accordion-content">
                     <p>
                         These inputs are needed, to execute the tool:
-                    </p>
-                    <table>
+                        <table>
                             <tr>
                                 <th>Flag</th>
                                 <th>Meaning</th>
@@ -117,12 +119,13 @@
                                 <td>-o</td>
                                 <td>the output directory, created when missing</td>
                             </tr>
-                    </table>
-                    <ul>
+                            </table>
+                        <ul>
                             <li>For AddDeducedPeptides there is no parameter file needed.</li>
                             <li>Delete an existing output .prot file before a rerun, because the tool appends to it</li>
                             <li>Logs go to AddDeducedPeptides_log.txt.</li>
-                    </ul>
+                        </ul>
+                    </p>
                 </div>
             </details>
         </section>
@@ -130,7 +133,8 @@
             <details class="accordion">
                 <summary>Outputs</summary>
                     <div class="accordion-content">
-                        <table>
+                        <p>
+                            <table>
                                 <thead>
                                     <tr>
                                         <th>Column</th>
@@ -163,7 +167,8 @@
                                         <td>Q-value (False-Discovery-Rate) for every identified protein</td>
                                     </tr>
                                 </tbody>
-                        </table>
+                            </table>
+                        </p>
                     </div>
             </details>
         </section>

@@ -1,0 +1,17 @@
+---
+import Workflow from '../components/workflow/Workflow.jsx';
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Interactive workflow · ProteomIQon" description="Explore how ProteomIQon tools connect across the analysis pipeline.">
+	<section class="workflow-page">
+		<div class="page-hero compact-page-hero">
+			<div>
+				<p class="eyebrow"><span class="eyebrow-dot"></span> Interactive workflow</p>
+				<h1>Follow the data.<br /><em>Understand the hand-offs.</em></h1>
+				<p class="page-intro">Click a tool to open its documentation, or pan and zoom to inspect the full processing chain.</p>
+			</div>
+		</div>
+		<div class="workflow-page-canvas"><Workflow client:load /></div>
+	</section>
+</Layout>

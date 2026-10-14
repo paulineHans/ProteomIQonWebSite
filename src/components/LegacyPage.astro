@@ -2,17 +2,19 @@
 interface Props {
 	title: string;
 	eyebrow: string;
+	subtitle?: string;
 	intro: string;
 	html: string;
 }
 
-const { title, eyebrow, intro, html } = Astro.props;
+const { title, eyebrow, subtitle, intro, html } = Astro.props;
 ---
 
 <section class="page-hero compact-page-hero">
 	<div>
 		<p class="eyebrow"><span class="eyebrow-dot"></span>{eyebrow}</p>
 		<h1>{title}</h1>
+		{subtitle && <p class="page-subtitle">{subtitle}</p>}
 		<p class="page-intro">{intro}</p>
 	</div>
 	<div class="page-hero-index" aria-hidden="true">documentation<br /><span>↘</span></div>

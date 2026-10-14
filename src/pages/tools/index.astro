@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { tools } from '../../data/tools';
+import Workflow from '../../components/workflow/Workflow.jsx';
 
 const phases = [...new Set(tools.map((tool) => tool.phase))];
 ---
@@ -13,6 +14,17 @@ const phases = [...new Set(tools.map((tool) => tool.phase))];
 			<p class="page-intro">Each tool has one job. Explore the details, inputs and hand-offs that make up the ProteomIQon workflow.</p>
 		</div>
 		<div class="tool-count"><strong>{tools.length}</strong><span>documented<br />tools</span></div>
+	</section>
+
+	<section class="workflow-overview" aria-labelledby="workflow-overview-title">
+		<div class="workflow-overview-header">
+			<div>
+				<p class="eyebrow"><span class="eyebrow-dot"></span> Interactive workflow</p>
+				<h2 id="workflow-overview-title">Trace the data through the pipeline.</h2>
+			</div>
+			<p class="workflow-overview-help">Click any node to open its tool page. Drag the canvas to pan and use the controls or scroll wheel to zoom.</p>
+		</div>
+		<Workflow client:load />
 	</section>
 
 	<section class="tool-directory" aria-labelledby="directory-title">
