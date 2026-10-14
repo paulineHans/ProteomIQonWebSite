@@ -154,6 +154,29 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 .legacy-content .mockup-code { overflow-x: auto; margin: 20px 0; padding: 16px 18px; border-left: 4px solid var(--orange); background: var(--navy); color: var(--gray); font-family: var(--mono); font-size: .76rem; line-height: 1.7; }
 .legacy-content pre { white-space: pre-wrap; }
 
+/* Disclosure blocks and data tables in tool documentation */
+.legacy-section > .accordion { margin: 0; border: 1px solid var(--line); border-left: 4px solid var(--teal); background: var(--surface); box-shadow: 0 0 0 1px rgba(208,214,221,.22); }
+.accordion + .accordion { margin-top: 12px; }
+.accordion summary { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 17px 20px; color: var(--navy); cursor: pointer; font-family: var(--display); font-size: 1.02rem; font-weight: 600; list-style: none; }
+.accordion summary::-webkit-details-marker { display: none; }
+.accordion summary::after { content: '+'; display: grid; flex: 0 0 23px; place-items: center; width: 23px; height: 23px; border: 1px solid var(--teal); color: var(--teal); font: 1rem var(--mono); line-height: 1; }
+.accordion[open] summary { border-bottom: 1px solid var(--line); }
+.accordion[open] summary::after { content: '-'; border-color: var(--red); color: var(--red); }
+.accordion summary:hover { background: var(--surface-muted); }
+.accordion-content { padding: 20px 20px 22px; }
+.accordion-content > p { margin-bottom: 1rem; }
+.accordion-content > p:last-child { margin-bottom: 0; }
+.accordion-content ol, .accordion-content ul { margin: 0 0 1rem; }
+.table-scroll { width: 100%; margin: 20px 0 24px; overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+.table-scroll table { width: 100%; min-width: 560px; border-collapse: collapse; color: var(--slate); font-size: .84rem; line-height: 1.55; }
+.table-scroll th { padding: 12px 14px; border-bottom: 2px solid var(--teal); background: var(--navy); color: var(--surface); font: .62rem var(--mono); letter-spacing: .07em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+.table-scroll td { padding: 13px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.table-scroll tr:last-child td { border-bottom: 0; }
+.table-scroll tbody tr:hover td, .table-scroll > table > tr:hover td { background: rgba(106,178,231,.1); }
+.table-scroll td:first-child { color: var(--navy); font-family: var(--mono); font-size: .77rem; font-weight: 500; white-space: nowrap; }
+.table-scroll td a { color: var(--red); }
+.table-scroll + ul { margin-top: 4px; }
+
 /* Tools directory */
 .tools-hero { align-items: end; }
 .tool-count { display: flex; align-items: center; gap: 13px; padding-bottom: 8px; color: var(--slate); font: .64rem/1.35 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
@@ -241,6 +264,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 	.entry-grid, .tool-grid { grid-template-columns: 1fr; }
 	.entry-card { min-height: 205px; }
 	.description-box { padding: 20px 20px 21px; }
+	.accordion-content { padding: 17px 16px 19px; }
 	.legacy-section { padding-left: 39px; }
 	.legacy-section::before { top: 43px; }
 	.legacy-section:first-child::before { top: 3px; }

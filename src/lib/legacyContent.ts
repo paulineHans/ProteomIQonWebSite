@@ -52,6 +52,8 @@ export function readLegacyPage(relativePath: string, fallbackTitle: string) {
 		.replace(/<(run|ToolName|toolname)>/gi, '&lt;$1&gt;'))
 		.replace(/<header[\s\S]*?<\/header>/i, '')
 		.replace(/<div class="description_box">/gi, '<div class="description-box">')
+		.replace(/<table(\s[^>]*)?>/gi, '<div class="table-scroll"><table$1>')
+		.replace(/<\/table>/gi, '</table></div>')
 		.replace(/<section>/gi, () => {
 			sectionNumber += 1;
 			return `<section class="legacy-section" data-section="${String(sectionNumber).padStart(2, '0')}">`;
