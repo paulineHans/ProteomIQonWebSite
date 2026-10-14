@@ -23,7 +23,7 @@ const phases = [...new Set(tools.map((tool) => tool.phase))];
 
 		<div class="phase-groups">
 			{phases.map((phase) => (
-				<section class="phase-group" aria-labelledby={`phase-${phase.toLowerCase()}`}>
+				<section class:list={['phase-group', `phase-${phase.toLowerCase()}`]} aria-labelledby={`phase-${phase.toLowerCase()}`}>
 					<div class="phase-heading"><h3 id={`phase-${phase.toLowerCase()}`}>{phase}</h3><span>{tools.filter((tool) => tool.phase === phase).length} tools</span></div>
 					<div class="tool-grid">
 						{tools.filter((tool) => tool.phase === phase).map((tool) => (

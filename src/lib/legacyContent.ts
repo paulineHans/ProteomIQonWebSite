@@ -34,12 +34,28 @@ function extractMain(raw: string) {
 	return raw.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? raw.match(/<body[^>]*>([\s\S]*)/i)?.[1] ?? raw;
 }
 
+function formatLegacyParagraphs(html: string) {
+	return html.replace(/<p>\s*([^<]*?)\s*<\/p>/gi, (_match, content: string) => {
+		const paragraphs = content
+			.split(/\r?\n\s*\r?\n/)
+			.map((paragraph) => paragraph.replace(/\s+/g, ' ').trim())
+			.filter(Boolean);
+
+		return paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join('\n');
+	});
+}
+
 export function readLegacyPage(relativePath: string, fallbackTitle: string) {
 	const raw = readFileSync(resolve(legacyRoot, relativePath), 'utf8');
-	const html = extractMain(raw)
+	let sectionNumber = 0;
+	const html = formatLegacyParagraphs(extractMain(raw)
+		.replace(/<(run|ToolName|toolname)>/gi, '&lt;$1&gt;'))
 		.replace(/<header[\s\S]*?<\/header>/i, '')
 		.replace(/<div class="description_box">/gi, '<div class="description-box">')
-		.replace(/<section>/gi, '<section class="legacy-section">');
+		.replace(/<section>/gi, () => {
+			sectionNumber += 1;
+			return `<section class="legacy-section" data-section="${String(sectionNumber).padStart(2, '0')}">`;
+		});
 
 	return {
 		title: extractTitle(raw, fallbackTitle).replace(/^ProteomIQon\s+-\s+/i, ''),
