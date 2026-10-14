@@ -1,0 +1,56 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { tools } from '../../data/tools';
+
+const phases = [...new Set(tools.map((tool) => tool.phase))];
+---
+
+<Layout title="Tools · ProteomIQon" description="Browse the ProteomIQon tools by processing stage.">
+	<section class="page-hero tools-hero">
+		<div>
+			<p class="eyebrow"><span class="eyebrow-dot"></span> The tool directory</p>
+			<h1>One pipeline.<br /><em>Many focused tools.</em></h1>
+			<p class="page-intro">Each tool has one job. Explore the details, inputs and hand-offs that make up the ProteomIQon workflow.</p>
+		</div>
+		<div class="tool-count"><strong>{tools.length}</strong><span>documented<br />tools</span></div>
+	</section>
+
+	<section class="tool-directory" aria-labelledby="directory-title">
+		<div class="directory-header">
+			<div><p class="eyebrow">Navigate by stage</p><h2 id="directory-title">Find the right step for your data.</h2></div>
+			<label class="tool-search"><span aria-hidden="true">⌕</span><span class="sr-only">Search tools</span><input id="tool-search" type="search" placeholder="Search tools" autocomplete="off" /></label>
+		</div>
+
+		<div class="phase-groups">
+			{phases.map((phase) => (
+				<section class="phase-group" aria-labelledby={`phase-${phase.toLowerCase()}`}>
+					<div class="phase-heading"><h3 id={`phase-${phase.toLowerCase()}`}>{phase}</h3><span>{tools.filter((tool) => tool.phase === phase).length} tools</span></div>
+					<div class="tool-grid">
+						{tools.filter((tool) => tool.phase === phase).map((tool) => (
+							<a class="tool-card" data-tool-card data-search={`${tool.name} ${tool.summary} ${tool.phase}`} href={`/tools/${tool.slug}/`}>
+								<div class="tool-card-topline"><span>{tool.phaseNumber} / {tool.phase}</span><span>↗</span></div><h4>{tool.name}</h4><p>{tool.summary}</p>
+							</a>
+						))}
+					</div>
+				</section>
+			))}
+		</div>
+		<p class="no-results" id="no-results" hidden>No tools match that search. Try a shorter term.</p>
+	</section>
+</Layout>
+
+<script>
+	const searchInput = document.querySelector('#tool-search');
+	const cards = Array.from(document.querySelectorAll('[data-tool-card]'));
+	const noResults = document.querySelector('#no-results');
+	searchInput?.addEventListener('input', (event) => {
+		const query = event.target.value.trim().toLowerCase();
+		let visible = 0;
+		cards.forEach((card) => {
+			const matches = !query || card.dataset.search?.toLowerCase().includes(query);
+			card.hidden = !matches;
+			if (matches) visible += 1;
+		});
+		if (noResults) noResults.hidden = visible !== 0;
+	});
+</script>

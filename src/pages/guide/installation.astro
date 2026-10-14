@@ -1,0 +1,11 @@
+---
+import LegacyPage from '../../components/LegacyPage.astro';
+import Layout from '../../layouts/Layout.astro';
+import { readLegacyPage } from '../../lib/legacyContent';
+
+const page = readLegacyPage('installation_guide.html', 'Installation guide');
+---
+
+<Layout title="Installation guide · ProteomIQon" description="Install ProteomIQon as a complete pipeline or as individual tools.">
+	<LegacyPage title={page.title} eyebrow="Set up the toolchain" intro="Install the full pipeline, choose individual .NET tools, or build the project locally from source." html={page.html} />
+</Layout>

@@ -1,0 +1,11 @@
+---
+import LegacyPage from '../../components/LegacyPage.astro';
+import Layout from '../../layouts/Layout.astro';
+import { readLegacyPage } from '../../lib/legacyContent';
+
+const page = readLegacyPage('further_information.html', 'Further information');
+---
+
+<Layout title="Further information · ProteomIQon" description="Developer notes, documentation and related resources for ProteomIQon.">
+	<LegacyPage title={page.title} eyebrow="Go deeper" intro="Learn how tools are structured, documented and published, then follow the links into the wider scientific ecosystem." html={page.html} />
+</Layout>

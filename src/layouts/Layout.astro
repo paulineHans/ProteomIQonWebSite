@@ -1,0 +1,65 @@
+---
+import '../style.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'ProteomIQon · Proteomics toolchain',
+	description = 'Documentation for the ProteomIQon proteomics toolchain.',
+} = Astro.props;
+
+const navigation = [
+	{ href: '/tools/', label: 'Tools' },
+	{ href: '/guide/getting-started/', label: 'Getting started' },
+	{ href: '/guide/installation/', label: 'Installation' },
+	{ href: '/guide/further-information/', label: 'Learn more' },
+];
+
+const currentPath = Astro.url.pathname;
+const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(`${href}`);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="description" content={description} />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<div class="site-shell">
+			<header class="site-header">
+				<a class="brand" href="/" aria-label="ProteomIQon home">
+					<span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+					<span>Proteom<span>IQ</span>on</span>
+				</a>
+				<nav class="site-nav" aria-label="Main navigation">
+					{navigation.map((item) => (
+						<a class:list={{ active: isCurrent(item.href) }} href={item.href}>{item.label}</a>
+					))}
+					<a class="nav-quiet" href="/guide/help/">Help</a>
+				</nav>
+			</header>
+
+			<main>
+				<slot />
+			</main>
+
+			<footer class="site-footer">
+				<div>
+					<strong>ProteomIQon</strong>
+					<span>·</span>
+					<span>Proteomics, one clear step at a time.</span>
+				</div>
+				<a href="https://github.com/CSBiology/ProteomIQon/">View the project on GitHub ↗</a>
+			</footer>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,11 @@
+---
+import LegacyPage from '../../components/LegacyPage.astro';
+import Layout from '../../layouts/Layout.astro';
+import { readLegacyPage } from '../../lib/legacyContent';
+
+const page = readLegacyPage('getting_started.html', 'Getting started');
+---
+
+<Layout title="Getting started · ProteomIQon" description="Start using the ProteomIQon proteomics pipeline.">
+	<LegacyPage title={page.title} eyebrow="Start here" intro="A short route into the pipeline, whether you are installing the complete toolchain or exploring individual tools." html={page.html} />
+</Layout>
