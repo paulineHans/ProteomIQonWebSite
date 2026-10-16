@@ -1,182 +1,345 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Further Information</title>
-
-    <link rel="stylesheet" href="../../../style.css">
 </head>
 
 <body>
-
-    <header>
-        <h1>Further Information</h1>
-    </header>
-
     <main>
         <section>
             <h2>How to create your own tool</h2>
-                <div class="description_box">
-                    <p>
-                        Every ProteomIQon tool is a small console project under src/ with the same three files: 
-                        CLIArgumentParsing.fs declares the command line arguments with Argu, Program.fs parses 
-                        them, reads the parameter JSON and loops over the input files, and a third file holds the 
-                        actual work. Parameter records and result row types shared between tools live in the core 
-                        project src/ProteomIQon/.
-                    </p>
-                </div>
-            <h2>Scaffolding from the template</h2>
-                <div class="description_box">
-                    <p>
-                        The repository ships a dotnet new template that creates this layout. Install it once from the repository root:
-                        <div class="mockup-code w-full">
-                            <pre data-prefix="$"><code>dotnet new install ./ConsoleTemplate/template</code></pre>
+            <div class="tool-guide">
+                <p class="guide-intro">
+                    Every ProteomIQon tool is a small console project located in
+                    <code>src/</code>, containing three files with distinct responsibilities.
+                </p>
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <code class="file-name">CLIArgumentParsing.fs</code>
+                            <p>Declares command-line arguments using Argu.</p>
                         </div>
-                        dotnet new list should now show pct (prototypical proteomiqon console project). Create the project inside src/ and add it to the solution:
-                        <div class="mockup-code w-full">
-                            <pre data-prefix="$"><code>
-                                cd src
-                                dotnet new pct -n MyTool --force
-                                cd ..
-                                dotnet sln ProteomIQon.sln add src/MyTool/MyTool.fsproj
-                            </code></pre>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <code class="file-name">Program.fs</code>
+                            <p>Parses arguments, reads the parameter JSON and loops over input files.</p>
                         </div>
-                        Compare the new .fsproj with a current tool such as src/PeptideDB/PeptideDB.fsproj and take the target framework, the package versions, the PackAsTool and ToolCommandName properties from there.
-                    </p>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">03</span>
+                        <div>
+                            <span class="file-name">Tool-specific implementation</span>
+                            <p>Contains the actual processing logic.</p>
+                        </div>
+                    </div>
                 </div>
-            <h2>Wiring the tool in</h2>
-                <div class="description_box">
+                <div class="shared-note">
+                    <strong>Shared components</strong>
                     <p>
-                        Four more places need to know about the tool:
-                        <ol>
-                            <li>A parameter record in src/ProteomIQon/DTO.fs with a toDomain conversion, plus a default JSON file in src/ProteomIQon/defaultParams/. The tools read parameters with Json.ReadAndDeserialize.</li>
-                            <li>A RELEASE_NOTES.md in the project folder. The build reads the package version from it.</li>
-                            <li>An entry in the projects list of build/ProjectInfo.fs, so Build and Pack include it.</li>
-                            <li>A page in docs/tools/, see How to document your work.</li>
-                        </ol>
-                        Then open a pull request against dev.
+                        Parameter records and result row types shared between tools are located in
+                        <code>src/ProteomIQon/</code> in the core project.
                     </p>
                 </div>
+            </div>
         </section>
+
+        <section>
+            <h2>Scaffolding from the template</h2>
+            <div class="tool-guide">
+                <p class="guide-intro">
+                    The repository ships a <code>dotnet new</code> template that creates this layout.
+                    Follow these steps to set up your new tool.
+                </p>
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <strong>Install the template</strong>
+                            <p>Run the following command once from the repository root:</p>
+                            <pre class="command-block"><code>dotnet new install ./ConsoleTemplate/template</code></pre>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <strong>Create your project</strong>
+                            <p>
+                                Run <code>dotnet new list</code> to verify that <code>pct</code>
+                                (the prototypical ProteomIQon console project) is available.
+                            </p>
+                            <p>Then create your project inside <code>src/</code> and add it to the solution:</p>
+                            <pre class="command-block"><code>cd src
+dotnet new pct -n MyTool --force
+cd ..
+dotnet sln ProteomIQon.sln add src/MyTool/MyTool.fsproj</code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="shared-note">
+                    <strong>Information</strong>
+                    <p>
+                        Compare the new <code>.fsproj</code> with an existing tool such as
+                        <code>src/PeptideDB/PeptideDB.fsproj</code>. Use its target framework,
+                        package versions, <code>PackAsTool</code> and <code>ToolCommandName</code>
+                        properties as references.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Wiring the tool in</h2>
+            <div class="tool-guide">
+                <p class="guide-intro">Four more places need to know about the tool:</p>
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <p>
+                                A parameter record in <code>src/ProteomIQon/DTO.fs</code> with a
+                                <code>toDomain</code> conversion, plus a default JSON file in
+                                <code>src/ProteomIQon/defaultParams/</code>. The tools read parameters
+                                with <code>Json.ReadAndDeserialize</code>.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <p>
+                                A <code>RELEASE_NOTES.md</code> in the project folder. The build reads
+                                the package version from it.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">03</span>
+                        <div>
+                            <p>
+                                An entry in the projects list of <code>build/ProjectInfo.fs</code>,
+                                so Build and Pack include it.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">04</span>
+                        <div>
+                            <p>
+                                A page in <code>docs/tools/</code>; see <em>How to document your work</em>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="shared-note">
+                    <strong>Next step</strong>
+                    <p>Then open a pull request against <code>dev</code>.</p>
+                </div>
+            </div>
+        </section>
+
         <section>
             <h2>How to document your work</h2>
-                <div class="description_box">
-                    <p>
-                        The pages on this site are literate F# scripts under docs/, rendered with the fsdocs tool. 
-                        Prose lives in (** ... *) comment blocks as markdown, code between the blocks is shown with 
-                        syntax highlighting and tooltips.
-                    </p>
-                </div>
-            <h2>Building the docs locally</h2>
-                <div class="description_box">
-                    <p>
-                        From the repository root, restore the tools once and then run the docs target. It builds the core project in Release and renders the site into output/:
-                        <div class="mockup-code w-full">
-                            <pre data-prefix="$"><code>
-                                dotnet tool restore .\build.cmd builddocs
-                            </code></pre>
+            <div class="tool-guide">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <p>
+                                The pages on this site are literate F# scripts under <code>docs/</code>,
+                                rendered with the fsdocs tool.
+                            </p>
                         </div>
-                        On Linux or macOS use ./build.sh builddocs. For editing with hot reload use the watch target. It serves the site on a local port and re-renders a page whenever you save it:
-                        <div class="mockup-code w-full">
-                            <pre data-prefix="$"><code>
-                                .\build.cmd watchdocs
-                            </code></pre>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <p>
+                                Prose lives in <code>(** ... *)</code> comment blocks as Markdown;
+                                code between the blocks is shown with syntax highlighting and tooltips.
+                            </p>
                         </div>
-                    </p>
+                    </div>
                 </div>
-            <h2>Adding a page for a tool</h2>
-                <div class="description_box">
-                    <p>
-                        Copy an existing file from docs/tools/, for example PeptideDB.fsx, rename it after the tool folder in src/,
-                        and adjust the frontmatter at the top. index sets the position in the sidebar. The pages are ordered 
-                        along the processing chain, so pick the slot where the new tool fits and shift the later ones if needed.
-                        Each tool page has the same four parts: a short description of what the tool does and 
-                        where it sits in the chain, an inputs and outputs section, the parameter table with the 
-                        defaults from src/ProteomIQon/defaultParams/, and the script that writes a parameter file 
-                        followed by the command line calls. Tools without a parameter file skip the table and the 
-                        script. Keep the parameter script runnable. It references the core assembly built by 
-                        builddocs, so this proves it before you publish:
-                        <div class="mockup-code w-full">
-                            <pre data-prefix="$"><code>
-                                dotnet fsi docs/tools/YourTool.fsx
-                            </code></pre>
-                        </div>
-                        BioFSharp.Mz already explains the theory, and the pages link to it. 
-                        The BioFSharp.Mz documentation covers signal detection, search databases, scoring, 
-                        FDR control, quantification and protein inference.
-                    </p>
-                </div>
-            <h2>Publishing</h2>
-                <div class="description_box">
-                    <p>
-                        Pushing changes under docs/, build/ or src/ProteomIQon/ to the dev branch 
-                        triggers the Deploy Docs GitHub Action. It runs the same builddocs target and 
-                        pushes output/ to the gh-pages branch, which GitHub Pages serves at
-                        <a href="https://csbiology.github.io/ProteomIQon/"></a>. The workflow can also be 
-                        started by hand from the Actions tab.
-                    </p>
-                </div>
-            </h2>
-        </section>
-        <section>
-            <h2>Documentation BioFSharp.Mz</h2>
-            <div class="description_box">
-                <p>
-                    Information on how ProteomIQ can specifically access individual spectra can be found 
-                    in the BioFSharp.Mz documentation <a href="https://www.biofsharp.com/BioFSharp.Mz/">BioFSharp.Mz</a>
-                </p>
             </div>
         </section>
+
+        <section>
+            <h2>Building the docs locally</h2>
+            <div class="tool-guide">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <p>
+                                From the repository root, restore the tools once and then run the docs
+                                target. It builds the core project in Release and renders the site into
+                                <code>output/</code>:
+                            </p>
+                            <pre class="command-block"><code>dotnet tool restore
+.\build.cmd builddocs</code></pre>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <p>
+                                On Linux or macOS use <code>./build.sh builddocs</code>. For editing with
+                                hot reload use the watch target. It serves the site on a local port and
+                                re-renders a page whenever you save it:
+                            </p>
+                            <pre class="command-block"><code>.\build.cmd watchdocs</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Adding a page for a tool</h2>
+            <div class="tool-guide">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <p>
+                                Copy an existing file from <code>docs/tools/</code>, for example
+                                <code>PeptideDB.fsx</code>, rename it after the tool folder in
+                                <code>src/</code>, and adjust the frontmatter at the top. The
+                                <code>index</code> value sets the position in the sidebar. The pages are
+                                ordered along the processing chain, so pick the slot where the new tool
+                                fits and shift the later ones if needed.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <p>
+                                Each tool page has the same four parts: a short description of what the
+                                tool does and where it sits in the chain, an inputs and outputs section,
+                                the parameter table with the defaults from
+                                <code>src/ProteomIQon/defaultParams/</code>, and the script that writes
+                                a parameter file followed by the command line calls. Tools without a
+                                parameter file skip the table and the script.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">03</span>
+                        <div>
+                            <p>
+                                Keep the parameter script runnable. It references the core assembly
+                                built by builddocs, so this proves it before you publish:
+                            </p>
+                            <pre class="command-block"><code>dotnet fsi docs/tools/YourTool.fsx</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section>
             <h2>Other helpful documentation</h2>
-
-            <div class="description_box">
-                <p>
-                    ProteomIQon uses diffrent open-source librarys. For developers we recommend to have a look at them
-                    <dl>
-                        <dt>MzIO</dt>
-                            <dd>- <a href="https://csbiology.github.io/MzIO/index.html">MzIO Documentation</a> </dd>
-                            <dd>- <a href="https://github.com/CSBiology/MzIO">MzIO Github Repository</a></dd>
-                        <dt>BioFSharp</dt>
-                            <dd>- <a href="https://github.com/BioFSharp/BioFSharp">BioFSharp Repository</a> </dd>
-                            <dd>- <a href="https://www.biofsharp.com/BioFSharp/">BioFSharp Documentation</a> </dd>
-                        <dt>FSharp.Stats</dt>
-                            <dd>- <a href="https://github.com/fslaborg/FSharp.Stats">FSharp.Stats Repository</a></dd>
-                            <dd>- <a href="https://fslab.org/FSharp.Stats/">FSharp.Stats Documentation</a></dd>
-                    </dl>
+            <div class="tool-guide">
+                <p class="guide-intro">
+                    ProteomIQon uses different open-source libraries. For developers, we recommend
+                    exploring them as well.
                 </p>
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <strong>MzIO</strong>
+                            <p><a href="https://csbiology.github.io/MzIO/index.html" target="_blank" rel="noopener noreferrer">MzIO documentation</a></p>
+                            <p><a href="https://github.com/CSBiology/MzIO" target="_blank" rel="noopener noreferrer">MzIO GitHub repository</a></p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <strong>BioFSharp</strong>
+                            <p><a href="https://www.biofsharp.com/BioFSharp/" target="_blank" rel="noopener noreferrer">BioFSharp documentation</a></p>
+                            <p><a href="https://github.com/BioFSharp/BioFSharp" target="_blank" rel="noopener noreferrer">BioFSharp repository</a></p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">03</span>
+                        <div>
+                            <strong>FSharp.Stats</strong>
+                            <p><a href="https://fslab.org/FSharp.Stats/" target="_blank" rel="noopener noreferrer">FSharp.Stats documentation</a></p>
+                            <p><a href="https://github.com/fslaborg/FSharp.Stats" target="_blank" rel="noopener noreferrer">FSharp.Stats repository</a></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
+
         <section>
-            <h2>Avaiable also on GALAXY and Workflow Hub</h2>
-                <div class="description_box">
-                    <p>
-                        You can find all the ProteomIQon Tool on <a href="https://usegalaxy.eu/">ProteomIQon on GALAXY</a>, there you find also a beginner tutorial. 
-                        Nevertheless you find a whole overview of ProteomIQon on <a href="https://workflowhub.eu/">Workflow Hub</a>
-                    </p>
+            <h2>Available on Galaxy and WorkflowHub</h2>
+            <div class="tool-guide">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <strong>Galaxy</strong>
+                            <p>
+                                You can find all ProteomIQon tools on
+                                <a href="https://usegalaxy.eu/" target="_blank" rel="noopener noreferrer">Galaxy</a>;
+                                there you will also find a beginner tutorial.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="file-item">
+                        <span class="file-number">02</span>
+                        <div>
+                            <strong>WorkflowHub</strong>
+                            <p>
+                                You can also find an overview of ProteomIQon on
+                                <a href="https://workflowhub.eu/" target="_blank" rel="noopener noreferrer">WorkflowHub</a>.
+                            </p>
+                        </div>
+                    </div>
                 </div>
+            </div>
         </section>
+
         <section>
             <h2>Code of Conduct</h2>
-                <div class="description_box">
-                    <p>
-                        Please follow to our code of conduct 
-                        <a href="https://github.com/CSBiology/ProteomIQon/tree/main?tab=coc-ov-file">Code of Conduct</a>
-                    </p>
+            <div class="tool-guide">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <p>
+                                Please follow the
+                                <a href="https://github.com/CSBiology/ProteomIQon/tree/main?tab=coc-ov-file" target="_blank" rel="noopener noreferrer">Code of Conduct</a>.
+                            </p>
+                        </div>
+                    </div>
                 </div>
+            </div>
         </section>
+
         <section>
             <h2>How to cite ProteomIQon</h2>
-            <div class="description_box">
-                <p>
-                    If you worked with ProteomIQon (amaze amaze amaze) here's your citation
-                    <a href="https://doi.org/10.5281/zenodo.6335068">Cite ProteomIQon</a>
-                </p>
+            <div class="tool-guide">
+                <div class="file-list">
+                    <div class="file-item">
+                        <span class="file-number">01</span>
+                        <div>
+                            <p>
+                                If you used ProteomIQon in your work, please see the
+                                <a href="https://doi.org/10.5281/zenodo.6335068" target="_blank" rel="noopener noreferrer">citation record</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

@@ -4,28 +4,27 @@ export interface Tool {
 	source: string;
 	phase: string;
 	phaseNumber: string;
-	summary: string;
 }
 
 export const tools: Tool[] = [
-	{ slug: 'mzml-to-mzlite', name: 'MzMLToMzLite', source: 'MzMLToMzLite.html', phase: 'Prepare', phaseNumber: '01', summary: 'Converts an mzML file into the mzlite format.' },
-	{ slug: 'mzml-to-mzlite-ion-mobility', name: 'MzMLToMzLiteIonMobility', source: 'MzMLToMzLiteIonMobility.html', phase: 'Prepare', phaseNumber: '01', summary: 'Converts mzML files to mzLite format with respect to the ion mobility domain.' },
-	{ slug: 'peptide-db', name: 'PeptideDB', source: 'PeptideDB.html', phase: 'Prepare', phaseNumber: '01', summary: 'Creates a peptide database in the SQLite format through in silico digestion of FASTA proteins.' },
-	{ slug: 'peptide-spectrum-matching', name: 'PeptideSpectrumMatching', source: 'PeptideSpectrumMatching.html', phase: 'Peptide Identification', phaseNumber: '02', summary: 'Iterates across all MS/MS scans in an MS run, determines precursor charge states and possible peptide spectrum matches.' },
-	{ slug: 'peptide-spectrum-matching-tims', name: 'PeptideSpectrumMatchingTIMs', source: 'PeptideSpectrumMatchingTIMs.html', phase: 'Peptide Identification', phaseNumber: '02', summary: 'Iterates across all MS/MS scans in an MS run, determines precursor charge states and possible peptide spectrum matches. With respect to the ion mobility domain.' },
-	{ slug: 'psm-statistics', name: 'PSMStatistics', source: 'PSMStatistics.html', phase: 'Peptide Identification', phaseNumber: '02', summary: 'Utilizes semi supervised machine learning techniques to integrate search engine scores as well as the mentioned quality scores into one single consensus score.' },
-	{ slug: 'ms-fragger-to-psm', name: 'MSFragger to PSM', source: 'MsFraggerToPSM.html', phase: 'Peptide Identification', phaseNumber: '02', summary: 'MsFraggerToPSM turns the psm.tsv result of an MSFragger search, as written by FragPipe, into the .qpsm files that PSMBasedQuantificationTIMs reads.' },
-	{ slug: 'protein-inference', name: 'Protein Inference', source: 'ProteinInference.html', phase: 'Protein Identification', phaseNumber: '04', summary: 'ProteinInference maps the identified peptides back to proteins and reports protein groups: sets of proteins that share their peptide evidence.' },
-	{ slug: 'psm-based-quantification', name: 'PSMBasedQuantification', source: 'PSMBasedQuantification.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'PSMBasedQuantification turns the identifications from PSMStatistics into peptide ion intensities.' },
-	{ slug: 'psm-based-quantification-tims', name: 'PSMBasedQuantificationTIMS', source: 'PSBasedQuantificaitonTIMs.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'PSMBasedQuantificationTIMs is the PSMBasedQuantification variant for timsTOF runs.' },
-	{ slug: 'quant-based-alignment', name: 'Quant-Based Alignment', source: 'QuantBasedAlignment.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'QuantBasedAlignment aligns the retention times of peptide ions across different LC-MS runs. Using peptides shared between runs, it predicts where peptides identified in a source run should elute in a target run, even if they were not identified there.' },
-	{ slug: 'alignment-based-quantification', name: 'Alignment-Based Quantification', source: 'AlignmentsBasedQuantification.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'QuantBasedAlignment predicts where a peptide ion identified in another run should elute in this run.' },
-	{ slug: 'alignment-based-quant-statistics', name: 'Alignment-BasedQuantStatistics', source: 'AlignmentBasedQuantStatistics.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'AlignmentBasedQuantStatistics evaluates the reliability of peptide quantifications transferred between LC-MS runs. It uses a gradient-boosted tree classifier trained on known peptide ions to assign an alignment score and q-value to each transferred quantification.' },
-	{ slug: 'add-deduced-peptides', name: 'Add Deduced Peptides', source: 'AddDeducedPeptides.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'AddDeducedPeptides takes the protein groups of the combined inference and assigns them to every peptide present in each aligned .quant file, so that JoinQuantPepIonsWithProteins can join the transferred quantifications to proteins.' },
-	{ slug: 'join-quant-with-peptide-ions', name: 'JoinQuantWithPepIons', source: 'JoinQuantWithPepIons.html', phase: 'Peptide Quantification', phaseNumber: '03', summary: 'JoinQuantPepIonsWithProteins combines peptide ion quantification data (.quant) with protein identification data (.prot). It assigns each quantified peptide ion to its corresponding protein group, including the protein groups Q-value.' },
-	{ slug: 'label-free-protein-quantification', name: 'Label-Free Protein Quantification', source: 'LabelFreeProteinQuantification.html', phase: 'Protein Quantification', phaseNumber: '05', summary: 'LabelFreeProteinQuantification calculates protein group intensities from quantified peptide ion intensities in unlabeled samples. It optionally combines different charge states and modified peptide forms before aggregating peptides into protein groups. Outliers and single values can be filtered out during each step.' },
-	{ slug: 'labeled-protein-quantification', name: 'Labeled Protein Quantification', source: 'LabeledProteinQuantification.html', phase: 'Protein Quantification', phaseNumber: '05', summary: 'LabeledProteinQuantification calculates protein group intensities and light-to-heavy ratios from peptide ion intensities in N15-labeled proteomics experiments. It combines light and heavy peptide measurements, optionally merges different charge states and modified peptide forms, and aggregates peptide intensities and ratios at the protein group level while filtering outliers.' },
-	{ slug: 'ratio-lfq', name: 'Ratio LFQ', source: 'RatioLFQ.html', phase: 'Protein Quantification', phaseNumber: '05', summary: 'RatioLFQ converts light-to-heavy protein ratios from labeled experiments into comparable label-free-like protein intensities across runs. It uses log2-transformed ratios and pairwise differences between runs, applying least-squares optimization and reference intensity normalization to calculate protein intensities for each run.' },
+	{ slug: 'mzml-to-mzlite', name: 'MzMLToMzLite', source: 'MzMLToMzLite.html', phase: 'Preprocessing', phaseNumber: '01'},
+	{ slug: 'mzml-to-mzlite-ion-mobility', name: 'MzMLToMzLiteIonMobility', source: 'MzMLToMzLiteIonMobility.html', phase: 'Preprocessing', phaseNumber: '01'},
+	{ slug: 'peptide-db', name: 'PeptideDB', source: 'PeptideDB.html', phase: 'Preprocessing', phaseNumber: '01'},
+	{ slug: 'peptide-spectrum-matching', name: 'PeptideSpectrumMatching', source: 'PeptideSpectrumMatching.html', phase: 'Peptide Identification', phaseNumber: '02'},
+	{ slug: 'peptide-spectrum-matching-tims', name: 'PeptideSpectrumMatchingTIMs', source: 'PeptideSpectrumMatchingTIMs.html', phase: 'Peptide Identification', phaseNumber: '02'},
+	{ slug: 'psm-statistics', name: 'PSMStatistics', source: 'PSMStatistics.html', phase: 'Peptide Identification', phaseNumber: '02'},
+	{ slug: 'ms-fragger-to-psm', name: 'MSFragger to PSM', source: 'MsFraggerToPSM.html', phase: 'Peptide Identification', phaseNumber: '02'},
+	{ slug: 'protein-inference', name: 'Protein Inference', source: 'ProteinInference.html', phase: 'Protein Identification', phaseNumber: '04'},
+	{ slug: 'psm-based-quantification', name: 'PSMBasedQuantification', source: 'PSMBasedQuantification.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'psm-based-quantification-tims', name: 'PSMBasedQuantificationTIMS', source: 'PSBasedQuantificaitonTIMs.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'quant-based-alignment', name: 'Quant-Based Alignment', source: 'QuantBasedAlignment.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'alignment-based-quantification', name: 'Alignment-Based Quantification', source: 'AlignmentsBasedQuantification.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'alignment-based-quant-statistics', name: 'Alignment-BasedQuantStatistics', source: 'AlignmentBasedQuantStatistics.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'add-deduced-peptides', name: 'Add Deduced Peptides', source: 'AddDeducedPeptides.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'join-quant-with-peptide-ions', name: 'JoinQuantWithPepIons', source: 'JoinQuantWithPepIons.html', phase: 'Peptide Quantification', phaseNumber: '03'},
+	{ slug: 'label-free-protein-quantification', name: 'Label-Free Protein Quantification', source: 'LabelFreeProteinQuantification.html', phase: 'Protein Quantification', phaseNumber: '05'},
+	{ slug: 'labeled-protein-quantification', name: 'Labeled Protein Quantification', source: 'LabeledProteinQuantification.html', phase: 'Protein Quantification', phaseNumber: '05'},
+	{ slug: 'ratio-lfq', name: 'Ratio LFQ', source: 'RatioLFQ.html', phase: 'Protein Quantification', phaseNumber: '05'},
 ];
 
 export const toolBySlug = Object.fromEntries(tools.map((tool) => [tool.slug, tool]));

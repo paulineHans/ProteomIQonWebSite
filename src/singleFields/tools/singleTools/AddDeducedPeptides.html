@@ -18,160 +18,240 @@
             <h1>ProteomIQon - Add Deduced Peptides</h1>
         </header>
 
-    <main>
-
-        <section>
+    <main> 
+        <section class="workflow-section">
             <details class="accordion">
-            <summary>Tool Description</summary>
-                <div class="accordion-content">
-                    <p>
-                        AddDeducedPeptides takes the protein groups
-                        of the combined inference and assigns them
-                        to every peptide present in each aligned
-                        .quant file, so that JoinQuantPepIonsWithProteins
-                        can join the transferred quantifications
-                        to proteins.
+                <summary class="accordion-header">
+                <span class="accordion-icon">i</span>
+                <span class="accordion-heading">
+                    <strong>Tool Description</strong>
+                    <small>Purpose and functionality of the tool</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
 
-                        After alignment and AlignmentBasedQuantification
-                        a run's .quant file holds peptides that were
-                        never identified in that run, so the run's
-                        .prot file from ProteinInference does not list
-                        them.
+                <div class="accordion-content description-content">
+                <p>
+                    AddDeducedPeptides takes the protein groups of the
+                    combined inference and assigns them to every peptide
+                    present in each aligned <code>.quant</code> file,
+                    so that JoinQuantPepIonsWithProteins can join the
+                    transferred quantifications to proteins.
+                </p>
 
-                    </p>
+                <p>
+                    After alignment and AlignmentBasedQuantification,
+                    a run's <code>.quant</code> file holds peptides
+                    that were never identified in that run, so the
+                    run's <code>.prot</code> file from ProteinInference
+                    does not list them.
+                </p>
                 </div>
             </details>
         </section>
 
-        <section>
+        <section class="workflow-section">
             <details class="accordion">
-            <summary>What's happening?</summary>
+                <summary class="accordion-header">
+                <span class="accordion-icon">?</span>
+                <span class="accordion-heading">
+                    <strong>How does AddDeducedPeptides work?</strong>
+                    <small>Step-by-step explained</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
                 <div class="accordion-content">
-                    <p>
-                        <ol>
-                            <li>The tool reads all .prot files as one combined
-                                inference and does not pair them with the
-                                .quant files by name.
-                                This only works when ProteinInference ran
-                                over all runs together (GroupFiles set to true),
-                                because then every run's .prot file carries
-                                the same scores and Q-value for a protein group.
-                            </li>
-                            <li>If a protein group turns up with different
-                                scores, the tool stops with the message
-                                "If you are running this tool please infer
-                                proteins over all files".
-                            </li>
-                            <li>For every input .quant file the tool writes
-                                a corresponding .prot file into the output
-                                directory, a tab-separated table with the
-                                columns of a ProteinInference result.
-                            </li>
-                            <li>
-                                Each protein group keeps its scores and
-                                Q-value, and its PeptideSequence column lists
-                                only the peptides that occur in that .quant file.
-                                Protein groups without any peptide in the
-                                file are dropped.
-                            </li>
-                            <li>
-                                JoinQuantPepIonsWithProteins reads the new
-                                .prot file together with the scored .quant
-                                file of the same run.
-                            </li>
-                        </ol>
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-
-                        
-                    </p>
+                    <ol class="workflow-steps">
+                        <li>
+                        <strong>Combine protein inference results</strong>
+                        <p>
+                            The tool reads all <code>.prot</code> files
+                            as one combined inference and does not pair
+                            them with <code>.quant</code> files by name.
+                        </p>
+                        <p>
+                            This requires ProteinInference to run over
+                            all runs together (<code>GroupFiles = true</code>).
+                            Each run's <code>.prot</code> file must carry
+                            identical scores and Q-values for a protein group.
+                        </p>
+                        </li>
+                        <li>
+                        <strong>Validate protein group scores</strong>
+                        <p>
+                            If a protein group has different scores,
+                            the tool stops with the message:
+                        </p>
+                        <p class="workflow-message">
+                            If you are running this tool please infer
+                            proteins over all files
+                        </p>
+                        </li>
+                        <li>
+                        <strong>Generate run-specific protein files</strong>
+                        <p>
+                            For every input <code>.quant</code> file,
+                            the tool creates a corresponding
+                            <code>.prot</code> file in the output directory.
+                        </p>
+                        <p>
+                            Each output is a tab-separated table with
+                            the columns of a ProteinInference result.
+                        </p>
+                        </li>
+                        <li>
+                        <strong>Filter peptide associations</strong>
+                        <p>
+                            Each protein group retains its scores and
+                            Q-value. The <code>PeptideSequence</code>
+                            column lists only peptides present in the
+                            corresponding <code>.quant</code> file.
+                        </p>
+                        <p>
+                            Protein groups without matching peptides
+                            are removed.
+                        </p>
+                        </li>
+                        <li>
+                        <strong>Continue downstream processing</strong>
+                        <p>
+                            JoinQuantPepIonsWithProteins reads the newly
+                            generated <code>.prot</code> file together
+                            with the scored <code>.quant</code> file
+                            from the same run.
+                        </p>
+                        </li>
+                    </ol>
                 </div>
             </details>
         </section>
-        <section>
+        <section class="workflow-section">
             <details class="accordion">
-            <summary>Inputs</summary>
+                <summary class="accordion-header">
+                <span class="accordion-icon"><></span>
+                <span class="accordion-heading">
+                    <strong>Inputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
                 <div class="accordion-content">
-                    <p>
-                        These inputs are needed, to execute the tool:
-                        <table>
-                            <tr>
-                                <th>Flag</th>
-                                <th>Meaning</th>
-                                <th>Comes from</th>
-                            </tr>
-                            <tr>
-                                <td>-i</td>
-                                <td>one or more aligned .quant files, or  directory that is searched for *.quant</td>
-                                <td><a href="./AlignmentsBasedQuantification.html">AlignmentBasedQuantification</a></td>
-                            </tr>
-                            <tr>
-                                <td>-ii</td>
-                                <td>one or more .prot files, or a directory that is searched for *.prot</td>
-                                <td><a href="./ProteinInference.html">Protein Inference</a></td>
-                            </tr>
-                            <tr>
-                                <td>-o</td>
-                                <td>the output directory, created when missing</td>
-                            </tr>
-                            </table>
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <colgroup>
+                            <col class="col-flag" />
+                            <col class="col-meaning" />
+                            <col class="col-source" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td>
+                                    One or more aligned <code>.quant</code> files,
+                                    or a directory searched for <code>*.quant</code>
+                                    </td>
+                                    <td>
+                                    <a href="/your-link/">
+                                        AlignmentBasedQuantification ↗
+                                    </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ii</code></td>
+                                    <td>
+                                    One or more <code>.prot</code> files,
+                                    or a directory searched for <code>*.prot</code>
+                                    </td>
+                                    <td>
+                                    <a href="/your-link/">
+                                        Protein Inference ↗
+                                    </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>
+                                    The output directory, created when missing
+                                    </td>
+                                    <td class="empty-cell">—</td>
+                                </tr>
+                            </tbody>
+                        </table>
                         <ul>
                             <li>For AddDeducedPeptides there is no parameter file needed.</li>
                             <li>Delete an existing output .prot file before a rerun, because the tool appends to it</li>
                             <li>Logs go to AddDeducedPeptides_log.txt.</li>
                         </ul>
-                    </p>
+                    </div>
+                </div>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">=</span>
+                <span class="accordion-heading">
+                    <strong>Outputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>This Output is generated</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <colgroup>
+                            <col class="Parameter" />
+                            <col class="Description" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ProteinGroup</td>
+                                    <td>
+                                    Protein Identifier Collection
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PeptideSequence</td>
+                                    <td>
+                                    List of all peptides assigned to this protein group
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Class</td>
+                                    <td>
+                                    Peptide Evidence Classes (C1A, C1B, C2A, C2B, C3A, C3B) which define how a peptide has been assigned to its corresponding protein
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TargetScore</td>
+                                    <td>Target Score calculated based on the individual peptide scores of PSM</td>
+                                </tr>
+                                <tr>
+                                    <td>DecoyScore</td>
+                                    <td>Decoy Score calculated based on the individual peptide scores of PSM</td>
+                                </tr>
+                                <tr>
+                                    <td>QValue</td>
+                                    <td>Q-value (False-Discovery-Rate) for every identified protein</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </details>
-        </section>
-        <section>
-            <details class="accordion">
-                <summary>Outputs</summary>
-                    <div class="accordion-content">
-                        <p>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Column</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>ProteinGroup</td>
-                                        <td>Protein Identifier Collection</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PeptideSequence</td>
-                                        <td>List of all peptides assigned to this protein group</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Class</td>
-                                        <td>Peptide Evidence Classes (C1A, C1B, C2A, C2B, C3A, C3B) which define how a peptide has been assigned to its corresponding protein</td>
-                                    </tr>
-                                    <tr>
-                                        <td>TargetScore</td>
-                                        <td>Target Score calculated based on the individual peptide scores of PSM</td>
-                                    </tr>
-                                    <tr>
-                                        <td>DecoyScore</td>
-                                        <td>Decoy Score calculated based on the individual peptide scores of PSM</td>
-                                    </tr>
-                                    <tr>
-                                        <td>QValue</td>
-                                        <td>Q-value (False-Discovery-Rate) for every identified protein</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </p>
-                    </div>
-            </details>
-        </section>
+        </section>         
     </main>
     </body>
 </html>

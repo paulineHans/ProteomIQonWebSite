@@ -4,17 +4,19 @@ import '../style.css';
 interface Props {
 	title?: string;
 	description?: string;
+	showFooter?: boolean;
 }
 
 const {
 	title = 'ProteomIQon - Documentation',
 	description = 'Knowledgebase, Tutorials and more.',
+	showFooter = true,
 } = Astro.props;
 
 const navigation = [
-	{ href: '/tools/', label: 'Tools' },
 	{ href: '/guide/getting-started/', label: 'Getting started' },
 	{ href: '/guide/installation/', label: 'Installation' },
+	{ href: '/tools/', label: 'Tools' },
 	{ href: '/guide/further-information/', label: 'Learn more' },
 ];
 
@@ -52,14 +54,14 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 				<slot />
 			</main>
 
-			<footer class="site-footer">
-				<div>
-					<strong>ProteomIQon</strong>
-					<span>·</span>
-					<span>Step after step.</span>
-				</div>
-				<a href="https://github.com/CSBiology/ProteomIQon/">View the project on GitHub ↗</a>
-			</footer>
+			{showFooter && (
+				<footer class="site-footer">
+					<div>
+						<strong>ProteomIQon</strong>
+					</div>
+					<a href="https://github.com/CSBiology/ProteomIQon/">View the project on GitHub ↗</a>
+				</footer>
+			)}
 		</div>
 	</body>
 </html>

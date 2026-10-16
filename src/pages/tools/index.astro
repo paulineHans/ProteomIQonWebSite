@@ -1,9 +1,9 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { tools } from '../../data/tools';
-import Workflow from '../../components/workflow/Workflow.jsx';
 
 const phases = [...new Set(tools.map((tool) => tool.phase))];
+const phaseClass = (phase) => phase.toLowerCase().replace(/\s+/g, '-');
 ---
 
 <Layout title="Tools · ProteomIQon" description="Browse the ProteomIQon tools by processing stage.">
@@ -15,18 +15,6 @@ const phases = [...new Set(tools.map((tool) => tool.phase))];
 		</div>
 		<div class="tool-count"><strong>{tools.length}</strong><span>documented<br />tools</span></div>
 	</section>
-
-	<section class="workflow-overview" aria-labelledby="workflow-overview-title">
-		<div class="workflow-overview-header">
-			<div>
-				<p class="eyebrow"><span class="eyebrow-dot"></span> Interactive workflow</p>
-				<h2 id="workflow-overview-title">Trace the data through the pipeline.</h2>
-			</div>
-			<p class="workflow-overview-help">Click any node to open its tool page. Drag the canvas to pan and use the controls or scroll wheel to zoom.</p>
-		</div>
-		<Workflow client:load />
-	</section>
-
 	<section class="tool-directory" aria-labelledby="directory-title">
 		<div class="directory-header">
 			<div><p class="eyebrow">Navigate by stage</p><h2 id="directory-title">Find the right step for your data.</h2></div>
@@ -35,8 +23,8 @@ const phases = [...new Set(tools.map((tool) => tool.phase))];
 
 		<div class="phase-groups">
 			{phases.map((phase) => (
-				<section class:list={['phase-group', `phase-${phase.toLowerCase()}`]} aria-labelledby={`phase-${phase.toLowerCase()}`}>
-					<div class="phase-heading"><h3 id={`phase-${phase.toLowerCase()}`}>{phase}</h3><span>{tools.filter((tool) => tool.phase === phase).length} tools</span></div>
+				<section class:list={['phase-group', `phase-${phaseClass(phase)}`]} aria-labelledby={`phase-${phaseClass(phase)}`}>
+					<div class="phase-heading"><h3 id={`phase-${phaseClass(phase)}`}>{phase}</h3><span>{tools.filter((tool) => tool.phase === phase).length} tools</span></div>
 					<div class="tool-grid">
 						{tools.filter((tool) => tool.phase === phase).map((tool) => (
 							<a class="tool-card" data-tool-card data-search={`${tool.name} ${tool.summary} ${tool.phase}`} href={`/tools/${tool.slug}/`}>
