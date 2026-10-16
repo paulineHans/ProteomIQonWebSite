@@ -741,6 +741,173 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
   text-wrap: pretty;
 }
 
+/* Tool workflow and parameter tables */
+.tool-legacy-content .workflow-section {
+  margin: 0 0 24px;
+}
+
+.tool-legacy-content .workflow-section:last-child {
+  margin-bottom: 0;
+}
+
+.tool-legacy-content .accordion {
+  border-color: rgba(106, 178, 231, .32);
+  border-radius: 14px;
+  box-shadow: 0 5px 18px rgba(4, 44, 88, .045);
+}
+
+.tool-legacy-content .accordion-header {
+  min-height: 78px;
+  padding: 18px 28px;
+  background: rgba(106, 178, 231, .08);
+}
+
+.tool-legacy-content .accordion-content {
+  padding: 28px 32px 32px;
+}
+
+.tool-legacy-content .accordion-lede {
+  margin: 0 0 18px;
+  color: var(--slate);
+  font-size: .92rem;
+  line-height: 1.7;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-wrapper {
+  margin: 0;
+}
+
+.table-wrapper > .table-scroll {
+  margin: 0;
+}
+
+.tool-table {
+  min-width: 680px;
+}
+
+.tool-table th {
+  padding: 14px 18px;
+  font: .67rem var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tool-table td {
+  padding: 16px 18px;
+  font-size: .88rem;
+  line-height: 1.7;
+}
+
+.tool-table td:first-child {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.input-table {
+  min-width: 720px;
+}
+
+.input-table .col-flag {
+  width: 15%;
+}
+
+.input-table .col-meaning {
+  width: 52%;
+}
+
+.input-table .col-source {
+  width: 33%;
+}
+
+.input-handling-table {
+  min-width: 680px;
+}
+
+.input-handling-table .col-parameter {
+  width: 28%;
+}
+
+.input-handling-table .col-meaning {
+  width: 72%;
+}
+
+.parameter-intro {
+  max-width: 70ch;
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
+  background: rgba(119, 182, 186, .1);
+}
+
+.parameter-intro p {
+  margin: 0;
+  color: var(--slate);
+  font-size: .92rem;
+  line-height: 1.75;
+}
+
+.parameter-table {
+  min-width: 760px;
+}
+
+.parameter-table .col-parameter {
+  width: 29%;
+}
+
+.parameter-table .col-default {
+  width: 14%;
+}
+
+.parameter-table .col-meaning {
+  width: 57%;
+}
+
+.parameter-table td:first-child,
+.parameter-table td:nth-child(2) {
+  font-family: var(--mono);
+  font-size: .76rem;
+}
+
+.parameter-table td:nth-child(2) {
+  color: var(--teal);
+  text-align: center;
+}
+
+.table-note {
+  max-width: 70ch;
+  margin: 18px 0 0;
+  color: var(--slate);
+  font-size: .88rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 600px) {
+  .tool-legacy-content .accordion-header {
+    min-height: 68px;
+    padding: 15px 16px;
+  }
+
+  .tool-legacy-content .accordion-content {
+    padding: 22px 16px 24px;
+  }
+
+  .tool-table th,
+  .tool-table td {
+    padding: 13px 14px;
+  }
+
+  .parameter-intro {
+    padding: 14px 15px;
+  }
+}
+
 .command-block {
   overflow-x: auto;
   margin: 16px 0 2px;

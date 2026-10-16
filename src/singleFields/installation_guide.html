@@ -60,18 +60,21 @@
             <h2>How to build binaries or packages</h2>
                 <div class="description_box">
                     <p>
-                        The build is a FAKE project under build/. build.cmd and build.sh run it with the target name as the first argument. Without a target it builds the whole solution.
+                        The build is a FAKE project in the <code>./build</code> folder with the <code>build.cmd</code> and the <code>build.sh</code> run it with the target name as the first argument. Without a target it builds the whole solution.
                     </p>
                 </div>
             <h2>Building</h2>
                 <div class="description_box">
                     <p>
                         The Build target compiles every released tool listed in build/ProjectInfo.fs.
-                        For Windows
+                    </p>
+                    <p>
+                        - For Windows
+                    </p>
                         <div class="mockup-code w-full">
                             <pre data-prefix="$"><code>.\build.cmd build</code></pre>
                         </div>
-                        For Linux:
+                        - For Linux:
                         <div class="mockup-code w-full">
                             <pre data-prefix="$"><code>.\build.sh build</code></pre>
                         </div>

@@ -3,43 +3,293 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProteomIQon - AlignmentBasedQuantStatistics</title>
-
-    <link rel="stylesheet" href="../../../style.css">
 </head>
 
 <body>
-
-    <header>
-        <h1>ProteomIQon - AlignmentBasedQuantStatistics</h1>
-    </header>
-
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    AlignmentBasedQuantStatistics gives every transferred quantification an alignment score 
-                    and an alignment Q-value, so downstream tools can filter transferred quantifications the way identifications 
-                    are filtered by Q-value.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        AlignmentBasedQuantStatistics gives every transferred quantification an alignment score
+                        and an alignment Q-value, so downstream tools can filter transferred quantifications
+                        in the same way identifications are filtered by Q-value.
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    A peptide ion transferred by alignment and quantified by AlignmentBasedQuantification has no 
-                    identification behind it, so nothing says yet whether the peak found at the predicted scan time is 
-                    the peptide. It learns from peptide ions where the truth is known: the .align file also predicts 
-                    ions the run had identified itself, and for those the transferred quantification can be compared with the 
-                    quantification of the identified ion. Ions where m/z and intensity agree closely are positive training 
-                    examples, ions where they disagree are negative ones. A gradient boosted tree classifier trained on them 
-                    scores every transferred ion, and the Q-value follows from the score distribution of the negative examples.
-                </p>
-            </div>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">?</span>
+                    <span class="accordion-heading">
+                        <strong>How does AlignmentBasedQuantStatistics work?</strong>
+                        <small>Step-by-step explanation</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <p>
+                                A peptide ion transferred by alignment and quantified by
+                                AlignmentBasedQuantification has no identification behind it, so nothing says yet
+                                whether the peak found at the predicted scan time is the peptide.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                It learns from peptide ions where the truth is known: the <code>.align</code> file
+                                also predicts ions the run had identified itself, and for those the transferred
+                                quantification can be compared with the quantification of the identified ion.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                Ions where m/z and intensity agree closely are positive training examples; ions
+                                where they disagree are negative ones.
+                            </p>
+                        </li>
+                        <li>
+                            <p>
+                                A gradient-boosted tree classifier trained on them scores every transferred ion,
+                                and the Q-value follows from the score distribution of the negative examples.
+                            </p>
+                        </li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">&lt;&gt;</span>
+                    <span class="accordion-heading">
+                        <strong>Inputs</strong>
+                        <small>Files and command-line options</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p class="accordion-lede">These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup>
+                                <col class="col-flag">
+                                <col class="col-meaning">
+                                <col class="col-source">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Flag</th>
+                                    <th scope="col">Meaning</th>
+                                    <th scope="col">Comes from</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td><code>.quant</code> of the run, before alignment</td>
+                                    <td><a href="./PSMBasedQuantification.html">PSMBasedQuantification</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ii</code></td>
+                                    <td><code>.align</code> of the run</td>
+                                    <td><a href="./QuantBasedAlignment.html">QuantBasedAlignment</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-iii</code></td>
+                                    <td><code>.quant</code> of the run, after alignment</td>
+                                    <td><a href="./AlignmentsBasedQuantification.html">AlignmentBasedQuantification</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-l</code></td>
+                                    <td><code>.quant</code> files after alignment of the runs used for training</td>
+                                    <td><a href="./PSMBasedQuantification.html">PSMBasedQuantification</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ll</code></td>
+                                    <td><code>.align</code> files of the runs used for training</td>
+                                    <td><a href="./QuantBasedAlignment.html">QuantBasedAlignment</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-lll</code></td>
+                                    <td><code>.quant</code> files after alignment for the runs used for training</td>
+                                    <td><a href="./AlignmentsBasedQuantification.html">AlignmentBasedQuantification</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>Output directory, created when missing</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-p</code></td>
+                                    <td>Parameter file (JSON)</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-c</code></td>
+                                    <td>Number of runs scored in parallel (default: 1)</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ts</code></td>
+                                    <td>Switch: write the training examples selected from each run</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-dc</code></td>
+                                    <td>Switch: write diagnostic charts</td>
+                                    <td>—</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-mf</code></td>
+                                    <td>Switch: pair input files by name instead of position</td>
+                                    <td>—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Input file handling</strong>
+                        <small>File matching and classifier training</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table input-handling-table">
+                            <colgroup>
+                                <col class="col-parameter">
+                                <col class="col-meaning">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-i</code> to <code>-iii</code></td>
+                                    <td>Name the runs to score.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-l</code> to <code>-lll</code></td>
+                                    <td>Name the runs to learn from. These can be the same runs that are being scored.</td>
+                                </tr>
+                                <tr>
+                                    <td>File selection</td>
+                                    <td>Each of the six flags accepts a single file, multiple files, or a directory searched for <code>*.quant</code> or <code>*.align</code> files.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-mf</code></td>
+                                    <td>Pairs quant, align, and aligned quant files by filename without extension. Without this flag, files are paired by position.</td>
+                                </tr>
+                                <tr>
+                                    <td>Classifier training</td>
+                                    <td>Every scored run trains a classifier using pooled examples from all training runs.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ts</code></td>
+                                    <td>Additionally writes a test set containing the training examples from the run of the same name.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-dc</code></td>
+                                    <td>Generates diagnostic plots for probability and Q-value distributions.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                        <small>Cutoffs used for positive and negative training examples</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <div class="parameter-intro">
+                        <p>
+                            The four cutoffs decide which training ions count as positive and which as negative.
+                            Each compares a transferred value with the value of the identified ion (light or heavy,
+                            matching the ion's GlobalMod) and expresses the allowed difference as a fraction of the
+                            identified value.
+                        </p>
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="tool-table parameter-table">
+                            <colgroup>
+                                <col class="col-parameter">
+                                <col class="col-default">
+                                <col class="col-meaning">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Default</th>
+                                    <th scope="col">Meaning</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>PositiveQuantMzCutoff</code></td>
+                                    <td><code>0.01</code></td>
+                                    <td>Positive when the m/z difference is below this fraction of the identified m/z and the intensity condition holds too.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>NegativeQuantMzCutoff</code></td>
+                                    <td><code>0.99</code></td>
+                                    <td>Negative when the m/z difference is above <code>(1 - NegativeQuantMzCutoff)</code> times the identified m/z, so above 1 percent with the default.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>PositiveQuantCutoff</code></td>
+                                    <td><code>0.1</code></td>
+                                    <td>Positive when the intensity difference is below this fraction of the identified intensity and the m/z condition holds too.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>NegativeQuantCutoff</code></td>
+                                    <td><code>0.9</code></td>
+                                    <td>Negative when the intensity difference is above <code>(1 - NegativeQuantCutoff)</code> times the identified intensity, so above 10 percent with the default.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="table-note">
+                        The positive test runs first. An ion that fails it is negative, whether or not it passes
+                        one of the negative conditions. The default file can be
+                        <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/AlignmentBasedQuantStatisticsParams.json">downloaded here</a>.
+                    </p>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>
