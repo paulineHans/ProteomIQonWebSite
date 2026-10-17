@@ -7,45 +7,260 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>ProteomIQon - MzMLToMzLiteIonMobility</title>
-
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
     <header>
-        <h1>ProteomIQon - MzMLToMzLiteIonMobility</h1>
+        <h1>ProteomIQon - MzMLToMzLiteToIonMobility</h1>
     </header>
-
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    MzMLToMzLiteIonMobility converts mzML files from ion mobility instruments such as the 
-                    Bruker timsTOF into mzlite files.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool Description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        MzMLToMzLiteIonMobility converts mzML files from ion mobility instruments such as the Bruker timsTOF into mzlite files. 
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    In these files every peak carries an ion mobility value 
-                    next to its m/z and intensity, and the tool keeps that value in the mzlite. It is the 
-                    ion mobility counterpart of MzMLToMzLite, which also explains how to get mzML from raw files 
-                    and what mzlite is. The tool reads the same parameter record as MzMLToMzLite. The spectra are 
-                    written with their m/z, intensity and ion mobility arrays as they are in the mzML, and 
-                    compress decides how those arrays are stored.
-
-                    The reader fails on mzML without ion mobility data. -f rewrites every input file in place and 
-                    removes the string &quot, for mzML exports where that string breaks the XML reader. The tool 
-                    writes one <run>.mzlite per input into the output directory. Spectra with an MS level other 
-                    than 1 or 2 stop the conversion with an error. Scan times are stored in minutes. 
-                    The mzlite is read by PeptideSpectrumMatchingTIMs and PSMBasedQuantificationTIMs, 
-                    and by MsFraggerToPSM when the identification comes from FragPipe. The output directory 
-                    also receives MzMLToMzLite_log.txt and one <run>_log.txt per input.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">?</span>
+                <span class="accordion-heading">
+                    <strong>How does MzMlToMzLite work?</strong>
+                    <small>Step-by-step explained</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="accordion-content">
+                        <ol class="workflow-steps">
+                            <li>
+                                <strong>MzML to Mzlite</strong>
+                                <p>
+                                    In these files every peak carries an ion mobility value next to its m/z and intensity, and the tool keeps that value in the mzlite. It is the ion mobility counterpart of MzMLToMzLite, which also explains how to get mzML from raw files and what mzlite is.
+                                    The tool reads the same parameter record as MzMLToMzLite.
+                                </p>
+                            </li>
+                            <li>
+                                <strong>How to get MzML</strong>
+                                <p>
+                                    To get mzML from vendor raw files, use <a href="https://proteowizard.sourceforge.io/">MSConvert</a>. On <a href="https://galaxyproject.org/use/">Galaxy.eu</a> runs msconvert in the browser without a local install.
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Important to know</strong>
+                                <p>
+                                    The spectra are written with their m/z, intensity and ion mobility arrays as they are in the mzML, and Compress decides how those arrays are stored.
+                                </p>
+                            </li>
+                        </ol>
+                    </ol>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">&lt;&gt;</span>
+                <span class="accordion-heading">
+                    <strong>Inputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper ion-mobility-table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup>
+                            <col class="col-flag" />
+                            <col class="col-meaning" />
+                            <col class="col-source" />                           
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>-i</code></td>
+                                <td>one or more mzML files, or a directory that is searched for <code>*.mzML</code> and <code>*.mzml</code> (not recursive)</td>
+                                <td>MSConvert</td>
+                            </tr>
+                            <tr>
+                                <td><code>-o</code></td>
+                                <td>the output directory, created when missing</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>-p</code></td>
+                                <td>the parameter file in JSON</td>
+                                <td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/TIMsMzMLtoMzLiteParams.json">Github ProteomIQon Core</a></td>
+                            </tr>
+                            <tr>
+                                <td><code>-c</code></td>
+                                <td>number of files converted at the same time, default 1, no effect on a single file</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>-f</code></td>
+                                <td>switch: rewrite every input file in place and remove &quot in vendor raw files</td>
+                                <td>-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    <p>
+                                        The reader fails on mzML without ion mobility data.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        <code>-f</code> every input file in place and removes the string <code>quot</code>, for mzML exports where that string breaks the XML reader.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p> The tool writes one <code>run.mzlite</code> per input into the output directory.</p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Spectra with an MS level other than 1 or 2 stop the conversion with an error. Scan times are stored in minutes.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        The mzlite is read by <a href="./PeptideSpectrumMatchingTIMs.html">PeptideSpectrumMatching</a>, <a href="./PSBasedQuantificaitonTIMs.html">PSMBasedQuantificationTIMs</a> and <a href="MsFraggerToPSM.html">MSFragger</a>. The output directory also receives <code>MzMLToMzLite_log.txt</code> and one <code>run_log.txt</code> per input.
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <div class="table-wrapper ion-mobility-table-wrapper">
+                        <table class="tool-table parameter-table">
+                            <colgroup>
+                            <col class="col-parameter">
+                            <col class="col-default">
+                            <col class="col-meaning">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Default</th>
+                                    <th scope="col">Meaning</th>                                                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Compress</code></td>
+                                    <td>Compression.NoCompression</td>
+                                    <td>Compression of the peak arrays in the mzlite. Compression.ZLib and Compression.NumPress are the other options, Compression.NumPressZLib combines both.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>StartRetentionTime</code></td>
+                                    <td>None</td>
+                                    <td>With Some t, only spectra with a scan time above t are copied. The comparison uses the time unit of the mzML file.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>EndRetentionTime</code></td>
+                                    <td>None</td>
+                                    <td>With Some t, only spectra with a scan time below t are copied, same unit as above.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MS1PeakPicking</code></td>
+                                    <td>PeakPicking.Centroid (CentroidizationMode.Wavelet ms1Wavelet)</td>
+                                    <td>Same field as in <a href="./MzMLToMzLite.html">MzMLToMzLite</a>. The default file carries the wavelet record shown in the script below, and the MS1 peaks are copied as they are.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MS2PeakPicking</code></td>
+                                    <td>PeakPicking.Centroid (CentroidizationMode.Wavelet ms2Wavelet)</td>
+                                    <td>Same field as in <a href="./MzMLToMzLite.html">MzMLToMzLite</a>, with padding settings in the default file. The MS2 peaks are copied as they are.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.MzMLToMzLiteIonMobility</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Convert one run</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-mzmltomzliteionmobility -i path/to/run.mzML -o path/to/output -p path/to/TIMsMzMLtoMzLiteParams.json</code></pre>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p>Convert multiple runs</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-mzmltomzliteionmobility -i path/to/run1.mzML path/to/run2.mzML path/to/run3.mzML -o path/to/output -p path/to/TIMsMzMLtoMzLiteParams.json -c 3</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Help</strong>
+                            <p>If the execution of one or multiple runs failed, use the <code>-f</code> flag to get rid of the <code>quot</code> part that is a common leftover in the raw vendor files</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-mzmltomzliteionmobility -i path/to/run.mzML -o path/to/output -p path/to/TIMsMzMLtoMzLiteParams.json -f</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-mzmltomzliteionmobility --help</code></pre>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

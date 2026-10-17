@@ -12,6 +12,7 @@ const page = readToolPage(tool.source, tool.name);
 const toolIndex = tools.findIndex((candidate) => candidate.slug === tool.slug);
 const previousTool = tools[toolIndex - 1];
 const nextTool = tools[toolIndex + 1];
+const hasLongToolTitle = tool.name === 'PeptideSpectrumMatchingTIMs';
 ---
 
 <Layout title={`${tool.name} · ProteomIQon`} description={tool.summary}>
@@ -26,7 +27,7 @@ const nextTool = tools[toolIndex + 1];
 		</aside>
 
 		<main class="tool-detail">
-			<section class="tool-detail-hero"><p class="eyebrow"><span class="eyebrow-dot"></span> {tool.phaseNumber} / {tool.phase}</p><h1>{tool.name}</h1><p class="tool-summary">{tool.summary}</p></section>
+			<section class="tool-detail-hero"><p class="eyebrow"><span class="eyebrow-dot"></span> {tool.phaseNumber} / {tool.phase}</p><h1 class:list={{ 'long-tool-title': hasLongToolTitle }}>{hasLongToolTitle ? <>PeptideSpectrumMatching<wbr />TIMs</> : tool.name}</h1><p class="tool-summary">{tool.summary}</p></section>
 			<article class="legacy-content tool-legacy-content" set:html={page.html}></article>
 			<nav class="tool-pagination" aria-label="Browse tools">
 				{previousTool ? <a href={`/tools/${previousTool.slug}/`}><small>Previous tool</small><span>← {previousTool.name}</span></a> : <span></span>}

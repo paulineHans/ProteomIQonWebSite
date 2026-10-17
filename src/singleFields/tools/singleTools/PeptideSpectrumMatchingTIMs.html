@@ -1,89 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>ProteomIQon - Peptide Spectrum Matching TIMs</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProteomIQon - PeptideSpectrumMatchingTIMs</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
-    <header>
-        <h1>ProteomIQon - Peptide Spectrum Matching TIMs</h1>
-    </header>
-
-    <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    PeptideSpectrumMatchingTIMs identifies peptides in 
-                    timsTOF runs using precursor ion mobility information. 
-                    It accepts mzlite input files and follows a 
-                    peptide spectrum matching approach based on the 
-                    search pattern used by MSFragger. For conventional 
-                    mzlite and mzML files, the corresponding search is 
-                    performed by <a href="./PeptideSpectrumMatching.html">PeptideSpectrumMatching</a>.
-                </p>
+<header><h1>ProteomIQon - PeptideSpectrumMatchingTIMs</h1></header>
+<main>
+    <section class="workflow-section">
+        <details class="accordion" open>
+            <summary class="accordion-header"><span class="accordion-icon">i</span><span class="accordion-heading"><strong>Tool Description</strong><small>Purpose and functionality of the tool</small></span><span class="accordion-chevron"></span></summary>
+            <div class="accordion-content description-content">
+                <p>PeptideSpectrumMatchingTIMs identifies peptides from timsTOF runs using precursor ion mobility data. It reads <code>.mzlite</code> files and applies a fragment-index search approach related to MSFragger. For mzlite or mzML searches without this TIMs-specific workflow, see <a href="https://csbiology.github.io/ProteomIQon/tools/PeptideSpectrumMatching.html">PeptideSpectrumMatching ↗</a>.</p>
+                <p>The program merges the mobility scans of each MS2 spectrum, selects candidate peptides from a fragment index, ranks their spectrum matches and generates one <code>.psm</code> result file for each run.</p>
             </div>
-        </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    PeptideSpectrumMatchingTIMs combines the mobility scans of each MS2 spectrum in 
-                    an mzlite file into a single spectrum. Starting at the lowest m/z, peaks within the 
-                    specified mobility merge tolerance are combined by summing their intensities and calculating 
-                    an intensity-weighted m/z. Spectra without per-peak ion mobility information are processed 
-                    without merging. Repeated PASEF measurements of the same precursor remain separate spectra.
-
-                    The fragment index contains only target peptide b and y ions. Reversed decoys share this index 
-                    through a water shift: decoy b ions correspond to target y ions minus water, while decoy y ions 
-                    correspond to target b ions plus water. Only peptides within the precursor mass windows, 
-                    accounting for isotope errors and tolerances, are indexed. Fragment masses are limited by the 
-                    heaviest precursor window plus 1 Da or the -f parameter, and never exceed the heaviest database 
-                    peptide plus 1 Da.
-
-                    Each MS2 spectrum is preprocessed by removing precursor-associated peaks, peaks below 
-                    MinimumPeakRatio, and isotope partner peaks. Only the TopNPeaks most intense peaks are retained 
-                    for fragment index searching. Candidates must match the precursor mass within the configured 
-                    isotope errors. Charge states and selected ion m/z values are taken from the mzlite file, with 
-                    FallbackChargeStates used when charge information is missing. The tool reports the ReportedHitsPerLabel best target matches 
-                    and an equal number of decoy matches.
-
-                    Fragment matching uses bins defined by FragmentIndexBinWidth, extending the effective search 
-                    tolerance by up to one bin width on either side. Overlapping tolerance windows separated by 
-                    less than one bin are merged using the higher intensity to prevent duplicate fragment counting.
-
-                    Reported targets and decoys receive the SEQUEST-like score used by PeptideSpectrumMatching, 
-                    along with Andromeda-like and X!Tandem-like scores. NormDeltaBestToRest and NormDeltaNext are 
-                    calculated using the target and decoy forms of all peptides selected during the index pass, including 
-                    candidates removed during exact rescoring.
-                </p>
+        </details>
+    </section>
+    <section class="workflow-section">
+        <details class="accordion">
+            <summary class="accordion-header"><span class="accordion-icon">?</span><span class="accordion-heading"><strong>How does PeptideSpectrumMatchingTIMs work?</strong><small>Search procedure, scoring and performance</small></span><span class="accordion-chevron"></span></summary>
+            <div class="accordion-content">
+                <ol class="workflow-steps">
+                    <li><strong>Combine ion mobility scans</strong>
+                        <p>A timsTOF mzlite MS2 spectrum stores peaks by mobility scan. Since the fragment ions inherit the precursor's mobility, the tool combines these scans before matching. Working from low to high m/z, it groups peaks lying within <code>--mobility-merge-ppm</code> of the first peak of the group. Group intensity is summed, while the representative m/z is intensity-weighted.</p>
+                        <p>The default merging width equals <code>FragmentTolerancePPM</code>. Setting <code>--mobility-merge-ppm 0</code> combines only exactly equal m/z values; it does <em>not</em> disable summation. Spectra without peak-level mobility information pass through unchanged. Separate PASEF measurements remain separate MS2 spectra.</p>
+                    </li>
+                    <li><strong>Build the target fragment index</strong>
+                        <p>The index stores theoretical b and y fragments for target peptides. Reversed decoys can share that index: a decoy b fragment maps to a target y fragment minus water, whereas a decoy y fragment maps to a target b fragment plus water.</p>
+                        <p>Only peptides in the measured runs' precursor-mass windows are indexed, accounting for isotope errors and precursor tolerance. Fragment masses are capped by the largest applicable precursor window plus 1 Da or the optional <code>-f</code> value, and never above the largest peptide mass in the database plus 1 Da. Each fragment entry occupies 4 bytes.</p>
+                        <details><summary><strong>Memory management: index slices</strong></summary>
+                            <p>With <code>-s</code>, the peptide table is divided into that many index slices, built and searched sequentially so only one slice is held in memory. Normally the spectra are reread for each slice. Adding <code>-k</code> caches preprocessed spectra instead (roughly 2.4 kB per spectrum and charge). Slicing changes memory and I/O requirements, not the results.</p>
+                        </details>
+                    </li>
+                    <li><strong>Preprocess the spectra and retrieve candidates</strong>
+                        <p>For each spectrum, remove peaks near the precursor m/z, peaks below the <code>MinimumPeakRatio</code> fraction of the base peak, and isotope partners; then retain the <code>TopNPeaks</code> strongest peaks. The remaining peaks query the fragment index, while peptide candidates must fit the precursor mass for at least one configured isotope error.</p>
+                        <p>Precursor m/z and charge normally come from the mzlite input. Missing charge information triggers the configured <code>FallbackChargeStates</code>. The search retains the top <code>ReportedHitsPerLabel</code> targets and the same number of decoys.</p>
+                        <details><summary><strong>Index binning and duplicate-hit prevention</strong></summary>
+                            <p>Lookup operates on complete <code>FragmentIndexBinWidth</code> bins, which can extend the effective candidate-retrieval interval by up to one bin width on either side of the specified tolerance. Nearby peak tolerance ranges closer than a bin are merged using the stronger intensity, preventing repeated fragment counts during index lookup.</p>
+                        </details>
+                    </li>
+                    <li><strong>Calculate and refine the hyperscore</strong>
+                        <p>The initial X!Tandem-style hyperscore is calculated using the BioFSharp.Mz implementation. With base-peak-relative intensities scaled to 100 and a minimum intensity floor of zero, the natural-log version is:</p>
+                        <p><code>ln(sum of matched intensities) + ln(Nb!) + ln(Ny!)</code></p>
+                        <p><code>Nb</code> and <code>Ny</code> denote the counts of matched b and y fragments. For reported candidates, the tool repeats matching at the exact fragment tolerance. This second calculation determines <code>Hyperscore</code>, <code>MatchedIons</code> and hyperscore rank. <code>MinMatchedFragments</code> is checked against that exact match count.</p>
+                    </li>
+                    <li><strong>Model expectation values</strong>
+                        <p>The expectation-value model follows X!Tandem's approach, also used by MSFragger. For each spectrum, index-pass candidate scores with at least <code>MinFragmentsModelling</code> matched fragments populate a histogram with bins of width one on the X!Tandem score scale.</p>
+                        <p>The histogram score scale is <code>4 × log10(product-form hyperscore)</code>, equivalent to <code>4 / ln(10)</code> times the natural-log expression above. The fit discards candidates above a gap in the upper survival-function tail and fits a line to the log10 survival function, from half of the remaining candidate count down to ten survivors.</p>
+                        <p>When fewer than 200 candidates remain, the X!Tandem fallback is <code>10^(3.5 - 0.18 × x)</code>. Expectation values cannot go below <code>1e-15</code>. Importantly, <code>Expectscore</code> is evaluated using the <em>index-pass</em> hyperscore, whereas <code>Hyperscore</code> is the exact rescored value. Consequently, the two columns need not rank candidates identically.</p>
+                    </li>
+                    <li><strong>Compute classic scores and score differences</strong>
+                        <p>The reported targets and decoys also receive the SEQUEST-like score from PeptideSpectrumMatching and Andromeda-like and X!Tandem-like scores. The <code>NormDeltaBestToRest</code> and <code>NormDeltaNext</code> metrics account for both target and decoy forms of all peptides selected during index retrieval, including candidates subsequently removed by exact rescoring.</p>
+                        <p>In ordinary PeptideSpectrumMatching, these differences use all peptides in the precursor window. Therefore, those normalized delta values are <strong>not directly comparable</strong> between the two tools.</p>
+                    </li>
+                    <li><strong>Process multiple runs</strong>
+                        <p>With <code>-c</code>, the tool handles groups of runs concurrently, using one thread per run and one shared index per group. Building the index uses one worker per run. A new group starts only after all runs in the current group finish; the default is <code>-c 1</code>.</p>
+                        <p>The peptide database must contain <strong>monoisotopic masses</strong>. Classic rescoring accounts for much of the processing time, so increasing <code>ReportedHitsPerLabel</code> also increases runtime.</p>
+                    </li>
+                </ol>
             </div>
-        </section>
-        <section>
-            <h2>Good to know!</h2>
-            <div class="description_box">
-                <p>
-                    Ion Mobility Parameters
-                    --mobility-merge-ppm: Defines the m/z tolerance for merging peaks across mobility scans. By default, the value of FragmentTolerancePPM is used.
-                    --mobility-merge-ppm 0: Only peaks with exactly matching m/z values are combined. This does not disable mobility-scan summation.
-                    
-                    Memory Management and Performance
-                    -s: Divides the peptide table into the specified number of slices. Each slice is indexed and searched sequentially, so only one slice must be held in memory at a time.
-                    -k: Keeps preprocessed spectra in memory between slices, requiring approximately 2.4 kB per spectrum and charge state. Without this option, spectra are read again for each additional slice.
-                    -c: Specifies how many runs are searched together, using one thread per run. The default is 1.
-                    
-                    Runs are processed in groups determined by -c. Each group shares a fragment index, which is built using one worker per run. The next group begins after all runs in the current group have finished.
-                    The fragment index requires 4 bytes per fragment entry.
-                    The number of slices does not affect the search results.
-                </p>
+        </details>
+    </section>
+    <section class="workflow-section">
+        <details class="accordion">
+            <summary class="accordion-header"><span class="accordion-icon">&lt;&gt;</span><span class="accordion-heading"><strong>Inputs</strong><small>Files and command-line options</small></span><span class="accordion-chevron"></span></summary>
+            <div class="accordion-content">
+                <div class="table-wrapper"><table class="tool-table"><thead><tr><th>Flag</th><th>Meaning</th><th>Comes from</th></tr></thead><tbody>
+                    <tr><td><code>-i</code></td><td>One or more <code>.mzlite</code> files, or a directory containing <code>*.mzlite</code> files</td><td><a href="https://csbiology.github.io/ProteomIQon/tools/MzMLToMzLiteIonMobility.html">MzMLToMzLiteIonMobility ↗</a></td></tr>
+                    <tr><td><code>-d</code></td><td>SQLite peptide database</td><td><a href="https://csbiology.github.io/ProteomIQon/tools/PeptideDB.html">PeptideDB ↗</a></td></tr>
+                    <tr><td><code>-o</code></td><td>Output directory, automatically created if absent</td><td>—</td></tr>
+                    <tr><td><code>-p</code></td><td>JSON file containing search parameters</td><td>Parameters section below</td></tr>
+                    <tr><td><code>-c</code></td><td>Concurrent runs (one thread per run)</td><td>Default: <code>1</code></td></tr>
+                    <tr><td><code>-s</code></td><td>Number of sequential fragment-index slices</td><td>Default: <code>1</code></td></tr>
+                    <tr><td><code>-k</code></td><td>Cache preprocessed spectra between index slices</td><td>Optional switch</td></tr>
+                    <tr><td><code>-f</code></td><td>Maximum indexed fragment mass, in Da</td><td>Default: largest precursor window + 1 Da</td></tr>
+                    <tr><td><code>--mobility-merge-ppm</code></td><td>m/z grouping width when combining mobility scans, in ppm</td><td>Default: <code>FragmentTolerancePPM</code></td></tr>
+                </tbody></table></div>
+                <p><strong>Input restrictions:</strong> Directory scanning is not recursive. An mzML input path produces an error; only mzlite inputs are supported.</p>
             </div>
+        </details>
+    </section>
+    <section class="workflow-section">
+        <details class="accordion">
+            <summary class="accordion-header"><span class="accordion-icon">⚙</span><span class="accordion-heading"><strong>Parameters</strong><small>All settings, defaults and Andromeda options</small></span><span class="accordion-chevron"></span></summary>
+            <div class="accordion-content">
+                <p>The search parameters are provided through the JSON file passed with <code>-p</code>. The table lists every parameter and its documented default.</p>
+                <div class="table-wrapper"><table class="tool-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
+                    <tr><td><code>PrecursorTolerancePPM</code></td><td>20.0</td><td>Tolerance for neutral precursor mass, in ppm</td></tr>
+                    <tr><td><code>FragmentTolerancePPM</code></td><td>20.0</td><td>Tolerance for fragment m/z matching, in ppm</td></tr>
+                    <tr><td><code>IsotopeErrors</code></td><td><code>[0, 1, 2]</code></td><td>Allowed precursor isotope offsets; zero denotes the monoisotopic peak</td></tr>
+                    <tr><td><code>MaxFragmentCharge</code></td><td>2</td><td>Upper fragment charge, restricted to the precursor charge minus one and at least one</td></tr>
+                    <tr><td><code>FallbackChargeStates</code></td><td><code>[2, 3]</code></td><td>Charge states used when precursor charge is missing; must contain at least one</td></tr>
+                    <tr><td><code>TopNPeaks</code></td><td>150</td><td>Maximum strongest peaks retained after preprocessing</td></tr>
+                    <tr><td><code>MinimumPeakRatio</code></td><td>0.01</td><td>Discard peaks below this base-peak intensity fraction</td></tr>
+                    <tr><td><code>RemovePrecursorRange</code></td><td>1.5</td><td>Excluded m/z distance around the precursor</td></tr>
+                    <tr><td><code>Deisotope</code></td><td><code>true</code></td><td>Remove isotope-related peaks before searching</td></tr>
+                    <tr><td><code>MinimumPeaks</code></td><td>15</td><td>Skip spectra with fewer peaks after filtering</td></tr>
+                    <tr><td><code>MinMatchedFragments</code></td><td>4</td><td>Minimum exact fragment matches required to report a candidate</td></tr>
+                    <tr><td><code>MinFragmentsModelling</code></td><td>1</td><td>Minimum index-pass fragment matches for expectation-model inclusion</td></tr>
+                    <tr><td><code>ReportedHitsPerLabel</code></td><td>10</td><td>Top hits to report separately for targets and decoys; affects runtime</td></tr>
+                    <tr><td><code>FragmentIndexBinWidth</code></td><td>0.01</td><td>Index bin width, in Da</td></tr>
+                    <tr><td><code>nTerminalSeries</code></td><td><code>B</code></td><td>N-terminal ion series used for classic rescoring</td></tr>
+                    <tr><td><code>cTerminalSeries</code></td><td><code>Y</code></td><td>C-terminal ion series used for classic rescoring</td></tr>
+                    <tr><td><code>Andromeda</code></td><td><code>{ PMinPMax = 4, 10; MatchingIonTolerancePPM = 100.0 }</code></td><td>Nested Andromeda-like scoring configuration</td></tr>
+                </tbody></table></div>
+                <p><strong>Note:</strong> <code>nTerminalSeries</code> and <code>cTerminalSeries</code> only change the classic rescoring stage; the fragment index always contains b and y ions.</p>
+                <details><summary><strong>Andromeda subparameters</strong></summary>
+                    <p><code>Andromeda</code> is a <code>ProteomIQon.Domain.AndromedaParams</code> record.</p>
+                    <div class="table-wrapper"><table class="tool-table"><thead><tr><th>Parameter</th><th>Default</th><th>Description</th></tr></thead><tbody>
+                        <tr><td><code>PMinPMax</code></td><td><code>4, 10</code></td><td>Minimum and maximum count of strongest peaks per 100 Da window. Every count in the range is tested; the best result is chosen.</td></tr>
+                        <tr><td><code>MatchingIonTolerancePPM</code></td><td>100.0</td><td>Theoretical-to-observed fragment matching tolerance, in ppm</td></tr>
+                    </tbody></table></div>
+                </details>
+                <p><a href="https://github.com/CSBiology/ProteomIQon/search?q=peptideSpectrumMatchingTIMsParams.json">Find the reference parameter JSON on GitHub ↗</a></p>
+            </div>
+        </details>
+    </section>
+    <section class="workflow-section">
+        <details class="accordion">
+            <summary class="accordion-header"><span class="accordion-icon">=</span><span class="accordion-heading"><strong>Outputs</strong><small>PSM columns, mobility fields and downstream use</small></span><span class="accordion-chevron"></span></summary>
+            <div class="accordion-content">
+                <p>Every input run generates <code>&lt;run&gt;.psm</code> in the output directory, as a header-containing, tab-delimited file. Existing PSM files are overwritten. Its data record is <code>Dto.PeptideSpectrumMatchingResult</code>, shared with PeptideSpectrumMatching.</p>
+                <p>The table contains 28 columns: 23 classic PSM columns and 5 TIMs-specific additions. <code>Label</code> is <code>1</code> for targets and <code>-1</code> for reversed decoys; <code>MissCleavages</code> is set to <code>-1</code> and recalculated by PSMStatistics.</p>
+                <details><summary><strong>Classic PSM columns (23)</strong></summary>
+                    <div class="table-wrapper"><table class="tool-table"><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+                        <tr><td>PSMId</td><td>MS/MS spectrum match identifier</td></tr>
+                        <tr><td>GlobalMod</td><td>Whether the peptide ion species is labeled or unlabeled</td></tr>
+                        <tr><td>PepSequenceID</td><td>Unmodified peptide sequence identifier in PeptideDB</td></tr>
+                        <tr><td>ModSequenceID</td><td>Modified peptide sequence identifier in PeptideDB, including PTMs</td></tr>
+                        <tr><td>Label</td><td>Target (+1) or decoy (-1)</td></tr>
+                        <tr><td>ScanNr</td><td>MS2 position in scan-time order</td></tr>
+                        <tr><td>ScanTime</td><td>MS2 retention time in minutes</td></tr>
+                        <tr><td>Charge</td><td>Precursor charge</td></tr>
+                        <tr><td>PrecursorMZ</td><td>Precursor mass-to-charge ratio</td></tr>
+                        <tr><td>TheoMass</td><td>Theoretical peptide mass in Da</td></tr>
+                        <tr><td>AbsDeltaMass</td><td>Mass error using the best-matching isotope offset</td></tr>
+                        <tr><td>PeptideLength</td><td>Number of peptide amino acids</td></tr>
+                        <tr><td>MissCleavages</td><td>Value -1 at this stage; recomputed by PSMStatistics</td></tr>
+                        <tr><td>SequestScore</td><td>SEQUEST-like similarity score</td></tr>
+                        <tr><td>SequestNormDeltaBestToRest</td><td>Normalized separation of best score from remaining candidates</td></tr>
+                        <tr><td>SequestNormDeltaNext</td><td>Normalized separation of top two candidate scores</td></tr>
+                        <tr><td>AndroScore</td><td>Andromeda-like match score</td></tr>
+                        <tr><td>AndroNormDeltaBestToRest</td><td>Normalized best-to-rest Andromeda score separation</td></tr>
+                        <tr><td>AndroNormDeltaNext</td><td>Normalized top-two Andromeda score separation</td></tr>
+                        <tr><td>XTandemScore</td><td>X!Tandem-like match score</td></tr>
+                        <tr><td>XtandemNormDeltaBestToRest</td><td>Normalized best-to-rest X!Tandem score separation</td></tr>
+                        <tr><td>XtandemNormDeltaNext</td><td>Normalized top-two X!Tandem score separation</td></tr>
+                        <tr><td>StringSequence</td><td>Matching peptide amino acid sequence in one-letter code</td></tr>
+                    </tbody></table></div>
+                </details>
+                <details open><summary><strong>TIMs-specific columns (5)</strong></summary>
+                    <div class="table-wrapper"><table class="tool-table"><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+                        <tr><td>IonMobility</td><td>Inverse reduced mobility (1/K0) of the precursor; <code>NaN</code> if unavailable</td></tr>
+                        <tr><td>Hyperscore</td><td>Exact b/y-fragment hyperscore</td></tr>
+                        <tr><td>Expectscore</td><td>Expectation value estimated using the index-pass hyperscore distribution</td></tr>
+                        <tr><td>MatchedIons</td><td>Count of matched b and y fragments used in the hyperscore</td></tr>
+                        <tr><td>TotalIons</td><td>Count of theoretical peptide b and y fragments</td></tr>
+                    </tbody></table></div>
+                </details>
+                <details><summary><strong>Identifiers and logs</strong></summary>
+                    <p><code>ScanNr</code> is the MS2 position after ordering spectra by scan time. For <code>PSMId</code>, spectrum-id spaces become hyphens and the suffix <code>_ScanNr_charge_rank</code> is added. Rank is determined by hyperscore within the reported target or decoy group for that spectrum.</p>
+                    <p>The output folder also contains <code>PeptideSpectrumMatchingTIMs_log.txt</code> and one <code>&lt;run&gt;_log.txt</code> for each run.</p>
+                </details>
+                <p><strong>Downstream compatibility:</strong> PSMStatistics can read these PSM results directly and uses <code>Hyperscore</code> and <code>Expectscore</code>, when present. Its <code>.qpsm</code> output does not yet retain ion mobility. Furthermore, <a href="https://csbiology.github.io/ProteomIQon/tools/PSMBasedQuantificationTIMs.html">PSMBasedQuantificationTIMs ↗</a> currently expects the FragPipe-style columns generated by <a href="https://csbiology.github.io/ProteomIQon/tools/MsFraggerToPSM.html">MsFraggerToPSM ↗</a>. Quantification after identification with this tool therefore needs adaptations to those downstream tools.</p>
+            </div>
+        </details>
+    </section>
+    <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.PeptideSpectrumMatchingTIMs</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-peptidespectrummatchingtims -i path/to/run.mzlite -d path/to/AraTest.db -o path/to/output -p path/to/peptideSpectrumMatchingTIMsParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Running the tool for multiple runs</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>
+                                    proteomiqon-peptidespectrummatchingtims -i path/to/run1.mzlite path/to/run2.mzlite path/to/run3.mzlite -d path/to/AraTest.db -o path/to/output -p path/to/peptideSpectrumMatchingTIMsParams.json -c 3
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>With a large database, build the index in four slices and keep the spectra in memory between them:</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$">
+                                    <code>
+                                        proteomiqon-peptidespectrummatchingtims -i path/to/run.mzlite -d path/to/AraTest.db -o path/to/output -p path/to/peptideSpectrumMatchingTIMsParams.json -s 4 -k
+                                    </code>
+                                </pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-peptidespectrummatchingtims --help</code></pre>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>
+

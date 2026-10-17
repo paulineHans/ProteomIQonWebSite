@@ -7,43 +7,305 @@
           content="width=device-width, initial-scale=1.0">
 
     <title>ProteomIQon - PeptideDB</title>
-
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
     <header>
         <h1>ProteomIQon - PeptideDB</h1>
     </header>
-
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    PeptideDB digests the proteins of a FASTA file in silico and stores the resulting peptides, 
-                    with their masses and modifications, in a SQLite database. 
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool Description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        PeptideDB digests the proteins of a FASTA file in silico and stores the resulting peptides, with their masses and modifications, in a SQLite database. 
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    The search tools compare measured spectra against these peptides, so the digestion 
-                    settings define the search space of the whole analysis. How the protease, the allowed 
-                    missed cleavages, the length limits and the modifications shape that space is explained in 
-                    the BioFSharp.Mz documentation, and the database layout is described on the same page.
-
-                    The tool writes <Name>.db into the output directory, where Name comes from the parameter file. 
-                    The database is read by PeptideSpectrumMatching, PSMStatistics, MsFraggerToPSM, 
-                    PSMBasedQuantification, PSMBasedQuantificationTIMs, AlignmentBasedQuantification and 
-                    ProteinInference. When a <Name>.db already exists in the output directory and the 
-                    parameters stored inside it equal the parameter file, the tool reuses that database 
-                    and only makes sure its index is present. The output directory also receives 
-                    PeptideDB_log.txt and PeptideDB_<Name>_log.txt.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">?</span>
+                <span class="accordion-heading">
+                    <strong>How does PeptideDB work?</strong>
+                    <small>Step-by-step explained</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="accordion-content">
+                        <ol class="workflow-steps">
+                            <li>
+                                <strong>Comparision</strong>
+                                <p>
+                                    The search tools compare measured spectra against these peptides, so the digestion settings define the search space of the whole analysis.
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Algorithm</strong>
+                                <p>
+                                    How the protease, the allowed missed cleavages, the length limits and the modifications shape that space is explained in the <a href="https://www.biofsharp.com/BioFSharp.Mz/">BioFSharp.Mz</a> documentation, and the database layout is described on the same page.
+                                </p>
+                            </li>
+                        </ol>
+                    </ol>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon"><></span>
+                <span class="accordion-heading">
+                    <strong>Inputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup>
+                            <col class="col-flag" />
+                            <col class="col-meaning" />
+                            <col class="col-source" />                           
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>-i</code></td>
+                                <td>one FASTA file (no directories)</td>
+                                <td>choosen Proteome</td>
+                            </tr>
+                            <tr>
+                                <td><code>-o</code></td>
+                                <td>the output directory, created when missing</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>-p</code></td>
+                                <td>the parameter file in JSON</td>
+                                <td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideDBParams.json">Github ProteomIQon Core</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    <p>
+                                       The tool writes <code>Name.db</code> into the output directory, where Name comes from the parameter file.  
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                       The database is read by 
+                                        <ul>
+                                            <li>
+                                                <p><a href="./PeptideSpectrumMatching.html">PeptideSpectrumMatching</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="./PeptideSpectrumMatchingTIMs.html">PeptideSpectrumMatchingTIMs</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="./PSMStatistics.html">PSMStatistics</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="./MsFraggerToPSM.html">MSFraggerToPSM</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="./PSMBasedQuantification.html">PSMBasedQuantification</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="./PSBasedQuantificaitonTIMs.html">PSMBasedQuantificationTIMs</a></p>
+                                            </li>
+                                            <li>
+                                                <p><a href="./AlignmentsBasedQuantification.html">AlignmentBasedQuantification</a></p>
+                                            </li>
+                                            <li>
+                                                <p>
+                                                    <a href="./ProteinInference.html">Protein Inference</a>
+                                                </p>
+                                            </li>
+                                        </ul>
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        When a <Name>.db already exists in the output directory and the parameters stored inside it equal the parameter file, the tool reuses that database and only makes sure its index is present. 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        The output directory also receives PeptideDB_log.txt and <code>PeptideDB_Name_log.txt</code>.
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table parameter-table">
+                            <colgroup>
+                            <col class="col-parameter">
+                            <col class="col-default">
+                            <col class="col-meaning">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Default</th>
+                                    <th scope="col">Meaning</th>                                                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>Name</code></td>
+                                    <td>AraTest</td>
+                                    <td>Name of the database and stem of the output file.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>ParseProteinIDRegexPattern</code></td>
+                                    <td>id</td>
+                                    <td>How protein identifiers are taken from the FASTA headers. "id" (in any letter case, or an empty string) keeps the whole header line as the identifier. Any other value is a regular expression, and the matched part of the header becomes the identifier, for example "^\S+" for the first word.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Protease</code></td>
+                                    <td>Protease.Trypsin</td>
+                                    <td>Enzyme used for the digestion. Other values are <code>Protease.Trypsin_P</code>, <code>Protease.LysC</code>, <code>Protease.LysC_P</code>, <code>Protease.Chymotrypsin</code> and <code>Protease.PepsinA</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MinMissedCleavages</code></td>
+                                    <td>0</td>
+                                    <td>Lowest number of missed cleavage sites a peptide may have.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxMissedCleavages</code></td>
+                                    <td>2</td>
+                                    <td>Highest number of missed cleavage sites a peptide may have.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxMass</code></td>
+                                    <td>15000.0</td>
+                                    <td>Peptides above this mass in Da are dropped.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MinPepLength</code></td>
+                                    <td>4</td>
+                                    <td>Shortest peptide length kept, in residues.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxPepLength</code></td>
+                                    <td>65</td>
+                                    <td>Longest peptide length kept, in residues.</td>
+                                </tr>
+                                <tr>
+                                    <td>IsotopicMod</td>
+                                    <td>[IsotopicMod.N15]</td>
+                                    <td>Isotopic labels of the experiment. Each label adds a labeled variant of every peptide next to the unlabeled one. Use <code>[]</code> for an unlabeled experiment. Other values are <code>IsotopicMod.C13</code>, <code>IsotopicMod.O17</code>, <code>IsotopicMod.O18</code> and <code>IsotopicMod.D</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MassMode</code></td>
+                                    <td>MassMode.Monoisotopic</td>
+                                    <td>Mass calculation, MassMode.Monoisotopic or MassMode.Average.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>FixedMods</code></td>
+                                    <td><code>[]</code></td>
+                                    <td>Modifications applied to every matching residue.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>VariableMods</code></td>
+                                    <td><code>[Modification.Oxidation'Met'; Modification.Acetylation'ProtNTerm']</code></td>
+                                    <td>Modifications that may or may not be present. Every allowed combination becomes its own database entry.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>VarModThreshold</code></td>
+                                    <td>4</td>
+                                    <td>Maximum number of variable modifications on one peptide.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    The available modifications are the cases of <code>ProteomIQon.Modification</code>, for example <code>Modification.Carbamidomethyl'Cys'</code> or <code>Modification.Phosphorylation'Ser'Thr'Tyr'</code>.
+                                </li>
+                                <li>
+                                    <p>The default file is <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideDBParams.json">PeptideDB.json</a>.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.PeptideDB</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-peptidedb -i path/to/proteome.fasta -o path/to/output -p path/to/peptideDBParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-peptidedb --help</code></pre>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

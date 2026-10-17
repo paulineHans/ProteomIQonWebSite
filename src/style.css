@@ -179,6 +179,20 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 .legacy-content .contributor-list a { display: inline-block; font-size: .75rem; white-space: nowrap; }
 .legacy-content .mockup-code { overflow-x: auto; margin: 20px 0; padding: 16px 18px; border-left: 4px solid var(--orange); background: var(--navy); color: var(--gray); font-family: var(--mono); font-size: .76rem; line-height: 1.7; }
 .legacy-content pre { white-space: pre-wrap; }
+.legacy-content .mockup-code pre {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.legacy-content .mockup-code code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+  overflow-wrap: inherit;
+}
 
 /* Tools directory */
 .tools-hero { align-items: end; }
@@ -252,7 +266,8 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 .tool-sidebar nav a { padding: 7px 8px; border-left: 2px solid transparent; color: var(--slate); font-size: .75rem; line-height: 1.35; text-decoration: none; }
 .tool-sidebar nav a:hover, .tool-sidebar nav a.active { border-color: var(--red); color: var(--navy); background: var(--surface); }
 .tool-detail-hero { padding: 12px 0 39px; border-bottom: 1px solid var(--line); }
-.tool-detail-hero h1 { max-width: 750px; margin-bottom: 17px; font-size: clamp(2.8rem, 5.6vw, 5.15rem); }
+.tool-detail-hero h1 { max-width: 750px; margin-bottom: 17px; font-size: clamp(2.8rem, 5.6vw, 5.15rem); overflow-wrap: anywhere; }
+.tool-detail-hero h1.long-tool-title { max-width: 100%; font-size: clamp(2.65rem, 4.7vw, 4.1rem); line-height: 1; }
 .tool-summary { max-width: 670px; margin-bottom: 0; color: var(--slate); font-size: 1.05rem; line-height: 1.75; }
 .tool-legacy-content { padding-top: 6px; }
 .tool-pagination { display: flex; justify-content: space-between; gap: 25px; margin-top: 48px; padding-top: 25px; border-top: 1px solid var(--line); }
@@ -504,7 +519,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
   padding: 0;
 }
 
-.workflow-steps li {
+.workflow-steps > li {
   position: relative;
   counter-increment: workflow;
   padding: 0 0 28px 48px;
@@ -512,13 +527,13 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
   border-left: 2px solid #dbe4ef;
 }
 
-.workflow-steps li:last-child {
+.workflow-steps > li:last-child {
   border-left-color: transparent;
   padding-bottom: 0;
 }
 
 /* Number circles */
-.workflow-steps li::before {
+.workflow-steps > li::before {
   content: counter(workflow);
   position: absolute;
   left: -17px;
@@ -535,7 +550,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 }
 
 /* Step headings */
-.workflow-steps li > strong {
+.workflow-steps > li > strong {
   display: block;
   padding-top: 4px;
   margin-bottom: 10px;
@@ -553,6 +568,24 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 
 .workflow-steps p:last-child {
   margin-bottom: 0;
+}
+
+.workflow-steps > li > ul {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+
+.workflow-steps > li > ul > li {
+  position: static;
+  counter-increment: none;
+  padding: 0;
+  margin: 0;
+  border-left: 0;
+}
+
+.workflow-steps > li > ul > li::before {
+  content: none;
 }
 
 .workflow-steps code {
@@ -585,7 +618,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
     padding: 24px 18px 24px 26px;
   }
 
-  .workflow-steps li {
+  .workflow-steps > li {
     padding-left: 36px;
   }
 
@@ -773,6 +806,83 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
   line-height: 1.7;
 }
 
+.tool-legacy-content .tool-image-section {
+  margin-bottom: 24px;
+}
+
+.tool-legacy-content .tool-figure {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: clamp(16px, 3vw, 30px);
+  border: 1px solid rgba(106, 178, 231, .32);
+  border-left: 4px solid var(--orange);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fbfdff 0%, #eef5fb 100%);
+  box-shadow: 0 5px 18px rgba(4, 44, 88, .045);
+  overflow: hidden;
+}
+
+.tool-legacy-content .tool-figure img {
+  display: block;
+  width: 100%;
+  max-width: 820px;
+  max-height: 560px;
+  height: auto;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.tool-legacy-content .parameter-table .parameter-group-row th {
+  padding: 16px 18px 12px;
+  border-top: 1px solid #dbe4ef;
+  background: rgba(119, 182, 186, .1);
+  color: var(--navy);
+  text-align: left;
+  text-transform: none;
+}
+
+.tool-legacy-content .parameter-table .parameter-group-row code {
+  display: block;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.tool-legacy-content .parameter-table .parameter-group-row span {
+  display: block;
+  margin-top: 5px;
+  color: var(--slate);
+  font: .88rem/1.5 var(--body);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.tool-legacy-content .parameter-table .parameter-detail-row td {
+  background: rgba(119, 182, 186, .025);
+}
+
+.tool-legacy-content .parameter-table .parameter-detail-row td:first-child {
+  padding-left: 34px;
+}
+
+.tool-legacy-content .parameter-table .parameter-detail-row td:first-child code {
+  overflow-wrap: anywhere;
+}
+
+.tool-legacy-content .parameter-table .parameter-group-note td {
+  padding: 15px 18px 9px;
+  border-top: 1px solid #dbe4ef;
+  background: rgba(119, 182, 186, .06);
+  color: var(--slate);
+  font-size: .82rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
 .table-scroll {
   width: 100%;
   overflow-x: auto;
@@ -853,6 +963,22 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
   line-height: 1.75;
 }
 
+.parameter-outro {
+  max-width: 70ch;
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
+  background: rgba(119, 182, 186, .1);
+}
+
+.parameter-outro p {
+  margin: 0;
+  color: var(--slate);
+  font-size: .92rem;
+  line-height: 1.75;
+}
+
 .parameter-table {
   min-width: 760px;
 }
@@ -896,6 +1022,20 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 
   .tool-legacy-content .accordion-content {
     padding: 22px 16px 24px;
+  }
+
+  .tool-legacy-content .tool-figure {
+    padding: 12px;
+    border-left-width: 3px;
+    border-radius: 10px;
+  }
+
+  .tool-legacy-content .parameter-table .parameter-group-row th {
+    padding: 14px 15px 11px;
+  }
+
+  .tool-legacy-content .parameter-table .parameter-detail-row td:first-child {
+    padding-left: 27px;
   }
 
   .tool-table th,

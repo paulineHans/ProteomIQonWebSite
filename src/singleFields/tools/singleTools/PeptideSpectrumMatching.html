@@ -6,72 +6,489 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>ProteomIQon - Peptide Spectrum Matching</title>
-
+    <title>ProteomIQon - PeptideSpectrumMatching</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
     <header>
-        <h1>ProteomIQon - Peptide Spectrum Matching</h1>
+        <h1>ProteomIQon - PeptideSpectrumMatching</h1>
     </header>
-
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    PeptideSpectrumMatching identifies the peptides 
-                    behind the MS/MS spectra of a run. For each MS2 
-                    scan it first determines the charge of the precursor 
-                    ion from the isotope pattern in the preceding MS1 scan
-                    (charge state determination). With the charge, the 
-                    precursor m/z becomes a peptide mass, and the tool 
-                    fetches every peptide from the PeptideDB database 
-                    whose mass lies within LookUpPPM of it. For each 
-                    candidate it computes the theoretical fragment ions 
-                    (fragmentation) and compares them with the measured 
-                    spectrum. Each candidate gets a SEQUEST-like score 
-                    and an Andromeda-like score. An X!Tandem-like score 
-                    is computed alongside the Andromeda one. The 
-                    candidates include reversed decoy peptides, which 
-                    PSMStatistics later uses to estimate the false discovery rate 
-                    (what the decoys are for).
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool Description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        PeptideSpectrumMatching identifies the peptides behind the MS/MS spectra of a run.
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    The tool writes one <run>.psm per input into the output 
-                        directory. It is a tab separated table with a header. 
-                        Each row is one candidate peptide for one spectrum with 
-                        its charge, precursor m/z, theoretical mass, the three 
-                        scores with their delta values to the next candidates, the 
-                        peptide sequence and a Label of 1 for a target peptide and 
-                        -1 for a decoy. The row ends with the five columns 
-                        IonMobility, Hyperscore, Expectscore, MatchedIons and 
-                        TotalIons, which PeptideSpectrumMatchingTIMs fills while 
-                        this tool writes NaN in the float columns and 0 in the 
-                        integer columns. The file is opened in append mode, so 
-                        running the tool twice into the same directory adds a 
-                        second header and a second set of rows. Delete the old file 
-                        first. The .psm is read by PSMStatistics. The output 
-                        directory also receives PeptideSpectrumMatching_log.txt and 
-                        one <run>_log.txt per input.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">?</span>
+                <span class="accordion-heading">
+                    <strong>How does PeptideDB work?</strong>
+                    <small>Step-by-step explained</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                            <li>
+                                <strong>Charge state determination</strong>
+                                <p>
+                                    For each MS2 scan it first determines the charge of the precursor ion from the isotope pattern in the preceding MS1 scan. 
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Comparision with PeptideDB</strong>
+                                <p>
+                                    With the charge, the precursor m/z becomes a peptide mass, and the tool fetches every peptide from the <a href="./PeptideDB.html">PeptideDB</a> database whose mass lies within LookUpPPM of it.
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Fragmentation</strong>
+                                <p>
+                                    For each candidate it computes the theoretical fragment ions and compares them with the measured spectrum.
+                                </p>
+                            </li>
+                            <li>
+                                <strong>Scoring</strong>
+                                <p>Each candidate gets a SEQUEST-like score and an Andromeda-like score. An X!Tandem-like score is computed alongside the Andromeda one.</p>
+                            </li>
+                            <li>
+                                <strong>Decoys</strong>
+                                <p>The candidates include reversed decoy peptides, which <a href="./PSMStatistics.html">PSMStatistics</a>> later uses to estimate the false discovery rate. If decoys are an unknown topic, further information can be found <a href="https://www.biofsharp.com/BioFSharp.Mz/02_03_sequest_like_scoring.html#What-the-decoys-are-for">here</a></p>
+                            </li>
+                    </ol>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>Good to know!</h2>
-            <div class="description_box">
-                <p>
-                    PeptideSpectrumMatchingTIMs is a variant of this tool
-                    which identifies peptides in timsTOF runs with precurso ion mobility. 
-                    Follow this link to get there <a href="./PeptideSpectrumMatchingTIMs.html">PeptideSpectrumMatchingTIMs</a>.
-                </p>
-            </div>
+        <section class="workflow-section tool-image-section">
+            <figure class="tool-figure">
+                <img src="/images/PSM.png" alt="Overview of the peptide spectrum matching workflow" loading="lazy">
+            </figure>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">&lt;&gt;</span>
+                <span class="accordion-heading">
+                    <strong>Inputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup>
+                            <col class="col-flag" />
+                            <col class="col-meaning" />
+                            <col class="col-source" />                           
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><code>-i</code></td>
+                                <td>one or more <code>.mzlite</code> files, or a directory that is searched for <code>*.mzlite</code></td>
+                                <td><a href="./MzMLToMzLite.html">MzMLToMzLite</a></td>
+                            </tr>
+                            <tr>
+                                <td><code>-o</code></td>
+                                <td>the output directory, created when missing</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td><code>-d</code></td>
+                                <td>the SQLite peptide database</td>
+                                <td><a href="./PeptideDB.html">PeptideDB</a></td>
+                            </tr>
+                            <tr>
+                                <td><code>-p</code></td>
+                                <td>the parameter file in JSON</td>
+                                <td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideSpectrumMatchingParams.json">Github ProteomIQon Core</a></td>
+                            </tr>
+                            <tr>
+                                <td><code>-c</code></td>
+                                <td>number of runs scored at the same time, default 1</td>
+                                <td>-</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    <p>
+                                       All four flags are mandatory. The reader opens files by extension and knows .mzlite and .mzML only, so an mzML file has to carry the extension in exactly that spelling. The tool stops when the database file does not exist. 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        The tool writes one <run>.psm per input into the output directory. It is a tab separated table with a header. 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Each row is one candidate peptide for one spectrum with its charge, precursor m/z, theoretical mass, the three scores with their delta values to the next candidates, the peptide sequence and a Label of 1 for a target peptide and -1 for a decoy.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        The row ends with the five columns IonMobility, Hyperscore, Expectscore, MatchedIons and TotalIons, which PeptideSpectrumMatchingTIMs fills while this tool writes NaN in the float columns and 0 in the integer columns. 
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        The file is opened in append mode, so running the tool twice into the same directory adds a second header and a second set of rows.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Delete the old file first. The .psm is read by <a href="./PSMStatistics.html">PSMStatistics</a>. The output directory also receives <code>PeptideSpectrumMatching_log.txt</code> and one <code>run_log.txt</code> per input.
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table parameter-table">
+                            <colgroup>
+                            <col class="col-parameter">
+                            <col class="col-default">
+                            <col class="col-meaning">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Default</th>
+                                    <th scope="col">Meaning</th>                                                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="parameter-group-row">
+                                    <th colspan="3" scope="colgroup">
+                                        <code>ChargeStateDeterminationParams</code>
+                                        <span>Settings of the charge state determination.</span>
+                                    </th>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>ExpectedMinimalCharge</code></td>
+                                    <td>2</td>
+                                    <td>Lowest precursor charge that is tested.</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>ExpectedMaximumCharge</code></td>
+                                    <td>5</td>
+                                    <td>Highest precursor charge that is tested.</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>Width</code></td>
+                                    <td>1.1</td>
+                                    <td>Width of the m/z window around the precursor in which the MS1 isotope pattern is examined.</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>MinIntensity</code></td>
+                                    <td>0.15</td>
+                                    <td>Minimum relative intensity of a peak to count as part of the isotope pattern.</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>DeltaMinIntensity</code></td>
+                                    <td>0.3</td>
+                                    <td>Minimum relative intensity difference used when comparing neighbouring peaks of the pattern.</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>NrOfRndSpectra</code></td>
+                                    <td>10000</td>
+                                    <td>Number of random spectra used to estimate how likely a matching pattern arises by chance.</td>
+                                </tr>
+                                <tr class="parameter-group-note">
+                                    <td colspan="3">Andromeda is a ProteomIQon.Domain.AndromedaParams record, with following default settings</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>PMinPMax</code></td>
+                                    <td>4, 10</td>
+                                    <td>Lowest and highest number of most intense peaks kept per 100 Da window. Every count in between is tried and the best score is kept.</td>
+                                </tr>
+                                <tr class="parameter-detail-row">
+                                    <td><code>MatchingIonTolerancePPM</code></td>
+                                    <td>100.0</td>
+                                    <td>Tolerance in ppm for matching a theoretical fragment to a measured peak.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>LookUpPPM</code></td>
+                                    <td>30.0</td>
+                                    <td>Mass window, in ppm around the precursor mass, from which candidate peptides are fetched.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>nTerminalSeries</code></td>
+                                    <td>NTerminalSeries.B</td>
+                                    <td>Fragment ion series counted from the N terminus. Keep B, the scoring builds the theoretical spectra from the b and y series.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>cTerminalSeries</code></td>
+                                    <td>CTerminalSeries.Y</td>
+                                    <td>Fragment ion series counted from the C terminus. Keep Y.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Andromeda</code></td>
+                                    <td>{PMinPMax = 4, 10; MatchingIonTolerancePPM = 100.0 }</td>
+                                    <td>Settings of the Andromeda-like and X!Tandem-like scoring.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxMass</code></td>
+                                    <td>15000.0</td>
+                                    <td>Peptides above this mass in Da are dropped.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MinPepLength</code></td>
+                                    <td>4</td>
+                                    <td>Shortest peptide length kept, in residues.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MaxPepLength</code></td>
+                                    <td>65</td>
+                                    <td>Longest peptide length kept, in residues.</td>
+                                </tr>
+                                <tr>
+                                    <td>IsotopicMod</td>
+                                    <td>[IsotopicMod.N15]</td>
+                                    <td>Isotopic labels of the experiment. Each label adds a labeled variant of every peptide next to the unlabeled one. Use <code>[]</code> for an unlabeled experiment. Other values are <code>IsotopicMod.C13</code>, <code>IsotopicMod.O17</code>, <code>IsotopicMod.O18</code> and <code>IsotopicMod.D</code>.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>MassMode</code></td>
+                                    <td>MassMode.Monoisotopic</td>
+                                    <td>Mass calculation, MassMode.Monoisotopic or MassMode.Average.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>FixedMods</code></td>
+                                    <td><code>[]</code></td>
+                                    <td>Modifications applied to every matching residue.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>VariableMods</code></td>
+                                    <td><code>[Modification.Oxidation'Met'; Modification.Acetylation'ProtNTerm']</code></td>
+                                    <td>Modifications that may or may not be present. Every allowed combination becomes its own database entry.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>VarModThreshold</code></td>
+                                    <td>4</td>
+                                    <td>Maximum number of variable modifications on one peptide.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    The available modifications are the cases of <code>ProteomIQon.Modification</code>, for example <code>Modification.Carbamidomethyl'Cys'</code> or <code>Modification.Phosphorylation'Ser'Thr'Tyr'</code>.
+                                </li>
+                                <li>
+                                    <p>The default file is <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideSpectrumMatchingParams.json">PeptideDB.json</a>.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">=</span>
+                <span class="accordion-heading">
+                    <strong>Outputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>This Output is generated</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <colgroup>
+                            <col class="Parameter" />
+                            <col class="Description" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PSMId</td>
+                                    <td>Identifier of the MS/MS spectrum</td>
+                                </tr>
+                                <tr>
+                                    <td>GlobalMod</td>
+                                    <td>Indicator, if a peptide ion species is labeled or unlabeled</td>
+                                </tr>
+                                <tr>
+                                    <td>PepSequenceID</td>
+                                    <td>Unique identifier of the unmodified peptide sequence, which points to PeptideDB</td>
+                                </tr>
+                                <tr>
+                                    <td>ModSequenceID</td>
+                                    <td>Unique identifier of the modified peptide sequence (including PTMs, e.g., methylation), which points to PeptideDB</td>
+                                </tr>
+                                <tr>
+                                    <td>Label</td>
+                                    <td>Target/decoy label: 1 = target, −1 = decoy</td>
+                                </tr>
+                                <tr>
+                                    <td>ScanNr</td>
+                                    <td>Scan identifier, combining the spectrum ID in the raw file with an ascending MS2 ID</td>
+                                </tr>
+                                <tr>
+                                    <td>ScanTime</td>
+                                    <td>Retention time (RT) in minutes of the MS/MS scan</td>
+                                </tr>
+                                <tr>
+                                    <td>Charge</td>
+                                    <td>Precursor ion charge state</td>
+                                </tr>
+                                <tr>
+                                    <td>PrecursorMZ</td>
+                                    <td>Precursor ion mass-to-charge ratio (m/z)</td>
+                                </tr>
+                                <tr>
+                                    <td>TheoMass</td>
+                                    <td>Theoretical peptide mass in the spectrum (based on amino acid composition) in Dalton</td>
+                                </tr>
+                                <tr>
+                                    <td>AbsDeltaMass</td>
+                                    <td>Absolute mass deviation between theoretical and measured mass (mass error)</td>
+                                </tr>
+                                <tr>
+                                    <td>PeptideLength</td>
+                                    <td>Peptide length in Amino Acid count</td>
+                                </tr>
+                                <tr>
+                                    <td>MissCleavages</td>
+                                    <td>Number of missed cleavages</td>
+                                </tr>
+                                <tr>
+                                    <td>SequestScore</td>
+                                    <td>SEQUEST similarity score (e.g., XCorr) quantifying agreement between theoretical and experimental spectra</td>
+                                </tr>
+                                <tr>
+                                    <td>SequestNormDeltaBestToRest</td>
+                                    <td>Normalized separation of the best SEQUEST score from the remaining candidate scores</td>
+                                </tr>
+                                <tr>
+                                    <td>SequestNormDeltaNext</td>
+                                    <td>Normalized separation between the best and second-best SEQUEST scores</td>
+                                </tr>
+                                <tr>
+                                    <td>AndroScore</td>
+                                    <td>Andromeda score quantifying the match between theoretical and experimental spectra</td>
+                                </tr>
+                                <tr>
+                                    <td>AndroNormDeltaBestToRest</td>
+                                    <td>Normalized separation of the best Andromeda score from the remaining candidate scores</td>
+                                </tr>
+                                <tr>
+                                    <td>AndroNormDeltaNext</td>
+                                    <td>Normalized separation between the best and second-best Andromeda scores</td>
+                                </tr>
+                                <tr>
+                                    <td>XTandemScore</td>
+                                    <td>XTandem score quantifying the match between theoretical and experimental spectra</td>
+                                </tr>
+                                <tr>
+                                    <td>XtandemNormDeltaBestToRest</td>
+                                    <td>Normalized separation of the best XTandem score from the remaining candidate scores</td>
+                                </tr>
+                                <tr>
+                                    <td>XtandemNormDeltaNext</td>
+                                    <td>Normalized separation between the best and second-best XTandem scores</td>
+                                </tr>
+                                <tr>
+                                    <td>StringSequence</td>
+                                    <td>Amino Acid sequence (one-letter code) from PeptideDB which matches the psm candidate</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.PeptideSpectrumMatching</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-peptidespectrummatching -i path/to/run.mzlite -d path/to/AraTest.db -o path/to/output -p path/to/peptideSpectrumMatchingParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Running the tool for multiple runs, for three at the same time</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>
+                                    proteomiqon-peptidespectrummatching -i path/to/run1.mzlite path/to/run2.mzlite path/to/run3.mzlite -d path/to/AraTest.db -o path/to/output -p path/to/peptideSpectrumMatchingParams.json -c 3
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-peptidespectrummatching --help</code></pre>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

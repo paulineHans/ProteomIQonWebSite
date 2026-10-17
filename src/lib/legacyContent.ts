@@ -45,10 +45,56 @@ function formatLegacyParagraphs(html: string) {
 	});
 }
 
-export function readLegacyPage(relativePath: string, fallbackTitle: string) {
+function sectionTitle(sectionBody: string) {
+	return sectionBody.match(/<h2[^>]*>([\s\S]*?)<\/h2>/i)?.[1]
+		.replace(/<[^>]+>/g, '')
+		.replace(/\s+/g, ' ')
+		.trim() ?? '';
+}
+
+function sectionIcon(title: string) {
+	if (/tool description/i.test(title)) return 'i';
+	if (/what'?s happening/i.test(title)) return '?';
+	if (/inputs?/i.test(title)) return '&lt;&gt;';
+	if (/outputs?/i.test(title)) return '=';
+	if (/good to know/i.test(title)) return '!';
+	return 'i';
+}
+
+function convertLegacySectionsToAccordions(html: string) {
+	if (/<details\b/i.test(html)) return html;
+
+	return html.replace(/<section\b[^>]*>([\s\S]*?)<\/section>/gi, (match, sectionBody: string) => {
+		const headingMatch = sectionBody.match(/<h2[^>]*>[\s\S]*?<\/h2>/i);
+		if (!headingMatch) return match;
+
+		const title = sectionTitle(sectionBody);
+		const icon = sectionIcon(title);
+		const content = sectionBody
+			.replace(headingMatch[0], '')
+			.replace(/^\s*<div\s+class=["']description_box["']\s*>([\s\S]*?)<\/div>\s*$/i, '$1');
+		const contentClass = /tool description/i.test(title) ? 'accordion-content description-content' : 'accordion-content';
+
+		return `<section class="workflow-section">
+	<details class="accordion">
+		<summary class="accordion-header">
+			<span class="accordion-icon">${icon}</span>
+			<span class="accordion-heading">
+				<strong>${headingMatch[0].replace(/<h2[^>]*>|<\/h2>/gi, '').trim()}</strong>
+			</span>
+			<span class="accordion-chevron"></span>
+		</summary>
+		<div class="${contentClass}">${content}</div>
+	</details>
+</section>`;
+	});
+}
+
+export function readLegacyPage(relativePath: string, fallbackTitle: string, useToolLayout = false) {
 	const raw = readFileSync(resolve(legacyRoot, relativePath), 'utf8');
 	let sectionNumber = 0;
-	const html = formatLegacyParagraphs(extractMain(raw)
+	const main = useToolLayout ? convertLegacySectionsToAccordions(extractMain(raw)) : extractMain(raw);
+	const html = formatLegacyParagraphs(main
 		.replace(/<(run|ToolName|toolname)>/gi, '&lt;$1&gt;'))
 		.replace(/<header[\s\S]*?<\/header>/i, '')
 		.replace(/<div class="description_box">/gi, '<div class="description-box">')
@@ -66,7 +112,7 @@ export function readLegacyPage(relativePath: string, fallbackTitle: string) {
 }
 
 export function readToolPage(source: string, fallbackTitle: string) {
-	return readLegacyPage(`tools/singleTools/${source}`, fallbackTitle);
+	return readLegacyPage(`tools/singleTools/${source}`, fallbackTitle, true);
 }
 
 export function getTool(slug: string) {
