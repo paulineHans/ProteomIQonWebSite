@@ -172,272 +172,157 @@
         <section class="workflow-section">
             <details class="accordion">
                 <summary class="accordion-header">
-                    <span class="accordion-icon">!</span>
-                    <span class="accordion-heading">
-                        <strong>Parameter file</strong>
-                    </span>
-                    <span class="accordion-chevron"></span>
-                </summary>
-                <div class="accordion-content parameter-content">
-                    <div class="table-wrapper">
-                        <table class="tool-table parameter-table">
-                            <colgroup>
-                            <col class="col-parameter">
-                            <col class="col-default">
-                            <col class="col-meaning">
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th scope="col">Parameter</th>
-                                    <th scope="col">Default</th>
-                                    <th scope="col">Meaning</th>                                                                 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="parameter-group-row">
-                                    <th colspan="3" scope="colgroup">
-                                        <code>ChargeStateDeterminationParams</code>
-                                        <span>Settings of the charge state determination.</span>
-                                    </th>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>ExpectedMinimalCharge</code></td>
-                                    <td>2</td>
-                                    <td>Lowest precursor charge that is tested.</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>ExpectedMaximumCharge</code></td>
-                                    <td>5</td>
-                                    <td>Highest precursor charge that is tested.</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>Width</code></td>
-                                    <td>1.1</td>
-                                    <td>Width of the m/z window around the precursor in which the MS1 isotope pattern is examined.</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>MinIntensity</code></td>
-                                    <td>0.15</td>
-                                    <td>Minimum relative intensity of a peak to count as part of the isotope pattern.</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>DeltaMinIntensity</code></td>
-                                    <td>0.3</td>
-                                    <td>Minimum relative intensity difference used when comparing neighbouring peaks of the pattern.</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>NrOfRndSpectra</code></td>
-                                    <td>10000</td>
-                                    <td>Number of random spectra used to estimate how likely a matching pattern arises by chance.</td>
-                                </tr>
-                                <tr class="parameter-group-note">
-                                    <td colspan="3">Andromeda is a ProteomIQon.Domain.AndromedaParams record, with following default settings</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>PMinPMax</code></td>
-                                    <td>4, 10</td>
-                                    <td>Lowest and highest number of most intense peaks kept per 100 Da window. Every count in between is tried and the best score is kept.</td>
-                                </tr>
-                                <tr class="parameter-detail-row">
-                                    <td><code>MatchingIonTolerancePPM</code></td>
-                                    <td>100.0</td>
-                                    <td>Tolerance in ppm for matching a theoretical fragment to a measured peak.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>LookUpPPM</code></td>
-                                    <td>30.0</td>
-                                    <td>Mass window, in ppm around the precursor mass, from which candidate peptides are fetched.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>nTerminalSeries</code></td>
-                                    <td>NTerminalSeries.B</td>
-                                    <td>Fragment ion series counted from the N terminus. Keep B, the scoring builds the theoretical spectra from the b and y series.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>cTerminalSeries</code></td>
-                                    <td>CTerminalSeries.Y</td>
-                                    <td>Fragment ion series counted from the C terminus. Keep Y.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>Andromeda</code></td>
-                                    <td>{PMinPMax = 4, 10; MatchingIonTolerancePPM = 100.0 }</td>
-                                    <td>Settings of the Andromeda-like and X!Tandem-like scoring.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>MaxMass</code></td>
-                                    <td>15000.0</td>
-                                    <td>Peptides above this mass in Da are dropped.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>MinPepLength</code></td>
-                                    <td>4</td>
-                                    <td>Shortest peptide length kept, in residues.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>MaxPepLength</code></td>
-                                    <td>65</td>
-                                    <td>Longest peptide length kept, in residues.</td>
-                                </tr>
-                                <tr>
-                                    <td>IsotopicMod</td>
-                                    <td>[IsotopicMod.N15]</td>
-                                    <td>Isotopic labels of the experiment. Each label adds a labeled variant of every peptide next to the unlabeled one. Use <code>[]</code> for an unlabeled experiment. Other values are <code>IsotopicMod.C13</code>, <code>IsotopicMod.O17</code>, <code>IsotopicMod.O18</code> and <code>IsotopicMod.D</code>.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>MassMode</code></td>
-                                    <td>MassMode.Monoisotopic</td>
-                                    <td>Mass calculation, MassMode.Monoisotopic or MassMode.Average.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>FixedMods</code></td>
-                                    <td><code>[]</code></td>
-                                    <td>Modifications applied to every matching residue.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>VariableMods</code></td>
-                                    <td><code>[Modification.Oxidation'Met'; Modification.Acetylation'ProtNTerm']</code></td>
-                                    <td>Modifications that may or may not be present. Every allowed combination becomes its own database entry.</td>
-                                </tr>
-                                <tr>
-                                    <td><code>VarModThreshold</code></td>
-                                    <td>4</td>
-                                    <td>Maximum number of variable modifications on one peptide.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="parameter-outro">
-                            <ul>
-                                <li>
-                                    The available modifications are the cases of <code>ProteomIQon.Modification</code>, for example <code>Modification.Carbamidomethyl'Cys'</code> or <code>Modification.Phosphorylation'Ser'Thr'Tyr'</code>.
-                                </li>
-                                <li>
-                                    <p>The default file is <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideSpectrumMatchingParams.json">PeptideDB.json</a>.</p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </details>
-        </section>
-        <section class="workflow-section">
-            <details class="accordion">
-                <summary class="accordion-header">
-                <span class="accordion-icon">=</span>
+                <span class="accordion-icon">!</span>
                 <span class="accordion-heading">
-                    <strong>Outputs</strong>
+                    <strong>Parameter file</strong>
+                    <small>Default values and parameter groups</small>
                 </span>
                 <span class="accordion-chevron"></span>
                 </summary>
-                <div class="accordion-content">
-                    <p>This Output is generated</p>
+                <div class="accordion-content parameter-content">
+                <details class="parameter-group">
+                    <summary class="parameter-group-header">
+                    <span class="parameter-group-heading">
+                        <strong>General parameters</strong>
+                            <small> Precursor matching, ion series and peptide limits </small>
+                    </span>
+                    <span class="parameter-group-chevron" aria-hidden="true"></span>
+                    </summary>
+                    <div class="parameter-group-content">
                     <div class="table-wrapper">
-                        <table class="tool-table">
-                            <colgroup>
-                            <col class="Parameter" />
-                            <col class="Description" />
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th>Parameter</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>PSMId</td>
-                                    <td>Identifier of the MS/MS spectrum</td>
-                                </tr>
-                                <tr>
-                                    <td>GlobalMod</td>
-                                    <td>Indicator, if a peptide ion species is labeled or unlabeled</td>
-                                </tr>
-                                <tr>
-                                    <td>PepSequenceID</td>
-                                    <td>Unique identifier of the unmodified peptide sequence, which points to PeptideDB</td>
-                                </tr>
-                                <tr>
-                                    <td>ModSequenceID</td>
-                                    <td>Unique identifier of the modified peptide sequence (including PTMs, e.g., methylation), which points to PeptideDB</td>
-                                </tr>
-                                <tr>
-                                    <td>Label</td>
-                                    <td>Target/decoy label: 1 = target, −1 = decoy</td>
-                                </tr>
-                                <tr>
-                                    <td>ScanNr</td>
-                                    <td>Scan identifier, combining the spectrum ID in the raw file with an ascending MS2 ID</td>
-                                </tr>
-                                <tr>
-                                    <td>ScanTime</td>
-                                    <td>Retention time (RT) in minutes of the MS/MS scan</td>
-                                </tr>
-                                <tr>
-                                    <td>Charge</td>
-                                    <td>Precursor ion charge state</td>
-                                </tr>
-                                <tr>
-                                    <td>PrecursorMZ</td>
-                                    <td>Precursor ion mass-to-charge ratio (m/z)</td>
-                                </tr>
-                                <tr>
-                                    <td>TheoMass</td>
-                                    <td>Theoretical peptide mass in the spectrum (based on amino acid composition) in Dalton</td>
-                                </tr>
-                                <tr>
-                                    <td>AbsDeltaMass</td>
-                                    <td>Absolute mass deviation between theoretical and measured mass (mass error)</td>
-                                </tr>
-                                <tr>
-                                    <td>PeptideLength</td>
-                                    <td>Peptide length in Amino Acid count</td>
-                                </tr>
-                                <tr>
-                                    <td>MissCleavages</td>
-                                    <td>Number of missed cleavages</td>
-                                </tr>
-                                <tr>
-                                    <td>SequestScore</td>
-                                    <td>SEQUEST similarity score (e.g., XCorr) quantifying agreement between theoretical and experimental spectra</td>
-                                </tr>
-                                <tr>
-                                    <td>SequestNormDeltaBestToRest</td>
-                                    <td>Normalized separation of the best SEQUEST score from the remaining candidate scores</td>
-                                </tr>
-                                <tr>
-                                    <td>SequestNormDeltaNext</td>
-                                    <td>Normalized separation between the best and second-best SEQUEST scores</td>
-                                </tr>
-                                <tr>
-                                    <td>AndroScore</td>
-                                    <td>Andromeda score quantifying the match between theoretical and experimental spectra</td>
-                                </tr>
-                                <tr>
-                                    <td>AndroNormDeltaBestToRest</td>
-                                    <td>Normalized separation of the best Andromeda score from the remaining candidate scores</td>
-                                </tr>
-                                <tr>
-                                    <td>AndroNormDeltaNext</td>
-                                    <td>Normalized separation between the best and second-best Andromeda scores</td>
-                                </tr>
-                                <tr>
-                                    <td>XTandemScore</td>
-                                    <td>XTandem score quantifying the match between theoretical and experimental spectra</td>
-                                </tr>
-                                <tr>
-                                    <td>XtandemNormDeltaBestToRest</td>
-                                    <td>Normalized separation of the best XTandem score from the remaining candidate scores</td>
-                                </tr>
-                                <tr>
-                                    <td>XtandemNormDeltaNext</td>
-                                    <td>Normalized separation between the best and second-best XTandem scores</td>
-                                </tr>
-                                <tr>
-                                    <td>StringSequence</td>
-                                    <td>Amino Acid sequence (one-letter code) from PeptideDB which matches the psm candidate</td>
-                                </tr>
-                            </tbody>
+                        <table class="tool-table parameter-table">
+                        <colgroup><col class="col-parameter"><col class="col-default"><col class="col-meaning"></colgroup>
+                        <thead><tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+                        <tbody>
+                            <tr><td><code>LookUpPPM</code></td><td>30.0</td><td>Mass window, in ppm around the precursor mass, from which candidate peptides are fetched.</td></tr>
+                            <tr><td><code>nTerminalSeries</code></td><td>NTerminalSeries.B</td><td>Fragment ion series counted from the N terminus. Keep B, the scoring builds the theoretical spectra from the b and y series.</td></tr>
+                            <tr><td><code>cTerminalSeries</code></td><td>CTerminalSeries.Y</td><td>Fragment ion series counted from the C terminus. Keep Y.</td></tr>
+                            <tr><td><code>Andromeda</code></td><td>{PMinPMax = 4, 10; MatchingIonTolerancePPM = 100.0 }</td><td>Settings of the Andromeda-like and X!Tandem-like scoring.</td></tr>
+                            <tr><td><code>MaxMass</code></td><td>15000.0</td><td>Peptides above this mass in Da are dropped.</td></tr>
+                            <tr><td><code>MinPepLength</code></td><td>4</td><td>Shortest peptide length kept, in residues.</td></tr>
+                            <tr><td><code>MaxPepLength</code></td><td>65</td><td>Longest peptide length kept, in residues.</td></tr>
+                            <tr><td><code>MassMode</code></td><td>MassMode.Monoisotopic</td><td>Mass calculation, MassMode.Monoisotopic or MassMode.Average.</td></tr>
+                        </tbody>
                         </table>
                     </div>
+                </div>
+        </details>
+        <details class="parameter-group">
+            <summary class="parameter-group-header">
+            <span class="parameter-group-heading">
+                <strong>Charge state determination</strong>
+                    <small> ChargeStateDeterminationParams - 6 parameters </small>
+                </span>
+            <span class="parameter-group-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="parameter-group-content">
+            <div class="table-wrapper">
+                <table class="tool-table parameter-table">
+                <colgroup><col class="col-parameter"><col class="col-default"><col class="col-meaning"></colgroup>
+                <thead><tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ExpectedMinimalCharge</code></td><td>2</td><td>Lowest precursor charge that is tested.</td></tr>
+                    <tr><td><code>ExpectedMaximumCharge</code></td><td>5</td><td>Highest precursor charge that is tested.</td></tr>
+                    <tr><td><code>Width</code></td><td>1.1</td><td>Width of the m/z window around the precursor in which the MS1 isotope pattern is examined.</td></tr>
+                    <tr><td><code>MinIntensity</code></td><td>0.15</td><td>Minimum relative intensity of a peak to count as part of the isotope pattern.</td></tr>
+                    <tr><td><code>DeltaMinIntensity</code></td><td>0.3</td><td>Minimum relative intensity difference used when comparing neighbouring peaks of the pattern.</td></tr>
+                    <tr><td><code>NrOfRndSpectra</code></td><td>10000</td><td>Number of random spectra used to estimate how likely a matching pattern arises by chance.</td></tr>
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </details>
+        <details class="parameter-group">
+            <summary class="parameter-group-header">
+            <span class="parameter-group-heading">
+                <strong>Andromeda scoring</strong>
+                    <small>AndromedaParams - 2 parameters</small>
+                </span>
+            <span class="parameter-group-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="parameter-group-content">
+            <div class="table-wrapper">
+                <table class="tool-table parameter-table">
+                <colgroup><col class="col-parameter"><col class="col-default"><col class="col-meaning"></colgroup>
+                <thead><tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+                <tbody>
+                    <tr><td><code>PMinPMax</code></td><td>4, 10</td><td>Lowest and highest number of most intense peaks kept per 100 Da window. Every count in between is tried and the best score is kept.</td></tr>
+                    <tr><td><code>MatchingIonTolerancePPM</code></td><td>100.0</td><td>Tolerance in ppm for matching a theoretical fragment to a measured peak.</td></tr>
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </details>
+        <details class="parameter-group">
+            <summary class="parameter-group-header">
+            <span class="parameter-group-heading">
+                <strong>Peptide modifications</strong>
+                    <small> Isotopic labels, fixed and variable modifications </small>
+                </span>
+            <span class="parameter-group-chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="parameter-group-content">
+            <div class="table-wrapper">
+                <table class="tool-table parameter-table">
+                <colgroup><col class="col-parameter"><col class="col-default"><col class="col-meaning"></colgroup>
+                <thead><tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+                <tbody>
+                    <tr><td>IsotopicMod</td><td>[IsotopicMod.N15]</td><td>Isotopic labels of the experiment. Each label adds a labeled variant of every peptide next to the unlabeled one. Use <code>[]</code> for an unlabeled experiment. Other values are <code>IsotopicMod.C13</code>, <code>IsotopicMod.O17</code>, <code>IsotopicMod.O18</code> and <code>IsotopicMod.D</code>.</td></tr>
+                    <tr><td><code>FixedMods</code></td><td><code>[]</code></td><td>Modifications applied to every matching residue.</td></tr>
+                    <tr><td><code>VariableMods</code></td><td><code>[Modification.Oxidation'Met'; Modification.Acetylation'ProtNTerm']</code></td><td>Modifications that may or may not be present. Every allowed combination becomes its own database entry.</td></tr>
+                    <tr><td><code>VarModThreshold</code></td><td>4</td><td>Maximum number of variable modifications on one peptide.</td></tr>
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </details>
+        <div class="parameter-outro">
+            <ul>
+            <li>The available modifications are the cases of <code>ProteomIQon.Modification</code>, for example <code>Modification.Carbamidomethyl'Cys'</code> or <code>Modification.Phosphorylation'Ser'Thr'Tyr'</code>.</li>
+            <li>The default file is <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideSpectrumMatchingParams.json">peptideSpectrumMatchingParams.json ↗</a>.</li>
+            </ul>
+        </div>
+        </div>
+    </details>
+    </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header"><span class="accordion-icon">=</span><span class="accordion-heading"><strong>Outputs</strong><small>PSM columns, mobility fields and downstream use</small></span><span class="accordion-chevron"></span></summary>
+                <div class="accordion-content">
+                    <p>Every input run generates <code>&lt;run&gt;.psm</code> in the output directory, as a header-containing, tab-delimited file. Existing PSM files are overwritten.</p>
+                    <p>The table contains 28 columns<code>Label</code> is <code>1</code> for targets and <code>-1</code> for reversed decoys; <code>MissCleavages</code> is set to <code>-1</code> and recalculated by PSMStatistics.</p>
+                    <details><summary><strong>Classic PSM columns (23)</strong></summary>
+                        <div class="table-wrapper"><table class="tool-table"><thead><tr><th>Column</th><th>Description</th></tr></thead><tbody>
+                            <tr><td>PSMId</td><td>MS/MS spectrum match identifier</td></tr>
+                            <tr><td>GlobalMod</td><td>Whether the peptide ion species is labeled or unlabeled</td></tr>
+                            <tr><td>PepSequenceID</td><td>Unmodified peptide sequence identifier in PeptideDB</td></tr>
+                            <tr><td>ModSequenceID</td><td>Modified peptide sequence identifier in PeptideDB, including PTMs</td></tr>
+                            <tr><td>Label</td><td>Target (+1) or decoy (-1)</td></tr>
+                            <tr><td>ScanNr</td><td>MS2 position in scan-time order</td></tr>
+                            <tr><td>ScanTime</td><td>MS2 retention time in minutes</td></tr>
+                            <tr><td>Charge</td><td>Precursor charge</td></tr>
+                            <tr><td>PrecursorMZ</td><td>Precursor mass-to-charge ratio</td></tr>
+                            <tr><td>TheoMass</td><td>Theoretical peptide mass in Da</td></tr>
+                            <tr><td>AbsDeltaMass</td><td>Mass error using the best-matching isotope offset</td></tr>
+                            <tr><td>PeptideLength</td><td>Number of peptide amino acids</td></tr>
+                            <tr><td>MissCleavages</td><td>Value -1 at this stage recomputed by PSMStatistics</td></tr>
+                            <tr><td>SequestScore</td><td>SEQUEST-like similarity score</td></tr>
+                            <tr><td>SequestNormDeltaBestToRest</td><td>Normalized separation of best score from remaining candidates</td></tr>
+                            <tr><td>SequestNormDeltaNext</td><td>Normalized separation of top two candidate scores</td></tr>
+                            <tr><td>AndroScore</td><td>Andromeda-like match score</td></tr>
+                            <tr><td>AndroNormDeltaBestToRest</td><td>Normalized best-to-rest Andromeda score separation</td></tr>
+                            <tr><td>AndroNormDeltaNext</td><td>Normalized top-two Andromeda score separation</td></tr>
+                            <tr><td>XTandemScore</td><td>X!Tandem-like match score</td></tr>
+                            <tr><td>XtandemNormDeltaBestToRest</td><td>Normalized best-to-rest X!Tandem score separation</td></tr>
+                            <tr><td>XtandemNormDeltaNext</td><td>Normalized top-two X!Tandem score separation</td></tr>
+                            <tr><td>StringSequence</td><td>Matching peptide amino acid sequence in one letter code</td></tr>
+                        </tbody></table></div>
+                    </details>
+                    <details><summary><strong>Identifiers and logs</strong></summary>
+                        <p><code>ScanNr</code> is the MS2 position after ordering spectra by scan time. For <code>PSMId</code>, spectrum-id spaces become hyphens and the suffix <code>_ScanNr_charge_rank</code> is added. Rank is determined by hyperscore within the reported target or decoy group for that spectrum.</p>
+                        <p>The output folder also contains <code>PeptideSpectrumMatching_log.txt</code> and one <code>&lt;run&gt;_log.txt</code> for each run.</p>
+                    </details>
+                    <p><strong>Downstream compatibility:</strong> PSMStatistics can read these PSM results directly and uses <code>Hyperscore</code> and <code>Expectscore</code>, when present. Its <code>.qpsm</code> output does not yet retain ion mobility. Furthermore, <a href="https://csbiology.github.io/ProteomIQon/tools/PSMBasedQuantification.html">PSMBasedQuantification ↗</a> currently expects the FragPipe-style columns generated by <a href="https://csbiology.github.io/ProteomIQon/tools/MsFraggerToPSM.html">MsFraggerToPSM ↗</a>. Quantification after identification with this tool therefore needs adaptations to those downstream tools.</p>
                 </div>
             </details>
         </section>

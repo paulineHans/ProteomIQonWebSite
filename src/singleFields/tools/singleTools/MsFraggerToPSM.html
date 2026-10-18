@@ -1,49 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>ProteomIQon - MsFraggerToPSM</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProteomIQon - MSFraggerToPSM</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
     <header>
-        <h1>ProteomIQon - MsFraggerToPSM</h1>
+        <h1>ProteomIQon - MSFraggerToPSM</h1>
     </header>
 
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    MsFraggerToPSM turns the psm.tsv result of an MSFragger search, as written by FragPipe, 
-                    into the .qpsm files that PSMBasedQuantificationTIMs reads. With it, an ion mobility run can 
-                    be identified in FragPipe and quantified in ProteomIQon, in place of the 
-                    PeptideSpectrumMatching and PSMStatistics pair. For each row of the tsv the tool rebuilds the 
-                    modified peptide sequence in ProteomIQon notation, looks it up in the PeptideDB database to 
-                    get the peptide and modified sequence identifiers, and assigns the row to the MS2 spectrum of 
-                    the mzlite whose scan time and precursor m/z lie closest to the values in the tsv. 
-                    The tool has no parameter file. 
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool Description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>MsFraggerToPSM turns the <code>psm.tsv</code> result of an MSFragger search, as written by FragPipe, into the <code>.qpsm</code> files that PSMBasedQuantificationTIMs reads.</p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    The tool writes one <run>.qpsm per mzlite into the output directory, named after the mzlite. 
-                        It is a tab separated table with a header and one row per identified spectrum, with the 
-                        spectrum identifier of the mzlite, the database identifiers, scan time, charge, 
-                        precursor m/z, ion mobility, the MSFragger expectation, hyperscore and probability, 
-                        the sequence and the protein names. An existing .qpsm of the same name is appended to. 
-                        Delete the old file before a rerun. The output directory also receives MSFraggerToPSM_log.txt
-                </p>
-            </div>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">?</span>
+                    <span class="accordion-heading">
+                        <strong>How does MSFragger work?</strong>
+                        <small>Step-by-step explained</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>The advantage</strong>
+                            <p>With this tool, an ion mobility run can be identified in FragPipe and quantified in ProteomIQon, in place of the PeptideSpectrumMatching and PSMStatistics pair.</p>
+                        </li>
+                        <li>
+                            <strong>How does this work?</strong>
+                            <p>For each row of the tsv the tool rebuilds the modified peptide sequence in ProteomIQon notation, looks it up in the <a href="./PeptideDB.html">PeptideDB</a> database to get the peptide and modified sequence identifiers, and assigns the row to the MS2 spectrum of the mzlite whose scan time and precursor m/z lie closest to the values in the tsv.</p>
+                        </li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">&lt;&gt;</span>
+                    <span class="accordion-heading">
+                        <strong>Inputs</strong>
+                        <small>Flags, required columns and input requirements</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content nested-content">
+                    <p class="nested-intro">These inputs are needed to execute the tool:</p>
+                    <div class="nested-groups">
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Input flags</strong>
+                                    <small>Command-line arguments and their sources</small>
+                                </span>
+                                <span class="nested-group-count">7 entries</span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <div class="table-wrapper">
+                                    <table class="tool-table input-table">
+                                        <colgroup>
+                                            <col class="col-flag">
+                                            <col class="col-meaning">
+                                            <col class="col-source">
+                                        </colgroup>
+                                        <thead>
+                                            <tr><th scope="col">Flag</th><th scope="col">Meaning</th><th scope="col">Comes from</th></tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td><code>-i</code></td><td>one or more <code>psm.tsv</code> files, or a directory that is searched for <code>*.tsv</code></td><td>MSFragger (FragPipe)</td></tr>
+                                            <tr><td><code>-ii</code></td><td>the matching <code>.mzlite</code> files, or a directory that is searched for <code>*.mzlite</code></td><td>-</td></tr>
+                                            <tr><td><code>-p</code></td><td>the parameter file in JSON</td><td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/mzMLToMzLiteParams.json">Github ProteomIQon Core</a></td></tr>
+                                            <tr><td><code>-c</code></td><td>number of files converted at the same time, default 1, no effect on a single file</td><td><a href="./MzMLToMzLiteIonMobility.html">MzMLToMzLiteIonMobility</a></td></tr>
+                                            <tr><td><code>-o</code></td><td>the output directory, created when missing</td><td>-</td></tr>
+                                            <tr><td><code>-d</code></td><td>The Peptide Database</td><td><a href="./PeptideDB.html">PeptideDB</a></td></tr>
+                                            <tr><td><code>-c</code></td><td>number of pairs converted at the same time, default 1</td><td>-</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="nested-note">All four flags are mandatory.</p>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Required TSV columns</strong>
+                                    <small>Columns expected in the FragPipe PSM input</small>
+                                </span>
+                                <span class="nested-group-count">15 columns</span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <p>The tsv needs the columns:</p>
+                                <ul class="nested-columns">
+                                    <li><code>Assigned Modifications</code></li>
+                                    <li><code>Peptide</code></li>
+                                    <li><code>Spectrum</code></li>
+                                    <li><code>Retention</code></li>
+                                    <li><code>Charge</code></li>
+                                    <li><code>Calibrated Observed M/Z</code></li>
+                                    <li><code>Calculated Peptide Mass</code></li>
+                                    <li><code>Delta Mass</code></li>
+                                    <li><code>Ion Mobility</code></li>
+                                    <li><code>Peptide Length</code></li>
+                                    <li><code>Number of Missed Cleavages</code></li>
+                                    <li><code>Expectation</code></li>
+                                    <li><code>Hyperscore</code></li>
+                                    <li><code>Probability</code></li>
+                                    <li><code>PROTEIN</code></li>
+                                </ul>
+                                <p>Retention is read in seconds and stored in minutes. The files are paired by position, the first tsv with the first mzlite and so on.</p>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>File pairing and database requirements</strong>
+                                    <small>Input order, matching and database compatibility</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <p>Give both lists in the same order and with the same length, otherwise the tool converts nothing. The tool stops when the database file does not exist. The lookup uses the unlabeled sequences of the database. Rows whose modified sequence has no entry in the database are dropped, so the database has to be built with the same modifications as the FragPipe search.</p>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Supported modifications</strong>
+                                    <small>Which FragPipe modifications can be converted</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <p>From the Assigned Modifications column the tool understands oxidized methionine and carbamidomethylated cysteine, plus N-terminal acetylation. A row with any other modification is printed to the console and dropped.</p>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Generated files and logs</strong>
+                                    <small>Output naming, reruns and logging</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <p>The tool writes one <code>run.qpsm</code> per mzlite into the output directory, named after the mzlite. It is a tab separated table with a header and one row per identified spectrum.</p>
+                                <p>An existing <code>.qpsm</code> of the same name is appended to. Delete the old file before a rerun. The output directory also receives <code>MSFraggerToPSM_log.txt.</code></p>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </details>
+        </section>
+
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content nested-content">
+                    <div class="nested-groups">
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Installing</strong>
+                                    <small>Install the .NET command-line tool</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                                <div class="mockup-code w-full"><pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.MsFraggerToPSM</code></pre></div>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Convert one run</strong>
+                                    <small>Command example for a single file pair</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <div class="mockup-code w-full"><pre data-prefix="$"><code>proteomiqon-msfraggertopsm -i path/to/run/psm.tsv -ii path/to/run.mzlite -d path/to/AraTest.db -o path/to/output</code></pre></div>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>Convert multiple runs</strong>
+                                    <small>Command example for multiple file pairs</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <div class="mockup-code w-full"><pre data-prefix="$"><code>proteomiqon-msfraggertopsm -i path/to/run1/psm.tsv path/to/run2/psm.tsv path/to/run3/psm.tsv -ii path/to/run1.mzlite path/to/run2.mzlite path/to/run3.mzlite -d path/to/AraTest.db -o path/to/output -c 3</code></pre></div>
+                            </div>
+                        </details>
+
+                        <details class="nested-group">
+                            <summary class="nested-group-header">
+                                <span class="nested-group-title">
+                                    <strong>All flags</strong>
+                                    <small>Show the command-line help</small>
+                                </span>
+                                <span class="nested-group-chevron" aria-hidden="true"></span>
+                            </summary>
+                            <div class="nested-group-body">
+                                <div class="mockup-code w-full"><pre data-prefix="$"><code>proteomiqon-msfraggertopsm --help</code></pre></div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

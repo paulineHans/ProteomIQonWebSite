@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,43 +6,343 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-
     <title>ProteomIQon - Protein Inference</title>
-
     <link rel="stylesheet" href="../../../style.css">
 </head>
+    <body>
+        <header>
+            <h1>ProteomIQon - Protein Inference</h1>
+        </header>
 
-<body>
+    <main> 
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">i</span>
+                <span class="accordion-heading">
+                    <strong>Tool Description</strong>
+                    <small>Purpose and functionality of the tool</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
 
-    <header>
-        <h1>ProteomIQon - Protein Inference</h1>
-    </header>
-
-    <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
+                <div class="accordion-content description-content">
                 <p>
-                    A peptide identified by PSMStatistics often fits more than one protein, 
-                    for example two splice variants of the same gene. ProteinInference maps the 
-                    identified peptides back to proteins and reports protein groups: sets of proteins 
-                    that share their peptide evidence. 
+                    ProteinInference maps the identified peptides back to proteins and reports protein groups: sets of proteins that share their peptide evidence.
                 </p>
-            </div>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    Each group gets a score from its peptides and a decoy 
-                    score from the reversed proteins, and from these a protein level Q-value. Two parameters decide how 
-                    groups are formed and which peptides count for them. Take two proteins pA and pB, each found by 
-                    one unique peptide and both by a third shared peptide. Protein (the integration strictness) decides 
-                    whether pA, pB and the group pA;pB are all reported or whether overlapping groups are merged into 
-                    the smallest set that explains every peptide. Peptide (the peptide usage) decides whether the abundance 
-                    of pA;pB later comes from the shared peptide only or also from the peptides unique to pA and pB. The figure 
-                    shows the outcomes for every combination.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">?</span>
+                <span class="accordion-heading">
+                    <strong>How does Protein Inference work?</strong>
+                    <small>Step-by-step explained</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                        <strong>One Peptide, multiple Proteins</strong>
+                        <p>
+                            A peptide identified by <a href="./PSMStatistics.html">PSMStatistics</a> often fits more than one protein, 
+                            for example two splice variants of the same gene. Each Peptide Evidence group gets a score from its peptides and a decoy score from the reversed proteins, and from these a protein level q-value.
+                        </p>
+                        </li>
+                        <li>
+                        <strong>How Protein Groups are formed</strong>
+                        <p>
+                            Two parameters decide how groups are formed and which peptides count for them. 
+                            Take two proteins pA and pB, each found by one unique peptide and both by a third shared peptide. 
+                            Protein (the integration strictness) decides whether pA, pB and the group pA;pB are all reported or 
+                            whether overlapping groups are merged into the smallest set that explains every peptide. 
+                            Peptide (the peptide usage) decides whether the abundance of pA;pB later comes from the shared peptide 
+                            only or also from the peptides unique to pA and pB. The figure shows the outcomes for every combination.
+                        </p>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
+        <section class="workflow-section tool-image-section">
+            <figure class="tool-figure">
+                <img src="/images/ProteinInference.png" alt="Protein Infrence" loading="lazy">
+            </figure>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon"><></span>
+                <span class="accordion-heading">
+                    <strong>Inputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <colgroup>
+                            <col class="col-flag" />
+                            <col class="col-meaning" />
+                            <col class="col-source" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td>
+                                        one or more <code>.qpsm</code> files, or a directory that is searched for <code>*.qpsm</code>
+                                    </td>
+                                    <td>
+                                    <a href="PSMStatistics.html">
+                                        PSMStatistics
+                                    </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-d</code></td>
+                                    <td>
+                                        The Peptide Database
+                                    </td>
+                                    <td>
+                                    <a href="./PeptideDB.html">
+                                        PeptideDB
+                                    </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-g</code></td>
+                                    <td>
+                                        optional GFF3 annotation of the proteome
+                                    </td>
+                                    <td>your genome annotation</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>the output directory, created when missing</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-p</code></td>
+                                    <td>the parameter file in JSON</td>
+                                    <td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/ProteinInferenceParams.json">Github ProteomIQon Core</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-dc</code></td>
+                                    <td>switch: save diagnostic charts to the output directory</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li>The GFF3 file tells the tool which proteins are transcripts of the same gene.</li>
+                            <li>With it the Class column (the peptide evidence class) separates groups made of isoforms of one gene from groups that mix unrelated proteins. Without -g every database protein counts as its own gene and the class carries no such information.</li>
+                            <li>For every input <code>run.qpsm</code> the tool writes <code>run.prot</code>, tab separated with a header.</li>
+                            <li>Further used from the <a href="./JoinQuantWithPepIons.html">JoinQuantWithPepIons</a> and the <a href="./AddDeducedPeptides.html">Add Deduced Peptides</a> Tools</li>
+                            <li>With <code>-dc</code> the tool saves a chart of scores against Q-values, as QValueGraph.html in the output directory when the files are grouped and as <code>run.prot_QValueGraph.html</code> per run otherwise.</li>
+                            <li>Logs go to <code>ProteinInference_log.txt</code> and a few <code>ProteinInference_step_log.txt</code> files in the output directory. There is no parallelism flag.</li>
+                        </ul>
+                    </div>
+                </div>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table parameter-table">
+                            <colgroup>
+                            <col class="col-parameter">
+                            <col class="col-default">
+                            <col class="col-meaning">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Parameter</th>
+                                    <th scope="col">Default</th>
+                                    <th scope="col">Meaning</th>                                                                 
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>ProteinIdentifierRegex</code></td>
+                                    <td>"Cre\S+"</td>
+                                    <td>Regex that extracts the protein identifier from the protein names in the database and, with -g, from the GFF3 entries. The default matches Chlamydomonas identifiers. Put a pattern for your own proteome here.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Protein</code></td>
+                                    <td>ProteinInference.IntegrationStrictness.Maximal</td>
+                                    <td>Maximal keeps every protein group intact. Minimal merges overlapping groups into the smallest set of proteins that explains all peptides.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>Peptide</code></td>
+                                    <td>ProteinInference.PeptideUsageForQuantification.Minimal</td>
+                                    <td>Minimal uses only the best matching peptides of a group. Maximal also uses peptides that point to a larger group containing this one. MaximalInverse also uses peptides that point to a part of this group.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>GroupFiles</code></td>
+                                    <td>true</td>
+                                    <td>Infer all input files together: the peptides of every run go into one inference and one q-value calculation, and every output file reports the same protein groups, each restricted to the peptides seen in that run. AddDeducedPeptides needs this. false infers each run on its own.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>GetQValue</code></td>
+                                    <td>QValueMethod.LogisticRegression FDRMethod.MAYU</td>
+                                    <td>Estimate the protein FDR with MAYU and turn it into q-values by logistic regression on the target and decoy scores. The other FDR estimates are FDRMethod.DecoyTargetRatio and FDRMethod.Conservative (an FDR of 1). QValueMethod.Storey uses the Storey estimate instead, QValueMethod.NoQValue writes nan. If the chosen calculation fails the tool falls back to nan and logs it.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    <p>The default file is <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/ProteinInferenceParams.json">PeptideDB.json</a>.</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">=</span>
+                <span class="accordion-heading">
+                    <strong>Outputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>This Output is generated</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <colgroup>
+                            <col class="Parameter" />
+                            <col class="Description" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ProteinGroup</td>
+                                    <td>
+                                    Protein Identifier Collection
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PeptideSequence</td>
+                                    <td>
+                                    List of all peptides assigned to this protein group
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Class</td>
+                                    <td>
+                                    Peptide Evidence Classes (C1A, C1B, C2A, C2B, C3A, C3B) which define how a peptide has been assigned to its corresponding protein
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>TargetScore</td>
+                                    <td>Target Score calculated based on the individual peptide scores of PSM</td>
+                                </tr>
+                                <tr>
+                                    <td>DecoyScore</td>
+                                    <td>Decoy Score calculated based on the individual peptide scores of PSM</td>
+                                </tr>
+                                <tr>
+                                    <td>QValue</td>
+                                    <td>Q-value (False-Discovery-Rate) for every identified protein</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.ProteinInference</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-proteininference -i path/to/run.qpsm -d path/to/database.db -o path/to/output -p path/to/ProteinInferenceParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Several runs grouped together, with the annotation for the evidence class</strong>
+                            <ul>    
+                                <li>
+                                    <div class="mockup-code w-full">
+                                    <pre data-prefix="$">
+                                        <code>proteomiqon-proteininference -i path/to/run1.qpsm path/to/run2.qpsm path/to/run3.qpsm -d path/to/database.db -g path/to/proteome.gff3 -o path/to/output -p path/to/ProteinInferenceParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>A whole directory, with the q-value chart</strong>
+                            <ul>
+                                <li>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$">
+                                            <code>proteomiqon-proteininference -i path/to/qpsmFolder -d path/to/database.db -o path/to/output -p path/to/ProteinInferenceParams.json -dc</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <ul>
+                                <li>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-proteininference --help</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </details>
+        </section>      
     </main>
+    </body>
+</html>
