@@ -1,5 +1,6 @@
 ---
 import '../style.css';
+import { baseUrl, withBase } from '../lib/site';
 
 interface Props {
 	title?: string;
@@ -14,10 +15,10 @@ const {
 } = Astro.props;
 
 const navigation = [
-	{ href: '/guide/getting-started/', label: 'Getting started' },
-	{ href: '/guide/installation/', label: 'Installation' },
-	{ href: '/tools/', label: 'Tools' },
-	{ href: '/guide/further-information/', label: 'Learn more' },
+	{ href: withBase('/guide/getting-started/'), label: 'Getting started' },
+	{ href: withBase('/guide/installation/'), label: 'Installation' },
+	{ href: withBase('/tools/'), label: 'Tools' },
+	{ href: withBase('/guide/further-information/'), label: 'Learn more' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -29,8 +30,8 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+		<link rel="icon" href={withBase('/favicon.ico')} />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
@@ -38,7 +39,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 	<body data-theme="light">
 		<div class="site-shell">
 			<header class="site-header">
-				<a class="brand" href="/" aria-label="ProteomIQon home">
+				<a class="brand" href={baseUrl} aria-label="ProteomIQon home">
 					<span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
 					<span>Proteom<span>IQ</span>on</span>
 				</a>
@@ -46,7 +47,7 @@ const isCurrent = (href: string) => currentPath === href || currentPath.startsWi
 					{navigation.map((item) => (
 						<a class:list={{ active: isCurrent(item.href) }} href={item.href}>{item.label}</a>
 					))}
-					<a class="nav-quiet" href="/guide/help/">Help</a>
+					<a class="nav-quiet" href={withBase('/guide/help/')}>Help</a>
 				</nav>
 			</header>
 

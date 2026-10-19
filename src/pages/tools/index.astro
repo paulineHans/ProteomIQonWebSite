@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { tools } from '../../data/tools';
+import { withBase } from '../../lib/site';
 
 const phases = [...new Set(tools.map((tool) => tool.phase))];
 const phaseClass = (phase) => phase.toLowerCase().replace(/\s+/g, '-');
@@ -27,7 +28,7 @@ const phaseClass = (phase) => phase.toLowerCase().replace(/\s+/g, '-');
 					<div class="phase-heading"><h3 id={`phase-${phaseClass(phase)}`}>{phase}</h3><span>{tools.filter((tool) => tool.phase === phase).length} tools</span></div>
 					<div class="tool-grid">
 						{tools.filter((tool) => tool.phase === phase).map((tool) => (
-							<a class="tool-card" data-tool-card data-search={`${tool.name} ${tool.summary} ${tool.phase}`} href={`/tools/${tool.slug}/`}>
+							<a class="tool-card" data-tool-card data-search={`${tool.name} ${tool.summary} ${tool.phase}`} href={withBase(`/tools/${tool.slug}/`)}>
 								<div class="tool-card-topline"><span>{tool.phaseNumber} / {tool.phase}</span><span>↗</span></div><h4>{tool.name}</h4><p>{tool.summary}</p>
 							</a>
 						))}

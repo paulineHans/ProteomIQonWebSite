@@ -1,12 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { withBase } from '../lib/site';
 
 const entryPoints = [
-	{ number: '01', title: 'Explore the tools', text: 'Browse each processing step, from mzML conversion to protein inference and quantification.', href: '/tools/', label: '18 tools in the directory', className: 'coral' },
-	{ number: '02', title: 'Install the pipeline', text: 'Set up the complete pipeline or install individual .NET tools from NuGet.', href: '/guide/installation/', label: 'Installation guide', className: 'blue' },
-	{ number: '03', title: 'Get started', text: 'Find the first steps for running ProteomIQon as a beginner or advanced user.', href: '/guide/getting-started/', label: 'Start here', className: 'lime' },
-	{ number: '04', title: 'Understand the system', text: 'Learn how tools are built, connected, documented and published.', href: '/guide/further-information/', label: 'Developer notes', className: 'gold' },
-	{ number: '05', title: 'Find support', text: 'Report issues, contribute ideas or connect with the people behind the project.', href: '/guide/help/', label: 'Community & help', className: 'violet' },
+	{ number: '01', title: 'Explore the tools', text: 'Browse each processing step, from mzML conversion to protein inference and quantification.', href: withBase('/tools/'), label: '18 tools in the directory', className: 'coral' },
+	{ number: '02', title: 'Install the pipeline', text: 'Set up the complete pipeline or install individual .NET tools from NuGet.', href: withBase('/guide/installation/'), label: 'Installation guide', className: 'blue' },
+	{ number: '03', title: 'Get started', text: 'Find the first steps for running ProteomIQon as a beginner or advanced user.', href: withBase('/guide/getting-started/'), label: 'Start here', className: 'lime' },
+	{ number: '04', title: 'Understand the system', text: 'Learn how tools are built, connected, documented and published.', href: withBase('/guide/further-information/'), label: 'Developer notes', className: 'gold' },
+	{ number: '05', title: 'Find support', text: 'Report issues, contribute ideas or connect with the people behind the project.', href: withBase('/guide/help/'), label: 'Community & help', className: 'violet' },
 ];
 
 const stages = [
@@ -27,11 +28,11 @@ const stages = [
 				<h1>Proteom<em>IQ</em>on</h1>
 				<p class="hero-lede">a modular collection of tools for moving from mass-spectrometry data to identifications and quantitative results.</p>
 				<div class="hero-actions">
-					<a class="button button-primary" href="/guide/getting-started/">New here? Start with the guide <span>→</span></a>
+					<a class="button button-primary" href={withBase('/guide/getting-started/')}>New here? Start with the guide <span>→</span></a>
 				</div>
 			</div>
 			<div class="hero-visual" aria-label="A diagram showing data moving through a proteomics pipeline">
-				<img src="/images/PillarsOfCompProt.png" alt="ProteomIQon"/>
+				<img src={withBase('/images/PillarsOfCompProt.png')} alt="ProteomIQon"/>
 			</div>
 		</section>
 

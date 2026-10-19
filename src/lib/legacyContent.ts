@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { toolBySlug, tools } from '../data/tools';
+import { withBase } from './site';
 
 const legacyRoot = resolve(process.cwd(), 'src', 'singleFields');
 
@@ -18,9 +19,13 @@ function slugForToolFile(fileName: string) {
 }
 
 function rewriteInternalLinks(html: string) {
-	return html.replace(/href="\.\/([^"#?]+\.html)"/gi, (_match, fileName: string) => {
+	const rewritten = html.replace(/href=(['"])(?!https?:|\/\/)(?:\.\/|\/)?([^'"#?]+\.html)([^'"]*)\1/gi, (_match, quote: string, fileName: string, suffix: string) => {
 		const route = guideRoutes[fileName.toLowerCase()] ?? `/tools/${slugForToolFile(fileName)}/`;
-		return `href="${route}"`;
+		return `href=${quote}${route}${suffix}${quote}`;
+	});
+
+	return rewritten.replace(/\b(href|src)=(['"])(\/[^'"]*)\2/gi, (_match, attribute: string, quote: string, path: string) => {
+		return `${attribute}=${quote}${withBase(path)}${quote}`;
 	});
 }
 
