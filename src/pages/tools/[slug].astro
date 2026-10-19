@@ -13,10 +13,11 @@ const toolIndex = tools.findIndex((candidate) => candidate.slug === tool.slug);
 const previousTool = tools[toolIndex - 1];
 const nextTool = tools[toolIndex + 1];
 const hasLongToolTitle = tool.name === 'PeptideSpectrumMatchingTIMs';
+const phaseClass = (phase: string) => phase.toLowerCase().replace(/\s+/g, '-');
 ---
 
 <Layout title={`${tool.name} · ProteomIQon`} description={tool.summary}>
-	<div class="tool-detail-layout">
+	<div class:list={['tool-detail-layout', `phase-${phaseClass(tool.phase)}`]}>
 		<aside class="tool-sidebar">
 			<a class="back-link" href="/tools/">← All tools</a><div class="sidebar-rule"></div><p class="sidebar-label">In this stage</p>
 			<nav aria-label={`${tool.phase} tools`}>
