@@ -6,38 +6,499 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>ProteomIQon - PSMBased Quantification TIMs</title>
-
+    <title>ProteomIQon - PSMBasedQuantificationTIMs</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
     <header>
-        <h1>ProteomIQon - PSMBased Quantification TIMs</h1>
+        <h1>ProteomIQon - PSMBasedQuantificationTIMs</h1>
     </header>
-
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    PSMBasedQuantificationTIMs is the PSMBasedQuantification variant for timsTOF runs. 
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool Description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        PSMBasedQuantificationTIMs is the PSMBasedQuantification variant for timsTOF runs.
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    On these instruments a peptide ion is a peak in two dimensions, retention time and ion 
-                    mobility, so the tool extracts an intensity grid over that plane around every 
-                    identification instead of a one dimensional ion chromatogram. By default it locates the 
-                    peak on the grid with a Gabor filter (a Gaussian envelope multiplied with a cosine wave, 
-                    tuned in size, width, frequency and angle), then fits and integrates it. The output has the 
-                    same layout as the output of PSMBasedQuantification, so the downstream tools do not care 
-                    which of the two produced it.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">?</span>
+                    <span class="accordion-heading">
+                        <strong>How does PSMBasedQuantificationTIMs work?</strong>
+                        <small>Step-by-step explained</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Diffrences to normal quantification</strong>
+                            <p>
+                                On these instruments a peptide ion is a peak in two dimensions, retention time and ion mobility, so the tool extracts an intensity grid over that plane around every identification instead of a one dimensional ion chromatogram.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Detection type</strong>
+                            <p>
+                                By default it locates the peak on the grid with a Gabor filter (a Gaussian envelope multiplied with a cosine wave, tuned in size, width, frequency and angle), then fits and integrates it.
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Output</strong>
+                            <p>
+                                The output has the same layout as the output of PSMBasedQuantification, so the downstream tools do not care which of the two produced it.
+                            </p>
+                        </li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">&lt;&gt;</span>
+                    <span class="accordion-heading">
+                        <strong>Inputs</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup>
+                                <col class="col-flag" />
+                                <col class="col-meaning" />
+                                <col class="col-source" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td>one or more <code>.mzlite</code> files with ion mobility, or a directory that is searched for <code>*mzlite</code></td>
+                                    <td><a href="./MzMLToMzLite.html">MzMLToMzLite</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ii</code></td>
+                                    <td>one or more <code>.qpsm</code> files in the FragPipe column layout, or a directory that is searched for <code>*.qpsm</code></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>the output directory, created when missing</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-d</code></td>
+                                    <td>the SQLite peptide database</td>
+                                    <td><a href="./PeptideDB.html">PeptideDB</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-p</code></td>
+                                    <td>the parameter file in JSON</td>
+                                    <td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/peptideSpectrumMatchingParams.json">Github ProteomIQon Core</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-mf</code></td>
+                                    <td>switch: pair files by base name instead of by position</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-dc</code></td>
+                                    <td>switch: write diagnostic charts</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-z</code></td>
+                                    <td>switch: pack the chart directory into a zip file and delete it</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-c</code></td>
+                                    <td>number of runs quantified at the same time, default 1</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="parameter-outro">
+                            <ul>
+                                <li>
+                                    <p>
+                                       The tool refuses any instrument file whose name does not end in <code>.mzlite</code>. It always reads the <code>qpsm</code> files as the FragPipe layout written by <code>MsFraggerToPSM</code> (with Hyperscore and IonMobility columns), so the files from PSMStatistics do not fit here.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        With one file per flag the pair is used as given. With lists, the n-th mzlite file is paired with the n-th qpsm file unless you pass -mf, which pairs files by their base name and skips mzlite files without a partner.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        For every run the tool writes <code>run.quant</code>, tab separated with a header.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        With <code>-dc</code> the tool writes charts into <code>run_plots</code>, and <code>-z</code> packs that directory into <code>run_plots.zip</code> and deletes it.
+                                    </p>
+                                </li>
+                                <li>
+                                    <p>
+                                        Delete an existing <code>run.quant</code> in the output directory before a rerun, the tool appends to it. Logs go to <code>PSMBasedQuantification_log.txt</code> and <code>run_log.txt</code> in the output directory.
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                        <small>Quantification, XIC extraction and Gabor filter settings</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <p>
+                        The parameter record is shared with PSMBasedQuantification.
+                        The following default values are specific to timsTOF runs.
+                    </p>
+                    <details class="parameter-group">
+                        <summary><strong>General settings</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table parameter-table">
+                                <thead>
+                                    <tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>PerformLabeledQuantification</code></td>
+                                        <td><code>Labeling.Unlabeled</code></td>
+                                        <td>Label-free quantification of the identified ion. The three labeled modes follow PSMBasedQuantification and also quantify the corresponding partner ion.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>FragPipe</code></td>
+                                        <td><code>true</code></td>
+                                        <td>Indicates that the qpsm file uses the FragPipe format produced by MsFraggerToPSM. Keep this setting at <code>true</code>.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>BaseLineCorrection</code></td>
+                                        <td><code>None</code></td>
+                                        <td>Disables baseline subtraction. <code>Some { MaxIterations = 10; Lambda = 6; P = 0.05 }</code> enables asymmetric least-squares baseline correction.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary><strong>XIC extraction</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table parameter-table">
+                                <thead>
+                                    <tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>XicExtraction.ScanTimeWindow</code></td>
+                                        <td><code>2.0</code></td>
+                                        <td>Half-width of the retention-time interval extracted around the identification, in the run's scan-time unit.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>XicExtraction.MzWindow_Da</code></td>
+                                        <td><code>Window.Estimate</code></td>
+                                        <td>Half-width of the m/z window in Da. <code>Estimate</code> uses four times the MS1 mass error of the identifications; <code>Window.Fixed 0.07</code> specifies 0.07 Da.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>XicExtraction.XicProcessing</code></td>
+                                        <td><code>XicProcessing.Gabor3D gaborParams</code></td>
+                                        <td>Locates peaks in the retention-time/ion-mobility grid with the Gabor settings listed below. <code>Wavelet</code> and <code>SecondDerivative</code> instead use the one-dimensional processing from PSMBasedQuantification.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>XicExtraction.TopKPSMs</code></td>
+                                        <td><code>None</code></td>
+                                        <td><code>Some k</code> limits peak placement to the k identifications with the highest <code>Hyperscore</code> for each peptide ion.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary><strong>Gabor filter parameters</strong></summary>
+                        <p>
+                            The kernel size must be greater than zero. Widths must be positive and finite;
+                            frequency and angle must also be finite.
+                        </p>
+                        <div class="table-wrapper">
+                            <table class="tool-table parameter-table">
+                                <thead>
+                                    <tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>sizeX</code></td>
+                                        <td><code>41</code></td>
+                                        <td>Kernel size along retention time, in grid bins. Half the size is the kernel radius, which expands the search area around the expected peak.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>sizeY</code></td>
+                                        <td><code>41</code></td>
+                                        <td>Kernel size along ion mobility, in grid bins.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>sigmaX</code></td>
+                                        <td><code>8.0</code></td>
+                                        <td>Gaussian envelope width along the first kernel axis, in bins.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>sigmaY</code></td>
+                                        <td><code>8.0</code></td>
+                                        <td>Gaussian envelope width along the second kernel axis, in bins.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>frequency</code></td>
+                                        <td><code>2.0</code></td>
+                                        <td>Frequency of the cosine wave inside the kernel.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>theta</code></td>
+                                        <td><code>0.06</code></td>
+                                        <td>Kernel rotation in the plane, in radians.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <div class="parameter-outro">
+                        <p>
+                            <strong>Default parameter file:</strong>
+                            <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/QuantificationTIMsParams.json">Default JSON File</a>
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">=</span>
+                    <span class="accordion-heading">
+                        <strong>Outputs</strong>
+                        <small>Output columns, quantification results and alignment metrics</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>The output table contains 45 columns. Expand a category to see its column names and descriptions.</p>
+                    <details>
+                        <summary><strong>Identification and PSM confidence</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>StringSequence</code></td><td>Amino Acid sequence (one-letter code) from PeptideDB which matches the psm candidate</td></tr>
+                                    <tr><td><code>GlobalMod</code></td><td>Indicator, if a peptide ion species is labeled or unlabeled</td></tr>
+                                    <tr><td><code>Charge</code></td><td>Precursor ion charge state</td></tr>
+                                    <tr><td><code>PepSequenceID</code></td><td>Unique identifier of the unmodified peptide sequence, which points to PeptideDB</td></tr>
+                                    <tr><td><code>ModSequenceID</code></td><td>Unique identifier of the modified peptide sequence (including PTMs, e.g., methylation), which points to PeptideDB</td></tr>
+                                    <tr><td><code>PrecursorMZ</code></td><td>Precursor ion mass-to-charge ratio (m/z)</td></tr>
+                                    <tr><td><code>MeasuredMass</code></td><td>Measured mass of precursor ions in Dalton</td></tr>
+                                    <tr><td><code>TheoMass</code></td><td>Theoretical peptide mass in the spectrum (based on amino acid composition) in Dalton</td></tr>
+                                    <tr><td><code>AbsDeltaMass</code></td><td>Absolute mass deviation between theoretical and measured mass (mass error)</td></tr>
+                                    <tr><td><code>MeanPercolatorScore</code></td><td>The peptide spectrum matches (PSMs) are re-scored based on several parameters. This value corresponds to the average consensus score determined in the process</td></tr>
+                                    <tr><td><code>QValue</code></td><td>Q-value (False-Discovery-Rate) based on combined model scores</td></tr>
+                                    <tr><td><code>PEPValue</code></td><td>Posterior Error Probability</td></tr>
+                                    <tr><td><code>ProteinNames</code></td><td>Protein Names out of the PeptideDB</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Light quantification (8)</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>QuantMZ_Light</code></td><td>Mass-to-charge ratio from the extracted XIC of the unlabeled peptide ion</td></tr>
+                                    <tr><td><code>Quant_Light</code></td><td>Peak area from the extracted XIC of the unlabeled peptide ion</td></tr>
+                                    <tr><td><code>MeasuredApex_Light</code></td><td>Measured Apex of unlabeled peak</td></tr>
+                                    <tr><td><code>Seo_Light</code></td><td>Standard Error of Prediction for quantification</td></tr>
+                                    <tr><td><code>Params_Light</code></td><td>Describes the shape of the fitted peak for the unlabeled version of a peptide. Contains information about peak height, estimated peak time, and peak width.</td></tr>
+                                    <tr><td><code>Diffrence_SearchRT_FittedRT_Light</code></td><td>Difference between the retention time originally determined using PSMs and the retention time calculated from the measured peak</td></tr>
+                                    <tr><td><code>KLDiv_Observed_Theoretical_Light</code></td><td>Describes how well the measured unlabeled isotope pattern matches the theoretically expected pattern.</td></tr>
+                                    <tr><td><code>KLDiv_CorrectObserved_Theoretical_Light</code></td><td>Corrected Kullback-Leiber divergence of isotopic pattern of unlabeled peptide ion versus the measured pattern</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Heavy quantification (8)</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>QuantMZ_Heavy</code></td><td>Mass-to-charge ratio from the extracted XIC of the labeled peptide ion</td></tr>
+                                    <tr><td><code>Quant_Heavy</code></td><td>Peak area from the extracted XIC of the labeled peptide ion</td></tr>
+                                    <tr><td><code>MeasuredApex_Heavy</code></td><td>Measured Apex of labeled peak</td></tr>
+                                    <tr><td><code>Seo_Heavy</code></td><td>Standard Error of Prediction of quantification</td></tr>
+                                    <tr><td><code>Params_Heavy</code></td><td>Describes the shape of the fitted peak for the labeled version of a peptide. Contains information about peak height, estimated peak time, and peak width.</td></tr>
+                                    <tr><td><code>Diffrence_SearchRT_FittedRT_Heavy</code></td><td>Difference between the retention time originally determined using PSMs and the retention time calculated from the measured peak</td></tr>
+                                    <tr><td><code>KLDiv_Observed_Theoretical_Heavy</code></td><td>Describes how well the measured labeled isotope pattern matches the theoretically expected pattern.</td></tr>
+                                    <tr><td><code>KLDiv_CorrectObserved_Theoretical_Heavy</code></td><td>Corrected Kullback-Leiber divergence of isotopic pattern of labeled peptide ion versus the measured pattern</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Light isotope patterns and traces (6)</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>IsotopicPatternMz_Light</code></td><td>M/z-distribution of isotope cluster in spectra for unlabeled peaks</td></tr>
+                                    <tr><td><code>IsotopicPatternIntensity_Observed_Light</code></td><td>Observed intensity distribution of unlabeled isotopic clusters</td></tr>
+                                    <tr><td><code>IsotopicPatternIntensity_Corrected_Light</code></td><td>Corrected intensity distribution of unlabeled isotopic clusters</td></tr>
+                                    <tr><td><code>RtTrace_Light</code></td><td>Retention Time Profile of unlabeled peptide ion</td></tr>
+                                    <tr><td><code>IntensityTrace_Observed_Light</code></td><td>Intensity trace over for an observed unlabeled isotopic peak cluster</td></tr>
+                                    <tr><td><code>IntensityTrace_Corrected_Light</code></td><td>Corrected intensity trace between an unlabeled peak and a measured isotopic peak cluster</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Heavy isotope patterns and traces (6)</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>IsotopicPatternMZ_Heavy</code></td><td>M/z-distribution of isotope cluster in spectra for labeled peaks</td></tr>
+                                    <tr><td><code>IsotopicPatternIntensity_Observed_Heavy</code></td><td>Observed intensity distribution of labeled isotopic clusters</td></tr>
+                                    <tr><td><code>IsotopicPatternIntensity_Corrected_Heavy</code></td><td>Corrected intensity distribution of labeled isotopic clusters</td></tr>
+                                    <tr><td><code>RtTrace_Heavy</code></td><td>Retention Time Profile of labeled peptide ion</td></tr>
+                                    <tr><td><code>IntensityTrace_Observed_Heavy</code></td><td>Intensity trace for an observed labeled isotopic peak cluster</td></tr>
+                                    <tr><td><code>IntensityTrace_Corrected_Heavy</code></td><td>Corrected intensity trace between a labeled peak and a measured isotopic peak cluster</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Light / Heavy comparison and quantification source (2)</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>Correlation_Light_Heavy</code></td><td>Correlation calculated based on Pearson between unlabeled and labeled peaks</td></tr>
+                                    <tr><td><code>QuantificationSource</code></td><td>If spectra are found over Alignments or Peptide Spectrum Matching</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Alignment quality (2)</strong></summary>
+                        <p>Alignment scores and associated q-values</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>AlignmentScore</code></td><td>Actual known alignments compared with the observed alignments</td></tr>
+                                    <tr><td><code>AlignmentQValue</code></td><td>Q-value, which is calculated based on the alignment score</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.PSMBasedQuantificationTIMs</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-psmbasedquantificationtims -i path/to/run.mzlite -ii path/to/run.qpsm -d path/to/database.db -o path/to/output -p path/to/QuantificationTIMsParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Running the tool for multiple runs, for three at the same time</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>
+                                    proteomiqon-psmbasedquantificationtims -i path/to/run1.mzlite path/to/run2.mzlite path/to/run3.mzlite -ii path/to/run1.qpsm path/to/run2.qpsm path/to/run3.qpsm -d path/to/database.db -o path/to/output -p path/to/QuantificationTIMsParams.json -c 3
+                                </code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Two directories, paired by file name</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-psmbasedquantificationtims -i path/to/mzliteFolder -ii path/to/qpsmFolder -d path/to/database.db -o path/to/output -p path/to/QuantificationTIMsParams.json -c 3 -mf</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-psmbasedquantificationtims --help</code></pre>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

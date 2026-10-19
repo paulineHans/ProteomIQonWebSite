@@ -1,52 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProteomIQon - LabelFreeProteinQuantification</title>
-
     <link rel="stylesheet" href="../../../style.css">
+    <!-- Optional: include the companion CSS if your existing styles do not yet cover nested parameter groups. -->
+    <!-- <link rel="stylesheet" href="./LabelFreeProteinQuantification_additions.css"> -->
 </head>
-
 <body>
-
     <header>
         <h1>ProteomIQon - LabelFreeProteinQuantification</h1>
     </header>
 
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    After JoinQuantPepIonsWithProteins every quantified peptide ion carries its protein group. 
-                    LabelFreeProteinQuantification turns these ion intensities into one intensity per protein 
-                    group and run. 
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>Tool Description</strong>
+                        <small>Purpose and functionality of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        After <a href="./JoinQuantWithPepIons.html">JoinQuantPepIonsWithProteins</a> every quantified peptide ion carries its protein group. LabelFreeProteinQuantification turns these ion intensities into one intensity per protein group and run. 
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    It works in up to three steps. The first merges the charge states of a peptide, 
-                    the second merges the modified forms of a peptide, and the third merges all peptides of a 
-                    protein group. The first two steps are optional. Each step has the same shape: transform the values, 
-                    drop single values or outliers within a group, then aggregate what is left. 
-                    Only light rows (GlobalMod 0) go in, so this tool is for unlabeled samples. 
-                    
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">?</span>
+                    <span class="accordion-heading">
+                        <strong>How does Label-Free Protein Quantification work?</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Aggregate peptide charge states (optional)</strong>
+                            <p>
+                                The first step merges the charge states of a peptide
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Aggregate modified peptides (optional)</strong>
+                            <p>
+                                The second step merges the modified forms of a peptide
+                            </p>
+                        </li>
+                        <li>
+                            <strong>Aggregate to protein groups</strong>
+                            <p>
+                                The third step merges all peptides of a protein group
+                            </p>
+                        </li>
+                    </ol>
+                    <p>
+                        The first two steps are optional. Each step has the same shape: transform the values, drop single values or outliers within a group, then aggregate what is left. Only light rows (GlobalMod 0) go in, so this tool is for unlabeled samples. For labeled samples use <a href="./LabeledProteinQuantification.html">LabeledProteinQuantification</a>.
+                    </p>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>What happens when stages are skipped?</strong>
+                                <small>How the optional steps interact</small></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                If charge-state aggregation is disabled, differently charged versions of the
+                                same peptide remain separate for the next stage. If modification aggregation
+                                is disabled, differently modified versions remain separate. If both are
+                                disabled, protein-group aggregation works directly on the unaggregated peptide
+                                ions, so a peptide sequence may still occur with multiple charge states and
+                                modifications.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>Good to know!</h2>
-            <div class="description_box">
-                <p>
-                    For labeled samples use LabeledProteinQuantification. <a href="./LabeledProteinQuantification.html">LabeledProteinQuantification</a>
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">&lt;&gt;</span>
+                    <span class="accordion-heading">
+                        <strong>Inputs</strong>
+                        <small>Required files and command-line flags</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup><col class="col-flag"><col class="col-meaning"><col class="col-source"></colgroup>
+                            <thead><tr><th scope="col">Flag</th><th scope="col">Meaning</th><th scope="col">Comes from</th></tr></thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td>One or more <code>.quantAndProt</code> input files containing peptide quantification and protein-group assignments.</td>
+                                    <td><a href="./JoinQuantPepIonsWithProteins.html">JoinQuantPepIonsWithProteins</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>Directory in which the aggregation results are written.</td>
+                                    <td>Chosen output location</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-p</code></td>
+                                    <td>Path to a JSON file specifying modification filtering and aggregation settings.</td>
+                                    <td><a href="https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams.json" target="_blank" rel="noopener noreferrer">Default parameter file ↗</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p><strong>Important:</strong> The input must already combine peptide-level quantification
+                       with protein inference. The tool does not perform those upstream steps itself.</p>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                        <small>General settings, optional stages and shared aggregation options</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>General settings</strong>
+                                <small>Modification filter and aggregation stages</small></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <div class="table-wrapper">
+                                <table class="tool-table parameter-table">
+                                    <colgroup><col class="col-parameter"><col class="col-default"><col class="col-meaning"></colgroup>
+                                    <thead><tr><th scope="col">Parameter</th><th scope="col">Default / type</th><th scope="col">Meaning</th></tr></thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>ModificationFilter</code></td>
+                                            <td><code>UseModifiedPeptides.All</code></td>
+                                            <td>Specifies which modified peptides can be used in the aggregation stages.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AggregatePeptideChargeStatesParams</code></td>
+                                            <td><code>None</code> in the minimal JSON preset; otherwise <code>Some AggregationParams</code></td>
+                                            <td>Optional settings for combining differently charged versions of a peptide. Enabled in the charge-aggregation presets.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AggregateModifiedPeptidesParams</code></td>
+                                            <td><code>None</code> in the minimal and charge-only JSON presets; otherwise <code>Some AggregationParams</code></td>
+                                            <td>Optional settings for combining differently modified versions of a peptide. Enabled in the charge-and-modification preset.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>AggregateToProteinGroupsParams</code></td>
+                                            <td><code>AggregationParams</code> (required)</td>
+                                            <td>Settings for the final aggregation of peptide intensities to protein groups.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>
+                                <strong>Modification filter options:</strong> <code>UseModifiedPeptides.All</code>
+                                (use all), <code>UseModifiedPeptides.No</code> (exclude modified peptides), or
+                                <code>UseModifiedPeptides.UseOnly</code> (allow specified modifications).
+                            </p>
+                            <p>
+                                <strong>About the defaults:</strong> The documentation lists the optional stage
+                                parameters as <code>Some AggregationParams</code>, but the repository also
+                                supplies a <em>minimal</em> JSON preset in which both optional fields are
+                                <code>null</code>. Which stages run therefore depends on the chosen preset.
+                            </p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>Charge-state aggregation</strong>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                When enabled, this stage combines versions of the same modified peptide
+                                that differ only in precursor charge. Set
+                                <code>AggregatePeptideChargeStatesParams</code> to a <code>Some</code> record
+                                containing the settings listed under <em>Shared aggregation settings</em>.
+                                Set it to <code>None</code> / JSON <code>null</code> to skip the stage.
+                            </p>
+                            <p>In the supplied charge-aggregation JSON preset, filtering and transformation are
+                               disabled and light intensities are aggregated using the mean.</p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>Modification aggregation</strong>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                When enabled, this stage combines peptide versions with the same amino-acid
+                                sequence but different modifications. Set <code>AggregateModifiedPeptidesParams</code>
+                                to a <code>Some</code> record using the shared aggregation settings;
+                                <code>None</code> / JSON <code>null</code> skips the stage.
+                            </p>
+                            <p>In the supplied charge-and-modification JSON preset, light intensities are
+                               aggregated using the mean and the three optional transformation/filter fields
+                               are disabled.</p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>Protein-group aggregation</strong>
+                                <small>AggregateToProteinGroupsParams · required</small></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                The final aggregation combines the peptide intensities assigned to each protein
+                                group. Unlike the previous two stages, <code>AggregateToProteinGroupsParams</code>
+                                is not optional and always contains an aggregation-parameter record.
+                            </p>
+                            <p>The official JSON presets use the mean of light intensities without additional
+                               transformations or filtering for this step.</p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>Shared aggregation settings</strong>
+                                <small>Transform, filters and aggregation method</small></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                Each enabled stage uses the same four-field
+                                <code>LabelFreeQuantification.AggregationParams</code> record.
+                            </p>
+                            <div class="table-wrapper">
+                                <table class="tool-table parameter-table">
+                                    <colgroup><col class="col-parameter"><col class="col-default"><col class="col-meaning"></colgroup>
+                                    <thead><tr><th scope="col">Parameter</th><th scope="col">Default</th><th scope="col">Meaning</th></tr></thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><code>Transform</code></td>
+                                            <td><code>None</code></td>
+                                            <td>Optional transformation applied to intensity values.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>SingleFilters</code></td>
+                                            <td><code>None</code></td>
+                                            <td>Optional lower and/or upper limits for individual intensities.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>GroupFilters</code></td>
+                                            <td><code>None</code></td>
+                                            <td>Optional filtering of the group of intensities being aggregated.</td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>Aggregation</code></td>
+                                            <td><code>{Light = NumericAggregation.Mean}</code></td>
+                                            <td>Specifies how the intensity values in a group are combined.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p>
+                                <strong>Numeric aggregation choices:</strong>
+                                <code>NumericAggregation.Mean</code>, <code>NumericAggregation.Median</code>
+                                and <code>NumericAggregation.Sum</code>.
+                            </p>
+                            <p>
+                                In JSON, the <code>None</code> values are represented by <code>null</code>,
+                                and the mean aggregator is encoded as
+                                <code>"Aggregation": {"Light": {"Case": "Mean"}}</code>.
+                            </p>
+                        </div>
+                    </details>
+                    <div class="parameter-outro">
+                        <p><strong>Default parameter files:</strong> Choose the preset matching the aggregation stages you want to run.</p>
+                        <ul>
+                            <li><a href="https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams.json" target="_blank" rel="noopener noreferrer">Minimal: protein-group aggregation only ↗</a></li>
+                            <li><a href="https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams_ChargeAgg.json" target="_blank" rel="noopener noreferrer">Charge-state + protein-group aggregation ↗</a></li>
+                            <li><a href="https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams_ChargeAgg_ModAgg.json" target="_blank" rel="noopener noreferrer">Charge-state + modification + protein-group aggregation ↗</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">=</span>
+                    <span class="accordion-heading">
+                        <strong>Outputs</strong>
+                        <small>Outputs</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <thead><tr><th scope="col">Stage</th><th scope="col">Output content</th><th scope="col">When produced</th></tr></thead>
+                            <tbody>
+                                <tr>
+                                    <td>Charge-state aggregation</td>
+                                    <td>Intensities combined across charge states of the same modified peptide.</td>
+                                    <td>Only if <code>AggregatePeptideChargeStatesParams</code> is enabled.</td>
+                                </tr>
+                                <tr>
+                                    <td>Modification aggregation</td>
+                                    <td>Intensities combined across differently modified versions of the same peptide sequence.</td>
+                                    <td>Only if <code>AggregateModifiedPeptidesParams</code> is enabled.</td>
+                                </tr>
+                                <tr>
+                                    <td>Protein-group aggregation</td>
+                                    <td>Peptide intensities aggregated to protein-group level.</td>
+                                    <td>Always performed.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>
+                        <strong>Output format:</strong> tab-separated files. The referenced documentation
+                        does not specify exact output filenames or a column-by-column output schema, so no
+                        unverified filenames or columns are assumed here.
+                    </p>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.LabelFreeProteinQuantification</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-labelfreeproteinquantification -i path/to/run.quantAndProt -o path/to/output -p path/to/LabelFreeQuantificationParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Several runs in one table, from a list or from a directory</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$">
+                                    <code>
+                                       proteomiqon-labelfreeproteinquantification -i path/to/run1.quantAndProt path/to/run2.quantAndProt -o path/to/output -p path/to/LabelFreeQuantificationParams.json
+                                       proteomiqon-labelfreeproteinquantification -i path/to/quantAndProt -o path/to/output -p path/to/LabelFreeQuantificationParams.json
+                                    </code>
+                                </pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Two directories, paired by file name</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-psmbasedquantification -i path/to/mzliteFolder -ii path/to/qpsmFolder -d path/to/database.db -o path/to/output -p path/to/QuantificationParams.json -c 3 -mf</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>proteomiqon-labelfreeproteinquantification --help</code></pre>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

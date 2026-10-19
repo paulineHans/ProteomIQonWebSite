@@ -1,43 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ProteomIQon - JoinQuantPepIonsWithProteins</title>
-
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body>
-
     <header>
         <h1>ProteomIQon - JoinQuantPepIonsWithProteins</h1>
     </header>
-
     <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
-                <p>
-                    A .quant file knows the intensity of every peptide ion, and a .prot file knows which 
-                    protein group each peptide sequence belongs to and how confident that assignment is. 
-                    JoinQuantPepIonsWithProteins puts the two together.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">i</span>
+                    <span class="accordion-heading">
+                        <strong>JoinQuantPepIonsWithProteins</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content description-content">
+                    <p>
+                        A <code>.quant</code> file contains the intensities of peptide ions. A <code>.prot</code>
+                        file provides their protein-group assignments and the associated confidence.
+                        JoinQuantPepIonsWithProteins combines these files by expanding the
+                        semicolon-separated peptide sequences in the protein table and matching them
+                        to quantified peptide ions. Matching ions receive their protein group and q-value.
+                    </p>
+                    <p>
+                        One <code>.quantAndProt</code> file is produced for each run. These files are inputs
+                        for <a href="./LabelFreeProteinQuantification.html">LabelFreeProteinQuantification</a>
+                        and <a href="./LabeledProteinQuantification.html">LabeledProteinQuantification</a>.
+                    </p>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    It reads the protein table, 
-                    splits its semicolon separated peptide list into one row per sequence, and attaches the protein 
-                    group and its q-value to every quantified ion with the same sequence. The result is one 
-                    .quantAndProt file per run, which is what LabelFreeProteinQuantification and 
-                    LabeledProteinQuantification read.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">&lt;&gt;</span>
+                    <span class="accordion-heading">
+                        <strong>Inputs</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <div class="table-wrapper">
+                        <table class="tool-table input-table">
+                            <colgroup>
+                                <col class="col-flag">
+                                <col class="col-meaning">
+                                <col class="col-source">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Flag</th>
+                                    <th scope="col">Meaning</th>
+                                    <th scope="col">Comes from</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td>One or more <code>.quant</code> files, or a directory containing <code>*.quant</code> files.</td>
+                                    <td>
+                                        <a href="./PSMBasedQuantification.html">PSMBasedQuantification</a>,
+                                        <a href="./PSMBasedQuantificationTIMs.html">PSMBasedQuantificationTIMs</a>
+                                        or <a href="./AlignmentBasedQuantification.html">AlignmentBasedQuantification</a>,
+                                        optionally scored by
+                                        <a href="./AlignmentBasedQuantStatistics.html">AlignmentBasedQuantStatistics</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-ii</code></td>
+                                    <td>One or more <code>.prot</code> files, or a directory containing <code>*.prot</code> files.</td>
+                                    <td>
+                                        <a href="./ProteinInference.html">ProteinInference</a> or
+                                        <a href="./AddDeducedPeptides.html">AddDeducedPeptides</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>Output directory, which is created if it does not already exist.</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-mf</code></td>
+                                    <td>Switch to match input files by their base names rather than their positions.</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-c</code></td>
+                                    <td>Number of files processed concurrently; default is <code>1</code>.</td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading">
+                                <strong>Quantified ions</strong>
+                                <small>ProteinGroup, PeptideSequence and QValue</small>
+                            </span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                Quantified ions with no fitted scan time are excluded. From the protein
+                                table the tool reads <code>ProteinGroup</code>, <code>PeptideSequence</code>
+                                and <code>QValue</code>. The protein q-value is written to the
+                                <code>ProteinGroup_QValue</code> output column.
+                            </p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading">
+                                <strong>For every .quant file</strong>
+                                <small>.quantAndProt</small>
+                            </span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                Each <code>.quant</code> input produces a tab-delimited
+                                <code>&lt;name&gt;.quantAndProt</code> file. The columns from the original
+                                <code>.quant</code> rows are retained, with <code>FileName</code>,
+                                <code>ProteinGroup</code> and <code>ProteinGroup_QValue</code> placed before
+                                them. Peptides assigned to multiple protein groups are represented by
+                                one output row for each group.
+                            </p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading">
+                                <strong>Without -mf / With -mf</strong>
+                                <small>.quant and .prot files</small>
+                            </span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                Without <code>-mf</code>, the lists of <code>.quant</code> and
+                                <code>.prot</code> files are matched in their given order. Both lists
+                                must have the same number of files; otherwise nothing is written.
+                            </p>
+                            <p>
+                                With <code>-mf</code>, matching is based on the files' base names.
+                                A <code>.quant</code> file is skipped when no corresponding
+                                <code>.prot</code> file exists. Use <code>-mf</code> when supplying directories.
+                            </p>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading">
+                                <strong>Logs</strong>
+                                <small>JoinQuantPepIonsWithProteins_log.txt</small>
+                            </span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <p>
+                                Existing <code>&lt;name&gt;.quantAndProt</code> files must be deleted before
+                                another run because new rows are appended. The output directory also
+                                contains <code>JoinQuantPepIonsWithProteins_log.txt</code>.
+                            </p>
+                        </div>
+                    </details>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Running the tool</strong>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>The tool installs with:</p>
+                    <pre class="code-example"><code>dotnet tool install --global ProteomIQon.JoinQuantPepIonsWithProteins</code></pre>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>A single run</strong></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <pre class="code-example"><code>proteomiqon-joinquantpepionswithproteins -i path/to/run.quant -ii path/to/run.prot -o path/to/output</code></pre>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>Several runs, paired by position, four at a time</strong></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <pre class="code-example"><code>proteomiqon-joinquantpepionswithproteins -i path/to/run1.quant path/to/run2.quant -ii path/to/run1.prot path/to/run2.prot -o path/to/output -c 4</code></pre>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>Two directories, paired by file name</strong></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <pre class="code-example"><code>proteomiqon-joinquantpepionswithproteins -i path/to/quant -ii path/to/prot -o path/to/output -mf -c 4</code></pre>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary class="parameter-group-header">
+                            <span class="parameter-group-heading"><strong>All flags</strong></span>
+                            <span class="parameter-group-chevron"></span>
+                        </summary>
+                        <div class="parameter-group-content">
+                            <pre class="code-example"><code>proteomiqon-joinquantpepionswithproteins --help</code></pre>
+                        </div>
+                    </details>
+                </div>
+            </details>
         </section>
     </main>
+</body>
+</html>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,44 +6,448 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
-
-    <title>ProteomIQon - PSMStatistics</title>
-
+    <title>ProteomIQon - PSMStats</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
+    <body>
+        <header>
+            <h1>ProteomIQon - PSMStats</h1>
+        </header>
 
-<body>
+    <main> 
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">i</span>
+                <span class="accordion-heading">
+                    <strong>Tool Description</strong>
+                    <small>Purpose and functionality of the tool</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
 
-    <header>
-        <h1>ProteomIQon - PSMStatistics</h1>
-    </header>
-
-    <main>
-        <section>
-            <h2> Tool Description</h2>
-            <div class="description_box">
+                <div class="accordion-content description-content">
                 <p>
-                    PeptideSpectrumMatching reports several scores for every spectrum (SEQUEST-like, 
-                    Andromeda-like, X!Tandem-like, plus mass error, peptide length and how far the best 
-                    candidate is ahead of the next one). PSMStatistics learns one combined score from these columns.
+                    PeptideSpectrumMatching reports several scores for every spectrum (SEQUEST-like, Andromeda-like, X!Tandem-like, plus mass error, peptide length and how far the best candidate is ahead of the next one). PSMStatistics learns one combined score from these columns.
                 </p>
-            </div>
+                </div>
+            </details>
         </section>
-        <section>
-            <h2>What's happening?</h2>
-            <div class="description_box">
-                <p>
-                    It uses the target and decoy labels of the matches as training signal, retrains in 
-                    iterations while the set of confident targets grows (semi supervised), and stops when an 
-                    iteration adds too few new positives or the iteration limit is reached. From the combined 
-                    score it computes a q-value and a PEP value per match and keeps the PSMs under both 
-                    thresholds. PSMStatistics also reads the output of PeptideSpectrumMatchingTIMs. Both tools 
-                    write the 28 column layout of this release, and .psm files written by earlier releases 
-                    (23 columns) have to be regenerated before this release of PSMStatistics reads them. When 
-                    every row carries finite Hyperscore and Expectscore values, it uses both as model features, 
-                    with Expectscore represented by its negative log10, and seeds the first training round with 
-                    the expectation value. Without them the SEQUEST-like score seeds it, as before.
-                </p>
-            </div>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon">?</span>
+                <span class="accordion-heading">
+                    <strong>How does PSMStats work?</strong>
+                    <small>Step-by-step explained</small>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                        <strong>Semi-supervised Machine learning approach</strong>
+                        <p>
+                            It uses the target and decoy labels of the matches as training signal, retrains in iterations while the set of confident targets grows (semi supervised), and stops when an iteration adds too few new positives or the iteration limit is reached. From the combined score it computes a Q-value and a PEP value per match and keeps the PSMs under both thresholds.
+                        </p>
+                        </li>
+                        <li>
+                        <strong>Good to know!</strong>
+                        <p>
+                            PSMStatistics also reads the output of <a href="./PeptideSpectrumMatchingTIMs.html">PeptideSpectrumMatchingTIMs</a>. Both tools write the 28 column layout of this release, and <code>.psm</code> files written by earlier releases (23 columns) have to be regenerated before this release of PSMStatistics reads them. When every row carries finite Hyperscore and Expectscore values, it uses both as model features, with Expectscore represented by its negative log10, and seeds the first training round with the expectation value. Without them the SEQUEST-like score seeds it, as before.
+                        </p>
+                        </li>
+                    </ol>
+                </div>
+            </details>
         </section>
+        <section class="workflow-section tool-image-section">
+            <figure class="tool-figure">
+                <img src="/images/SemiSupervisedScoring.png" alt="Protein Infrence" loading="lazy">
+            </figure>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                <span class="accordion-icon"><></span>
+                <span class="accordion-heading">
+                    <strong>Inputs</strong>
+                </span>
+                <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>These inputs are needed to execute the tool:</p>
+                    <div class="table-wrapper">
+                        <table class="tool-table">
+                            <colgroup>
+                            <col class="col-flag" />
+                            <col class="col-meaning" />
+                            <col class="col-source" />
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>Flag</th>
+                                    <th>Meaning</th>
+                                    <th>Comes from</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><code>-i</code></td>
+                                    <td>
+                                        one or more <code>.psm</code> files, or a directory that is searched for <code>*.psm</code> (not recursive)
+                                    </td>
+                                    <td>
+                                    <a href="./PeptideSpectrumMatching.html">
+                                        PSMStatistics
+                                    </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-d</code></td>
+                                    <td>
+                                        The Peptide Database
+                                    </td>
+                                    <td>
+                                    <a href="./PeptideDB.html">
+                                        PeptideDB
+                                    </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><code>-o</code></td>
+                                    <td>the output directory, created when missing</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-p</code></td>
+                                    <td>the parameter file in JSON</td>
+                                    <td><a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/pSMStatisticsParams.json">Github ProteomIQon Core</a></td>
+                                </tr>
+                                <tr>
+                                    <td><code>-dc</code></td>
+                                    <td>switch: save diagnostic charts to the output directory</td>
+                                </tr>
+                                <tr>
+                                    <td><code>-c</code></td>
+                                    <td>number of files scored at the same time, default 1</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <ul>
+                            <li>For every input <code>run.psm</code> the tool writes <code>run.qpsm</code> to the output directory.</li>
+                            <li>The file is tab separated with a header and holds one row per scan.</li>
+                            <li>The tool also creates a <code>run_plots</code> directory per input. It stays empty unless you pass <code>-dc</code>, which adds <code>Metrics.html</code> and <code>InitialSeparation.html</code>, plus one <code>separationAtIteration_n.html</code> per training iteration. </li>
+                        </ul>
+                    </div>
+                </div>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">!</span>
+                    <span class="accordion-heading">
+                        <strong>Parameter file</strong>
+                        <small>Threshold selection, score estimation and general settings</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content parameter-content">
+                    <p>
+                        PSMStatistics can either estimate a combined score using iterative learning
+                        or apply fixed score cutoffs. The default uses <code>Threshold.Estimate</code>.
+                    </p>
+                    <details class="parameter-group">
+                        <summary><strong>Threshold selection</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table parameter-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Parameter</th>
+                                        <th scope="col">Default</th>
+                                        <th scope="col">Meaning</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>Threshold</code></td>
+                                        <td><code>Threshold.Estimate estimationParams</code></td>
+                                        <td>Learn a combined model score and retain PSMs according to q-value and PEP thresholds. The nested estimation settings are listed below.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>Threshold</code> (alternative)</td>
+                                        <td><code>Threshold.Fixed { SequestLike = 0.; Andromeda = 0. }</code></td>
+                                        <td>Skip model training and keep the best match per scan only if its <code>SequestScore</code> exceeds <code>SequestLike</code> and its <code>AndroScore</code> exceeds <code>Andromeda</code>. Decoy matches are removed. The resulting <code>ModelScore</code>, <code>QValue</code> and <code>PEPValue</code> are <code>nan</code>. Both zero cutoffs shown here are placeholders; choose values appropriate for your data.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary><strong>Estimation parameters</strong></summary>
+                        <p>These settings belong to the nested <code>Threshold.Estimate</code> record.</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table parameter-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Parameter</th>
+                                        <th scope="col">Default</th>
+                                        <th scope="col">Meaning</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>QValueThreshold</code></td>
+                                        <td><code>0.01</code></td>
+                                        <td>Retain PSMs whose q-value is below this threshold.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>PepValueThreshold</code></td>
+                                        <td><code>0.05</code></td>
+                                        <td>Retain PSMs whose posterior error probability (PEP) is below this threshold.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>MaxIterations</code></td>
+                                        <td><code>15</code></td>
+                                        <td>Maximum number of iterations used to retrain the scoring model.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>MinimumIncreaseBetweenIterations</code></td>
+                                        <td><code>0.005</code></td>
+                                        <td>Stop retraining when the relative increase in positive matches at the q-value threshold is smaller than this fraction.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>PepValueFittingMethod</code></td>
+                                        <td><code>PepValueFittingMethod.IRLS</code></td>
+                                        <td>Fit the PEP curve using iteratively reweighted least squares (<code>IRLS</code>); this is the only available fitting method.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details class="parameter-group">
+                        <summary><strong>General settings</strong></summary>
+                        <div class="table-wrapper">
+                            <table class="tool-table parameter-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Parameter</th>
+                                        <th scope="col">Default</th>
+                                        <th scope="col">Meaning</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>ParseProteinIDRegexPattern</code></td>
+                                        <td><code>"id"</code></td>
+                                        <td>Regular expression used on database FASTA headers to populate <code>ProteinNames</code>. Use the same identifier pattern as in PeptideDB.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>KeepTemporaryFiles</code></td>
+                                        <td><code>true</code></td>
+                                        <td>Field in the parameter record. Leave this setting at <code>true</code>.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <div class="parameter-outro">
+                        <p>
+                            The default parameter file is
+                            <a href="https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/pSMStatisticsParams.json"
+                            target="_blank" rel="noopener noreferrer">pSMStatisticsParams.json ↗</a>.
+                        </p>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">=</span>
+                    <span class="accordion-heading">
+                        <strong>Outputs</strong>
+                        <small>PSM identification, scoring and statistical confidence</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <p>The output table contains 27 columns. Expand a category to see its column names and descriptions.</p>
+                    <details>
+                        <summary><strong>Identification and protein assignment (6)</strong></summary>
+                        <p>PSM identifiers, peptide sequences and corresponding proteins</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>PSMId</code></td><td>Identifier of the MS/MS spectrum</td></tr>
+                                    <tr><td><code>GlobalMod</code></td><td>Indicator, if a peptide ion species is labeled or unlabeled</td></tr>
+                                    <tr><td><code>PepSequenceID</code></td><td>Unique identifier of the unmodified peptide sequence, which points to PeptideDB</td></tr>
+                                    <tr><td><code>ModSequenceID</code></td><td>Unique identifier of the modified peptide sequence (including PTMs, e.g., methylation), which points to PeptideDB</td></tr>
+                                    <tr><td><code>StringSequence</code></td><td>Amino Acid sequence (one-letter code) from PeptideDB which matches the psm candidate</td></tr>
+                                    <tr><td><code>ProteinNames</code></td><td>Protein Names out of the PeptideDB</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Spectrum, precursor and peptide properties (8)</strong></summary>
+                        <p>Scan details, precursor masses, peptide length and missed cleavages</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>ScanNr</code></td><td>Scan identifier, combining the spectrum ID in the raw file with an ascending MS2 ID</td></tr>
+                                    <tr><td><code>ScanTime</code></td><td>Retention time (RT) in minutes of the MS/MS scan</td></tr>
+                                    <tr><td><code>Charge</code></td><td>Precursor ion charge state</td></tr>
+                                    <tr><td><code>PrecursorMZ</code></td><td>Precursor ion mass-to-charge ratio (m/z)</td></tr>
+                                    <tr><td><code>TheoMass</code></td><td>Theoretical peptide mass in the spectrum (based on amino acid composition) in Dalton</td></tr>
+                                    <tr><td><code>AbsDeltaMass</code></td><td>Absolute mass deviation between theoretical and measured mass (mass error)</td></tr>
+                                    <tr><td><code>PeptideLength</code></td><td>Peptide length in Amino Acid count</td></tr>
+                                    <tr><td><code>MissCleavages</code></td><td>Number of missed cleavages</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>SEQUEST scoring (3)</strong></summary>
+                        <p>Similarity score and normalized differences between candidates</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>SequestScore</code></td><td>SEQUEST similarity score (e.g., XCorr) quantifying agreement between theoretical and experimental spectra</td></tr>
+                                    <tr><td><code>SequestNormDeltaBestToRest</code></td><td>Normalized separation of the best SEQUEST score from the remaining candidate scores</td></tr>
+                                    <tr><td><code>SequestNormDeltaNext</code></td><td>Normalized separation between the best and second-best SEQUEST scores</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Andromeda scoring (3)</strong></summary>
+                        <p>Match score and normalized differences between candidates</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>AndroScore</code></td><td>Andromeda score quantifying the match between theoretical and experimental spectra</td></tr>
+                                    <tr><td><code>AndroNormDeltaBestToRest</code></td><td>Normalized separation of the best Andromeda score from the remaining candidate scores</td></tr>
+                                    <tr><td><code>AndroNormDeltaNext</code></td><td>Normalized separation between the best and second-best Andromeda scores</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>X!Tandem scoring (3)</strong></summary>
+                        <p>Match score and normalized differences between candidates</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>XTandemScore</code></td><td>XTandem score quantifying the match between theoretical and experimental spectra</td></tr>
+                                    <tr><td><code>XtandemNormDeltaBestToRest</code></td><td>Normalized separation of the best XTandem score from the remaining candidate scores</td></tr>
+                                    <tr><td><code>XtandemNormDeltaNext</code></td><td>Normalized separation between the best and second-best XTandem scores</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                    <details>
+                        <summary><strong>Target/decoy and statistical confidence (4)</strong></summary>
+                        <p>Model score, FDR and posterior error probability</p>
+                        <div class="table-wrapper">
+                            <table class="tool-table">
+                                <thead>
+                                    <tr><th scope="col">Column</th><th scope="col">Description</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td><code>Label</code></td><td>Target/decoy label: 1 = target, −1 = decoy</td></tr>
+                                    <tr><td><code>ModelScore</code></td><td>Best score value achieved by iterative model to distinguish between target &amp; decoy</td></tr>
+                                    <tr><td><code>QValue</code></td><td>Q-value (False-Discovery-Rate) based on combined model scores</td></tr>
+                                    <tr><td><code>PEPValue</code></td><td>Posterior Error Probability</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </details>
+                </div>
+            </details>
+        </section>
+        <section class="workflow-section">
+            <details class="accordion">
+                <summary class="accordion-header">
+                    <span class="accordion-icon">.exe</span>
+                    <span class="accordion-heading">
+                        <strong>Installing and executing the tool</strong>
+                        <small>Execution of the tool</small>
+                    </span>
+                    <span class="accordion-chevron"></span>
+                </summary>
+                <div class="accordion-content">
+                    <ol class="workflow-steps">
+                        <li>
+                            <strong>Installing</strong>
+                            <p>Install the Tool with the following command inside the choosen Command-Line</p>
+                            <div class="mockup-code w-full">
+                                <pre data-prefix="$"><code>dotnet tool install --global ProteomIQon.ProteinInference</code></pre>
+                            </div>
+                        </li>
+                        <li>
+                            <strong>Execute</strong>
+                            <ul>
+                                <li>
+                                    <p>Running the tool</p>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-proteininference -i path/to/run.qpsm -d path/to/database.db -o path/to/output -p path/to/ProteinInferenceParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Several runs grouped together, with the annotation for the evidence class</strong>
+                            <ul>    
+                                <li>
+                                    <div class="mockup-code w-full">
+                                    <pre data-prefix="$">
+                                        <code>proteomiqon-proteininference -i path/to/run1.qpsm path/to/run2.qpsm path/to/run3.qpsm -d path/to/database.db -g path/to/proteome.gff3 -o path/to/output -p path/to/ProteinInferenceParams.json</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>A whole directory, with the q-value chart</strong>
+                            <ul>
+                                <li>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$">
+                                            <code>proteomiqon-proteininference -i path/to/qpsmFolder -d path/to/database.db -o path/to/output -p path/to/ProteinInferenceParams.json -dc</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>All Flags</strong>
+                            <ul>
+                                <li>
+                                    <div class="mockup-code w-full">
+                                        <pre data-prefix="$"><code>proteomiqon-proteininference --help</code></pre>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </details>
+        </section>      
     </main>
+    </body>
+</html>
