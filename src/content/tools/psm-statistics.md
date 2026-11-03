@@ -73,7 +73,7 @@ The default parameter file is [pSMStatisticsParams.json ↗](https://github.com/
 
 ## Outputs
 
-The output table contains 27 columns. Expand a category to see its column names and descriptions.
+The output table contains 27 columns. The columns are grouped by category below.
 
 ### Identification and protein assignment (6)
 

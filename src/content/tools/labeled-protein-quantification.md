@@ -110,31 +110,31 @@ Use an official labeled JSON preset or generate your own with F#. The documentat
 
 ```json
 {
-                                        "Correlation_Light_Heavy_Threshold": null,
-                                        "ModificationFilter": {"Case": "All"},
-                                        "AggregateGlobalModificationsParams": {
-                                        "LabeledTransform": null,
-                                        "LabeledSingleFilters": null,
-                                        "LabeledGroupFilters": null,
-                                        "LabeledAggregation": {
-                                        "Light": {"Case": "Mean"},
-                                        "Heavy": {"Case": "Mean"},
-                                        "Ratio": {"Case": "Mean"}
-                                        }
-                                        },
-                                        "AggregatePeptideChargeStatesParams": null,
-                                        "AggregateModifiedPeptidesParams": null,
-                                        "AggregateToProteinGroupsParams": {
-                                        "LabeledTransform": null,
-                                        "LabeledSingleFilters": null,
-                                        "LabeledGroupFilters": null,
-                                        "LabeledAggregation": {
-                                        "Light": {"Case": "Mean"},
-                                        "Heavy": {"Case": "Mean"},
-                                        "Ratio": {"Case": "Mean"}
-                                        }
-                                        }
-                                        }
+  "Correlation_Light_Heavy_Threshold": null,
+  "ModificationFilter": {"Case": "All"},
+  "AggregateGlobalModificationsParams": {
+    "LabeledTransform": null,
+    "LabeledSingleFilters": null,
+    "LabeledGroupFilters": null,
+    "LabeledAggregation": {
+      "Light": {"Case": "Mean"},
+      "Heavy": {"Case": "Mean"},
+      "Ratio": {"Case": "Mean"}
+    }
+  },
+  "AggregatePeptideChargeStatesParams": null,
+  "AggregateModifiedPeptidesParams": null,
+  "AggregateToProteinGroupsParams": {
+    "LabeledTransform": null,
+    "LabeledSingleFilters": null,
+    "LabeledGroupFilters": null,
+    "LabeledAggregation": {
+      "Light": {"Case": "Mean"},
+      "Heavy": {"Case": "Mean"},
+      "Ratio": {"Case": "Mean"}
+    }
+  }
+}
 ```
 
 ### F# parameter-generation example
@@ -144,69 +144,69 @@ The script follows the documented labeled aggregation types. Optional charge-sta
 ```text
 #r "nuget: ProteomIQon, 0.0.7"
 
-                                        open ProteomIQon
-                                        open ProteomIQon.Dto
+open ProteomIQon
+open ProteomIQon.Dto
 
-                                        let globalModParams : Common.LabeledProteinQuantification.AggregationParams =
-                                        {
-                                        LabeledTransform     = None
-                                        LabeledSingleFilters = None
-                                        LabeledGroupFilters  = None
-                                        LabeledAggregation   = {
-                                        Light = NumericAggregation.Mean
-                                        Heavy = NumericAggregation.Mean
-                                        Ratio = NumericAggregation.Mean
-                                        }
-                                        }
+let globalModParams : Common.LabeledProteinQuantification.AggregationParams =
+{
+LabeledTransform     = None
+LabeledSingleFilters = None
+LabeledGroupFilters  = None
+LabeledAggregation   = {
+Light = NumericAggregation.Mean
+Heavy = NumericAggregation.Mean
+Ratio = NumericAggregation.Mean
+}
+}
 
-                                        let chargeParams : Common.LabeledProteinQuantification.AggregationParams =
-                                        {
-                                        LabeledTransform     = None
-                                        LabeledSingleFilters = None
-                                        LabeledGroupFilters  = None
-                                        LabeledAggregation   = {
-                                        Light = NumericAggregation.Mean
-                                        Heavy = NumericAggregation.Mean
-                                        Ratio = NumericAggregation.Mean
-                                        }
-                                        }
+let chargeParams : Common.LabeledProteinQuantification.AggregationParams =
+{
+LabeledTransform     = None
+LabeledSingleFilters = None
+LabeledGroupFilters  = None
+LabeledAggregation   = {
+Light = NumericAggregation.Mean
+Heavy = NumericAggregation.Mean
+Ratio = NumericAggregation.Mean
+}
+}
 
-                                        let modParams : Common.LabeledProteinQuantification.AggregationParams =
-                                        {
-                                        LabeledTransform     = None
-                                        LabeledSingleFilters = None
-                                        LabeledGroupFilters  = None
-                                        LabeledAggregation   = {
-                                        Light = NumericAggregation.Mean
-                                        Heavy = NumericAggregation.Mean
-                                        Ratio = NumericAggregation.Mean
-                                        }
-                                        }
+let modParams : Common.LabeledProteinQuantification.AggregationParams =
+{
+LabeledTransform     = None
+LabeledSingleFilters = None
+LabeledGroupFilters  = None
+LabeledAggregation   = {
+Light = NumericAggregation.Mean
+Heavy = NumericAggregation.Mean
+Ratio = NumericAggregation.Mean
+}
+}
 
-                                        let protParams : Common.LabeledProteinQuantification.AggregationParams =
-                                        {
-                                        LabeledTransform     = None
-                                        LabeledSingleFilters = None
-                                        LabeledGroupFilters  = None
-                                        LabeledAggregation   = {
-                                        Light = NumericAggregation.Mean
-                                        Heavy = NumericAggregation.Mean
-                                        Ratio = NumericAggregation.Mean
-                                        }
-                                        }
+let protParams : Common.LabeledProteinQuantification.AggregationParams =
+{
+LabeledTransform     = None
+LabeledSingleFilters = None
+LabeledGroupFilters  = None
+LabeledAggregation   = {
+Light = NumericAggregation.Mean
+Heavy = NumericAggregation.Mean
+Ratio = NumericAggregation.Mean
+}
+}
 
-                                        let parameters : Dto.LabeledQuantificationParams =
-                                        {
-                                        Correlation_Light_Heavy_Threshold = Some 0.0
-                                        ModificationFilter = UseModifiedPeptides.All
-                                        AggregateGlobalModificationsParams = globalModParams
-                                        AggregatePeptideChargeStatesParams = Some chargeParams // or None
-                                        AggregateModifiedPeptidesParams = Some modParams      // or None
-                                        AggregateToProteinGroupsParams = protParams
-                                        }
+let parameters : Dto.LabeledQuantificationParams =
+{
+Correlation_Light_Heavy_Threshold = Some 0.0
+ModificationFilter = UseModifiedPeptides.All
+AggregateGlobalModificationsParams = globalModParams
+AggregatePeptideChargeStatesParams = Some chargeParams // or None
+AggregateModifiedPeptidesParams = Some modParams      // or None
+AggregateToProteinGroupsParams = protParams
+}
 
-                                        let serialized = parameters |> Json.serialize
-                                        System.IO.File.WriteAllText("LabeledQuantificationParams.json", serialized)
+let serialized = parameters |> Json.serialize
+System.IO.File.WriteAllText("LabeledQuantificationParams.json", serialized)
 ```
 
 **Documentation note:** This F# sample uses the parameters shown in the published documentation. `Some modParams` applies the modification aggregation, whereas *Some chargeParams* applies charge aggregation. The `chargeParams` record and `Some chargeParams` are used together; replace either optional stage with None to skip it.
@@ -231,20 +231,20 @@ Process a `.quantAndProt` input, specifying the output directory and labeled JSO
 
 ```text
 proteomiqon-labeledproteinquantification \
-                                        -i "path/to/your/run.quantAndProt" \
-                                        -o "path/to/your/outDirectory" \
-                                        -p "path/to/your/params.json"
+-i "path/to/your/run.quantAndProt" \
+-o "path/to/your/outDirectory" \
+-p "path/to/your/params.json"
 ```
 
 ### Convert multiple runs
 
 ```text
 proteomiqon-labeledproteinquantification \
-                                        -i "path/to/your/run1.quantAndProt" \
-                                        "path/to/your/run2.quantAndProt" \
-                                        "path/to/your/run3.quantAndProt" \
-                                        -o "path/to/your/outDirectory" \
-                                        -p "path/to/your/params.json"
+-i "path/to/your/run1.quantAndProt" \
+"path/to/your/run2.quantAndProt" \
+"path/to/your/run3.quantAndProt" \
+-o "path/to/your/outDirectory" \
+-p "path/to/your/params.json"
 ```
 
 In the original multi-run example, `-o` is omitted before the output directory. The example above includes it, consistently with the single-run command.

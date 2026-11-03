@@ -43,7 +43,7 @@ These inputs are needed to execute the tool:
   - [AlignmentBasedQuantification](./alignment-based-quantification.md)
   - [Protein Inference](./protein-inference.md)
 
-- When a `<Name>`.db already exists in the output directory and the parameters stored inside it equal the parameter file, the tool reuses that database and only makes sure its index is present.
+- When a `<Name>.db` already exists in the output directory and the parameters stored inside it equal the parameter file, the tool reuses that database and only makes sure its index is present.
 
 - The output directory also receives PeptideDB_log.txt and `PeptideDB_Name_log.txt`.
 

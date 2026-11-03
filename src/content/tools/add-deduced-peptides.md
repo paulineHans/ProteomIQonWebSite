@@ -24,7 +24,7 @@ After alignment and AlignmentBasedQuantification, a run's `.quant` file holds pe
 
    If a protein group has different scores, the tool stops with the message:
 
-   If you are running this tool please infer proteins over all files
+   > If you are running this tool please infer proteins over all files
 
 3. **Generate run-specific protein files**
 

@@ -13,6 +13,7 @@ export default defineConfig({
   integrations: [react()],
   markdown: {
     processor: satteri({
+      features: { smartPunctuation: false },
       hastPlugins: [contentLinks({ base, contentDir: fileURLToPath(new URL('./src/content', import.meta.url)) })],
     }),
   },

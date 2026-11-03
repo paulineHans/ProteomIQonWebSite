@@ -84,7 +84,7 @@ The kernel size must be greater than zero. Widths must be positive and finite; f
 
 ## Outputs
 
-The output table contains 45 columns. Expand a category to see its column names and descriptions.
+The output table contains 45 columns. The columns are grouped by category below.
 
 ### Identification and PSM confidence
 
