@@ -1,0 +1,30 @@
+---
+interface Props {
+	number: string;
+	title: string;
+	text: string;
+	href: string;
+	label: string;
+	tone: 'sky' | 'orange' | 'teal' | 'red' | 'green';
+	class?: string;
+}
+const { number, title, text, href, label, tone, class: className } = Astro.props;
+
+const tones = {
+	sky: { card: 'border-t-sky hover:border-sky', arrow: 'text-sky' },
+	orange: { card: 'border-t-orange hover:border-orange', arrow: 'text-orange' },
+	teal: { card: 'border-t-teal hover:border-teal', arrow: 'text-teal' },
+	red: { card: 'border-t-red hover:border-red', arrow: 'text-red' },
+	green: { card: 'border-t-green hover:border-green', arrow: 'text-green' },
+};
+---
+
+<a class:list={['flex min-h-[238px] flex-col border border-t-4 border-line bg-surface px-[18px] pt-[19px] pb-[21px] no-underline transition-[border-color,transform,box-shadow] duration-200 hover:-translate-y-[3px] hover:shadow-offset-muted max-[520px]:min-h-[205px]', tones[tone].card, className]} href={href}>
+	<div class="flex justify-between">
+		<span class="text-steel">{number}</span>
+		<span class:list={['text-[1.05rem]', tones[tone].arrow]}>↗</span>
+	</div>
+	<h3 class="mt-7 mb-2.5 text-[1.22rem] tracking-[-.035em]! text-navy">{title}</h3>
+	<p class="mb-[18px] text-[.79rem] leading-[1.6] text-steel">{text}</p>
+	<span class="mt-auto font-mono text-[.59rem] tracking-[.07em] text-steel uppercase">{label}</span>
+</a>

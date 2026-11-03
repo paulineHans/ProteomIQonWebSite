@@ -1,0 +1,55 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+:root {
+	--paper: #f7f9fb;
+	--surface: #ffffff;
+	--surface-muted: #eef2f5;
+	--ink: #042c58;
+	--muted: #507289;
+	--line: #d0d6dd;
+}
+
+:root[data-theme="dark"] {
+	--paper: #07182c;
+	--surface: #0c2240;
+	--surface-muted: #12294a;
+	--ink: #e8eef5;
+	--muted: #9db4c6;
+	--line: #23405f;
+}
+
+@theme {
+	--color-navy: #042c58;
+	--color-steel: #507289;
+	--color-sky: #6ab2e7;
+	--color-orange: #ffa252;
+	--color-red: #e31b4c;
+	--color-green: #26d07c;
+	--color-teal: #77b6ba;
+	--color-mist: #d0d6dd;
+
+	--font-sans: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+	--font-mono: 'IBM Plex Mono', 'Cascadia Code', monospace;
+
+	--shadow-offset: 5px 5px 0 var(--color-orange);
+	--shadow-offset-muted: 5px 5px 0 var(--color-mist);
+}
+
+@theme inline {
+	--color-paper: var(--paper);
+	--color-surface: var(--surface);
+	--color-surface-muted: var(--surface-muted);
+	--color-ink: var(--ink);
+	--color-muted: var(--muted);
+	--color-line: var(--line);
+}
+
+@layer base {
+	html { scroll-behavior: smooth; }
+	body { @apply bg-paper text-ink font-sans leading-relaxed; }
+	::selection { color: var(--surface); background: var(--color-red); }
+	h1, h2, h3, h4 { @apply font-semibold; letter-spacing: -0.045em; line-height: 1.08; }
+}

@@ -1,0 +1,12 @@
+---
+interface Props {
+	href: string;
+	external?: boolean;
+	class?: string;
+}
+const { href, external = false, class: className } = Astro.props;
+---
+
+<a class:list={['text-[.82rem] font-semibold text-navy! no-underline', className]} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+	<slot /><span class="ml-1.5 text-red" aria-hidden="true">{external ? '↗' : '→'}</span>
+</a>
