@@ -53,3 +53,29 @@
 	::selection { color: var(--surface); background: var(--color-red); }
 	h1, h2, h3, h4 { @apply font-semibold; letter-spacing: -0.045em; line-height: 1.08; }
 }
+
+/* Brand customisation of the typography plugin. Unlayered on purpose: the legacy
+   `h1,h2,h3,h4,p { margin-top: 0 }` and `a { color: inherit }` rules are unlayered too. */
+.prose {
+	--tw-prose-body: var(--color-ink);
+	--tw-prose-headings: var(--color-navy);
+	--tw-prose-lead: var(--color-ink);
+	--tw-prose-links: var(--color-red);
+	--tw-prose-bold: var(--color-ink);
+	--tw-prose-counters: var(--color-steel);
+	--tw-prose-bullets: var(--color-steel);
+	--tw-prose-hr: var(--color-line);
+	--tw-prose-quotes: var(--color-ink);
+	--tw-prose-quote-borders: var(--color-line);
+	--tw-prose-captions: var(--color-muted);
+	--tw-prose-code: var(--color-ink);
+	--tw-prose-th-borders: var(--color-line);
+	--tw-prose-td-borders: var(--color-line);
+}
+.prose a { color: var(--tw-prose-links); text-decoration: underline; }
+.prose h1, .prose h2, .prose h3, .prose h4 { color: var(--tw-prose-headings); }
+.prose h2 { margin-top: 2em; }
+.prose h3 { margin-top: 1.6em; }
+.prose p { margin-top: 1.25em; }
+.prose table { display: block; overflow-x: auto; }
+.prose td:first-child code { font-family: var(--font-mono); }

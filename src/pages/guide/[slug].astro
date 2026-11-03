@@ -23,15 +23,15 @@ const { title, eyebrow, intro, description, contributors } = entry.data;
 	</section>
 
 	<div class="content-column">
-		<article class="legacy-content">
+		<article class="legacy-content prose max-w-none prose-a:font-semibold">
 			<Content />
 			{contributors && (
-				<ul class="contributor-list">
+				<ul class="not-prose grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] gap-6 mt-8">
 					{contributors.map((person) => (
-						<li>
-							<strong>{person.url ? <a href={person.url} target="_blank" rel="noopener">{person.name}</a> : person.name}</strong>
-							{person.role && <span>{person.role}</span>}
-							{person.image && <Image src={person.image} alt={`Portrait of ${person.name}`} width={160} />}
+						<li class="flex flex-col items-center gap-2 text-center">
+							{person.image && <Image class="rounded-full" src={person.image} alt={`Portrait of ${person.name}`} width={160} />}
+							<strong>{person.url ? <a class="text-red!" href={person.url} target="_blank" rel="noopener">{person.name}</a> : person.name}</strong>
+							{person.role && <span class="text-sm text-steel">{person.role}</span>}
 						</li>
 					))}
 				</ul>

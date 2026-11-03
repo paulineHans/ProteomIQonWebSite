@@ -6,14 +6,15 @@ interface Props {
 	title: string;
 	id?: string;
 	note?: string;
+	dot?: boolean;
 	class?: string;
 }
-const { eyebrow, title, id, note, class: className } = Astro.props;
+const { eyebrow, title, id, note, dot, class: className } = Astro.props;
 ---
 
 <div class:list={['mb-[42px] flex items-end justify-between gap-[45px] max-md:block', className]}>
 	<div>
-		<Eyebrow class="mb-3">{eyebrow}</Eyebrow>
+		<Eyebrow class="mb-3" dot={dot}>{eyebrow}</Eyebrow>
 		<h2 id={id} class="max-w-[540px] text-[clamp(2rem,3.8vw,3.2rem)]!">{title}</h2>
 	</div>
 	{note && <p class="mb-[7px] max-w-[320px] text-sm leading-[1.7] text-steel max-md:mt-[19px]!">{note}</p>}

@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import { phases } from '../../lib/phases';
 import { getSortedTools, toolHref } from '../../lib/tools';
 import { withBase } from '../../lib/site';
+import { breakCamelCase } from '../../lib/text';
 
 const tools = await getSortedTools();
 const toolsOf = (phaseId: string) => tools.filter((tool) => tool.data.phase === phaseId);
@@ -30,7 +31,7 @@ const toolsOf = (phaseId: string) => tools.filter((tool) => tool.data.phase === 
 					<div class="tool-grid">
 						{toolsOf(phase.id).map((tool) => (
 							<a class="tool-card" data-tool-card data-search={`${tool.data.name} ${tool.data.summary} ${phase.label}`} href={toolHref(tool.id)}>
-								<div class="tool-card-topline"><span>{phase.number} / {phase.label}</span><span>↗</span></div><h4>{tool.data.name}</h4><p>{tool.data.summary}</p>
+								<div class="tool-card-topline"><span>{phase.number} / {phase.label}</span><span>↗</span></div><h4>{breakCamelCase(tool.data.name).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}</h4><p>{tool.data.summary}</p>
 							</a>
 						))}
 					</div>

@@ -1,9 +1,10 @@
 ---
-import { getEntry, render } from 'astro:content';
+import { render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { getPhase } from '../../lib/phases';
 import { getSortedTools, toolHref } from '../../lib/tools';
 import { withBase } from '../../lib/site';
+import { breakCamelCase } from '../../lib/text';
 
 export async function getStaticPaths() {
 	const tools = await getSortedTools();
@@ -30,8 +31,8 @@ const phase = getPhase(entry.data.phase);
 		</aside>
 
 		<main class="tool-detail">
-			<section class="tool-detail-hero"><p class="eyebrow"><span class="eyebrow-dot"></span> {phase.number} / {phase.label}</p><h1>{entry.data.name}</h1><p class="tool-summary">{entry.data.summary}</p></section>
-			<article class="legacy-content tool-legacy-content"><Content /></article>
+			<section class="tool-detail-hero"><p class="eyebrow"><span class="eyebrow-dot"></span> {phase.number} / {phase.label}</p><h1>{breakCamelCase(entry.data.name).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}</h1></section>
+			<article class="legacy-content tool-legacy-content prose max-w-none prose-a:font-semibold prose-code:before:content-none prose-code:after:content-none"><Content /></article>
 			<nav class="tool-pagination" aria-label="Browse tools">
 				{previousTool ? <a href={toolHref(previousTool.id)}><small>Previous tool</small><span>← {previousTool.data.name}</span></a> : <span></span>}
 				{nextTool ? <a class="next" href={toolHref(nextTool.id)}><small>Next tool</small><span>{nextTool.data.name} →</span></a> : <a class="next" href={withBase('/tools/')}><small>Directory</small><span>Back to all tools →</span></a>}

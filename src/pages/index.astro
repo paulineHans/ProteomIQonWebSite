@@ -21,9 +21,9 @@ const entryPoints = [
 <Layout title="ProteomIQon · Proteomics toolchain" description="Explore the ProteomIQon toolchain, its processing tools, documentation and its tutorials." showFooter={false}>
 	<div>
 		<Banner>This website is a construction site and not finished yet</Banner>
-		<section class="relative overflow-hidden pt-[78px] pb-[70px] min-h-[575px] max-md:min-h-0 max-md:pt-14 max-md:pb-12 max-[520px]:pt-[47px]">
+		<section class="relative overflow-hidden flex min-h-[575px] items-center justify-between pt-[78px] pb-[70px] max-md:block max-md:min-h-0 max-md:pt-14 max-md:pb-12 max-[520px]:pt-[47px]">
 			<div class="relative z-2 w-[min(630px,100%)]">
-				<Eyebrow>Open-source proteomics toolchain</Eyebrow>
+				<Eyebrow class="mb-[17px]">Open-source proteomics toolchain</Eyebrow>
 				<h1 class="mb-6 text-[clamp(3rem,6.2vw,5.75rem)]! [text-shadow:0_0_18px_rgba(247,249,251,.92),0_2px_0_rgba(247,249,251,.72)]">Proteom<em class="text-steel not-italic">IQ</em>on</h1>
 				<p class="max-w-[570px] text-[1.07rem] leading-[1.75] text-steel max-[520px]:text-base">a modular collection of tools for moving from mass-spectrometry data to identifications and quantitative results.</p>
 				<div class="mt-[33px] flex flex-wrap items-center gap-6 max-[520px]:flex-col max-[520px]:items-start max-[520px]:gap-[18px]">
@@ -43,6 +43,7 @@ const entryPoints = [
 		<section class="pt-[108px] pb-[68px] max-md:pt-[76px] max-md:pb-[51px]" aria-labelledby="entry-title">
 			<SectionHeading
 				eyebrow="Choose your next step"
+				dot={false}
 				title="Overview."
 				id="entry-title"
 				note="Five entry points keep the documentation focused, whether you are running a workflow or building a new tool."
@@ -54,11 +55,11 @@ const entryPoints = [
 
 		<section class="grid grid-cols-[1fr_1.4fr_1fr] items-center gap-[25px] border-t border-line pt-7 pb-[72px] max-md:block max-md:pb-[54px]">
 			<div class="grid gap-[13px]">
-				<Eyebrow class="mb-0">Built for reproducible research</Eyebrow>
+				<Eyebrow class="mb-0" dot={false}>Built for reproducible research</Eyebrow>
 				<strong class="text-[.8rem] text-navy">ProteomIQon</strong>
 			</div>
 			<p class="max-w-[390px] text-[.86rem] text-steel max-md:my-[19px]!">Follow one tool at a time, or use the whole chain. The documentation mirrors the way the analysis is assembled.</p>
-			<TextLink href="https://github.com/CSBiology/ProteomIQon/" external class="max-md:inline-block">View the project on GitHub</TextLink>
+			<TextLink href="https://github.com/CSBiology/ProteomIQon/" external tone="red" class="justify-self-end max-md:inline-block">View the project on GitHub</TextLink>
 		</section>
 	</div>
 </Layout>

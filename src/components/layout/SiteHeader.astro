@@ -16,7 +16,8 @@ const navigation = [
 ];
 
 const currentPath = Astro.url.pathname;
-const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(href);
+const isExact = (href: string) => currentPath === href;
+const isAncestor = (href: string) => currentPath !== href && currentPath.startsWith(href);
 
 const link = 'group relative py-1 text-[.8rem] whitespace-nowrap no-underline transition-colors duration-200 hover:text-navy!';
 ---
@@ -25,12 +26,13 @@ const link = 'group relative py-1 text-[.8rem] whitespace-nowrap no-underline tr
 	<Brand />
 	<nav class="flex items-center gap-[25px] max-[520px]:mt-[18px] max-[520px]:flex-wrap max-[520px]:gap-x-4 max-[520px]:gap-y-2" aria-label="Main navigation">
 		{navigation.map((item) => {
-			const active = isCurrent(item.href);
+			const exact = isExact(item.href);
+			const active = exact || isAncestor(item.href);
 			return (
 				<a
 					class:list={[link, item.quiet ? 'text-red!' : active ? 'text-navy!' : 'text-steel!']}
 					href={item.href}
-					aria-current={active ? 'page' : undefined}
+					aria-current={exact ? 'page' : active ? 'true' : undefined}
 				>
 					{item.label}
 					<span class:list={['absolute inset-x-0 bottom-0 h-0.5 origin-right scale-x-0 bg-red transition-transform duration-200 group-hover:origin-left group-hover:scale-x-100', active && 'origin-left scale-x-100']}></span>
