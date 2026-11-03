@@ -1,6 +1,9 @@
 ---
+import '../styles/global.css';
 import '../style.css';
-import { baseUrl, withBase } from '../lib/site';
+import { withBase } from '../lib/site';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
 
 interface Props {
 	title?: string;
@@ -13,56 +16,29 @@ const {
 	description = 'Knowledgebase, Tutorials and more.',
 	showFooter = true,
 } = Astro.props;
-
-const navigation = [
-	{ href: withBase('/guide/getting-started/'), label: 'Getting started' },
-	{ href: withBase('/guide/installation/'), label: 'Installation' },
-	{ href: withBase('/tools/'), label: 'Tools' },
-	{ href: withBase('/guide/further-information/'), label: 'Learn more' },
-];
-
-const currentPath = Astro.url.pathname;
-const isCurrent = (href: string) => currentPath === href || currentPath.startsWith(`${href}`);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
 		<link rel="icon" href={withBase('/favicon.ico')} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body data-theme="light">
+	<body>
 		<div class="site-shell">
-			<header class="site-header">
-				<a class="brand" href={baseUrl} aria-label="ProteomIQon home">
-					<span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
-					<span>Proteom<span>IQ</span>on</span>
-				</a>
-				<nav class="site-nav" aria-label="Main navigation">
-					{navigation.map((item) => (
-						<a class:list={{ active: isCurrent(item.href) }} href={item.href}>{item.label}</a>
-					))}
-					<a class="nav-quiet" href={withBase('/guide/help/')}>Help</a>
-				</nav>
-			</header>
-
+			<SiteHeader />
 			<main>
 				<slot />
 			</main>
-
-			{showFooter && (
-				<footer class="site-footer">
-					<div>
-						<strong>ProteomIQon</strong>
-					</div>
-					<a href="https://github.com/CSBiology/ProteomIQon/">View the project on GitHub ↗</a>
-				</footer>
-			)}
+			{showFooter && <SiteFooter />}
 		</div>
 	</body>
 </html>

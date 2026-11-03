@@ -1,10 +1,12 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { tools } from '../../data/tools';
+import { phases } from '../../lib/phases';
+import { getSortedTools, toolHref } from '../../lib/tools';
 import { withBase } from '../../lib/site';
+import { breakCamelCase } from '../../lib/text';
 
-const phases = [...new Set(tools.map((tool) => tool.phase))];
-const phaseClass = (phase) => phase.toLowerCase().replace(/\s+/g, '-');
+const tools = await getSortedTools();
+const toolsOf = (phaseId: string) => tools.filter((tool) => tool.data.phase === phaseId);
 ---
 
 <Layout title="Tools · ProteomIQon" description="Browse the ProteomIQon tools by processing stage.">
@@ -24,12 +26,12 @@ const phaseClass = (phase) => phase.toLowerCase().replace(/\s+/g, '-');
 
 		<div class="phase-groups">
 			{phases.map((phase) => (
-				<section class:list={['phase-group', `phase-${phaseClass(phase)}`]} aria-labelledby={`phase-${phaseClass(phase)}`}>
-					<div class="phase-heading"><h3 id={`phase-${phaseClass(phase)}`}>{phase}</h3><span>{tools.filter((tool) => tool.phase === phase).length} tools</span></div>
+				<section class:list={['phase-group', `phase-${phase.id}`]} aria-labelledby={`phase-${phase.id}`}>
+					<div class="phase-heading"><h3 id={`phase-${phase.id}`}>{phase.label}</h3><span>{toolsOf(phase.id).length} tools</span></div>
 					<div class="tool-grid">
-						{tools.filter((tool) => tool.phase === phase).map((tool) => (
-							<a class="tool-card" data-tool-card data-search={`${tool.name} ${tool.summary} ${tool.phase}`} href={withBase(`/tools/${tool.slug}/`)}>
-								<div class="tool-card-topline"><span>{tool.phaseNumber} / {tool.phase}</span><span>↗</span></div><h4>{tool.name}</h4><p>{tool.summary}</p>
+						{toolsOf(phase.id).map((tool) => (
+							<a class="tool-card" data-tool-card data-search={`${tool.data.name} ${tool.data.summary} ${phase.label}`} href={toolHref(tool.id)}>
+								<div class="tool-card-topline"><span>{phase.number} / {phase.label}</span><span>↗</span></div><h4>{breakCamelCase(tool.data.name).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}</h4><p>{tool.data.summary}</p>
 							</a>
 						))}
 					</div>
@@ -41,11 +43,11 @@ const phaseClass = (phase) => phase.toLowerCase().replace(/\s+/g, '-');
 </Layout>
 
 <script>
-	const searchInput = document.querySelector('#tool-search');
-	const cards = Array.from(document.querySelectorAll('[data-tool-card]'));
-	const noResults = document.querySelector('#no-results');
-	searchInput?.addEventListener('input', (event) => {
-		const query = event.target.value.trim().toLowerCase();
+	const searchInput = document.querySelector<HTMLInputElement>('#tool-search');
+	const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-tool-card]'));
+	const noResults = document.querySelector<HTMLElement>('#no-results');
+	searchInput?.addEventListener('input', () => {
+		const query = searchInput.value.trim().toLowerCase();
 		let visible = 0;
 		cards.forEach((card) => {
 			const matches = !query || card.dataset.search?.toLowerCase().includes(query);
