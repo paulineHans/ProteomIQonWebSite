@@ -8,35 +8,34 @@ inputsFrom: []
 
 ## Tool Description
 
-In data dependent acquisition a peptide ion quantified in one run is often present in another run without having been fragmented there. QuantBasedAlignment predicts where such an ion elutes in the run that lacks it. For every target run (-i) it learns, from the peptide ions the target shares with each source run (-ii), how scan times shift between the two runs. With that model it predicts the scan time of every source ion in the target, together with an error estimate for each prediction. For timsTOF runs it also predicts the ion mobility.
+In data dependent acquisition a peptide ion quantified in one run is often present in another run without having been fragmented there. QuantBasedAlignment predicts where such an ion elutes in the run that lacks it.
+
+For every target run (`-i`) it learns, from the peptide ions the target shares with each source run (`-ii`), how scan times shift between the two runs. With that model it predicts the scan time of every source ion in the target, together with an error estimate for each prediction. For timsTOF runs it also predicts the ion mobility.
+
 The tool is the first of three that transfer quantifications between runs. It reads the .quant files of PSMBasedQuantification or PSMBasedQuantificationTIMs. AlignmentBasedQuantification then looks for the peak of each transferred ion, and AlignmentBasedQuantStatistics scores the result.
 
 ![QuantBasedAlignment](../../assets/images/quantbasedalignment.png)
 
-## How does QuantBasedALignment work?
+## How does QuantBasedAlignment work?
 The tool works on each pair of target and source run separately.
 
 1. **Identify Shared Peptide Ions**
+
     The model uses the ions (sequence, modifications, charge) that both runs quantified with a successful peak fit whose identification scan time lies within two standard deviations of the apex of the fitted peak. A pair needs at least 20 shared ions.
 2. **Calculate Retention Time Shifts**
+
     It describes the shift target scan time − source scan time as a function of the source scan time. Each point of the curve is the median shift of the k shared ions nearest in source scan time. Between ions the curve is interpolated linearly, beyond the first and last ion it is constant. 
 3. **Remove Outliers**
+
     Some shared ions have a wrong peak in one of the two runs and lie far from the true shift. Before the final fit, up to three rounds remove ions whose residual exceeds max(3 · 1.4826 · MAD, 0.05 min), where MAD is the median absolute deviation of the residuals. 
 4. **Optimize Model Parameters**
-    k is chosen from 
-        - 5 
-        - 7
-        - 11
-        - 15
-        - 21 
-        - 31
-        - 41
-        - 51,
-        -71 
-    and 101 by 5-fold cross-validation on the median absolute error, with folds by peptide sequence. -s seeds the folds.
+
+    `k` is chosen from `5`, `7`, `11`, `15`, `21`, `31`, `41`, `51`, `71` and `101` by 5-fold cross-validation on the median absolute error, with folds by peptide sequence. `-s` seeds the folds.
 5. **Rank Source Runs and Transfer Ions**
+
     The sources of a target are ranked by their median absolute out-of-fold error. Each ion is transferred from the best ranked source that has it. 
 6. **Estimate Prediction Uncertainty**
+
     PredictedScanTimeSd is 1.4826 times the median absolute out-of-fold error of the shared ions within ±5 min of the ion's source scan time, and at least 0.01 min. With fewer than 10 ions in the window the scale of the whole pair is used. It is small where the runs agree and large where they do not, for example at the end of the gradient. 
 
 Only source ions that pass the filter of step 1 are transferred. Ions the target quantified itself, called overlap ions, are transferred too, because the two following tools learn from them. They get the prediction of the fold that did not contain them, so their errors are comparable to those of new ions.

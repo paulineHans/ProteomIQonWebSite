@@ -25,6 +25,8 @@ This is the Astro-powered documentation site for the ProteomIQon proteomics tool
 - A link to a missing page is reported as a `[content-links]` warning in the build output.
 - Small-screen layouts are defined in `src/styles/responsive.css`. Tables show labelled fields on phones; `src/plugins/responsive-tables.mjs` adds these labels when rendering, so the content files stay plain Markdown.
 - All tool pages share the wide layout, typography, numbered workflow steps and collapsible Inputs, Outputs and Parameters sections. `src/plugins/tool-content.mjs` adds the presentation to Markdown when rendering; colours follow the phase in each tool's frontmatter via `src/lib/phases.ts` and the phase variables in `src/style.css`.
+- The three alignment pages use `src/styles/alignment-tools.css` and `src/plugins/alignment-readability.mjs` for readable text, figures and captions. The overview diagram is displayed with a light background through CSS.
+- Write inline formulas as `$...$` and display formulas between `$$` lines. `src/plugins/math-typesetting.mjs` renders them with KaTeX at build time, including MathML for accessibility.
 
 ## Commands
 

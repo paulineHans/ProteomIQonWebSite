@@ -6,6 +6,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { contentLinks } from './src/plugins/content-links.mjs';
 import { toolContent } from './src/plugins/tool-content.mjs';
 import { responsiveTables } from './src/plugins/responsive-tables.mjs';
+import { alignmentReadability } from './src/plugins/alignment-readability.mjs';
+import { mathTypesetting } from './src/plugins/math-typesetting.mjs';
 
 const base = '/ProteomIQonWebSite';
 
@@ -15,8 +17,8 @@ export default defineConfig({
   integrations: [react()],
   markdown: {
     processor: satteri({
-      features: { smartPunctuation: false },
-      hastPlugins: [contentLinks({ base, contentDir: fileURLToPath(new URL('./src/content', import.meta.url)) }), toolContent(), responsiveTables()],
+      features: { smartPunctuation: false, math: true },
+      hastPlugins: [contentLinks({ base, contentDir: fileURLToPath(new URL('./src/content', import.meta.url)) }), toolContent(), alignmentReadability(), responsiveTables(), mathTypesetting()],
     }),
   },
   vite: { plugins: [tailwindcss()] },

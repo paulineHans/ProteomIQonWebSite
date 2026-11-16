@@ -94,7 +94,7 @@ function workflowList(list) {
 /** Applies shared presentation to tool Markdown without adding markup to content files. */
 export function toolContent() {
 	return {
-		name: 'tool-content-v1',
+		name: 'tool-content-v3',
 		after(root, ctx) {
 			if (!/\/content\/tools\/[^/]+\.md$/.test(String(ctx.fileURL ?? ''))) return;
 
@@ -118,7 +118,7 @@ export function toolContent() {
 				const content = children.slice(i + 1, end);
 				if (Object.hasOwn(SECTION_DETAILS, title.toLowerCase())) {
 					nextChildren.push(accordion(child, title, content));
-				} else if (/^how does\b|^what['’]s happening/i.test(title)) {
+				} else if (/^how does\b|^what['’]s happening|^model, calibration and q-values$/i.test(title)) {
 					nextChildren.push(addClass(child, 'tool-workflow-heading'));
 					nextChildren.push(...content.map((node) => node.type === 'element' && node.tagName === 'ol' ? workflowList(node) : node));
 				} else {

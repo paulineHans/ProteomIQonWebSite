@@ -141,7 +141,11 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 
 /* Documentation pages */
 .page-hero { padding: 75px 0 70px; border-bottom: 1px solid var(--line); }
-.page-hero h1 { max-width: 720px; margin-bottom: 18px; font-size: clamp(3rem, 5.7vw, 5.4rem); }
+.page-hero > div:first-child { flex: 1; min-width: 0; }
+.page-hero h1 { max-width: 100%; margin-bottom: 18px; font-size: clamp(3rem, 5.7vw, 5.4rem); }
+.tools-hero > div:first-child { container-type: inline-size; }
+.tools-hero h1 { font-size: clamp(2.4rem, min(5.7vw, 6.7cqi), 5.4rem); }
+.tools-hero .tool-count { flex-shrink: 0; }
 .page-subtitle { max-width: 620px; margin: -4px 0 8px; color: var(--navy); font-size: 1.08rem; font-weight: 600; letter-spacing: -.015em; }
 .compact-page-hero { align-items: end; }
 .content-column { width: min(880px, 100%); margin: 0 auto; padding: 48px 0 88px; }
@@ -247,7 +251,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 .tool-sidebar nav { display: grid; gap: 4px; }
 .tool-sidebar nav a { padding: 7px 8px; border-left: 2px solid transparent; color: var(--slate); font-size: .75rem; line-height: 1.35; text-decoration: none; }
 .tool-sidebar nav a:hover, .tool-sidebar nav a.active { border-color: var(--red); color: var(--navy); background: var(--surface); }
-.tool-detail-hero { padding: 12px 0 39px; border-bottom: 1px solid var(--line); }
+.tool-detail-hero { container-type: inline-size; padding: 12px 0 39px; border-bottom: 1px solid var(--line); }
 .tool-detail-layout .back-link { color: var(--phase-accent); }
 .tool-detail-layout .tool-sidebar nav a:hover,
 .tool-detail-layout .tool-sidebar nav a.active { border-color: var(--phase-accent); }
@@ -255,8 +259,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 .tool-detail-layout .tool-detail-hero .eyebrow-dot { background: var(--phase-accent); }
 .tool-detail-layout .tool-detail-hero { border-bottom-color: var(--phase-border); }
 .tool-detail-layout .tool-pagination a:hover span { color: var(--phase-accent); }
-.tool-detail-hero h1 { max-width: 750px; margin-bottom: 17px; font-size: clamp(2.8rem, 5.6vw, 5.15rem); overflow-wrap: anywhere; text-shadow: 0 0 26px color-mix(in srgb, var(--phase-accent) 28%, transparent); }
-.tool-detail-hero h1.long-tool-title { max-width: 100%; font-size: clamp(2.65rem, 4.7vw, 4.1rem); line-height: 1; }
+.tool-detail-hero h1 { max-width: 100%; margin-bottom: 17px; font-size: clamp(2.8rem, min(5.6vw, 6.8cqi), 5.15rem); overflow-wrap: anywhere; text-shadow: 0 0 26px color-mix(in srgb, var(--phase-accent) 28%, transparent); }
 .tool-summary { max-width: 670px; margin-bottom: 0; color: var(--slate); font-size: 1.05rem; line-height: 1.75; }
 .tool-legacy-content { --tw-prose-links: var(--ink); padding-top: 6px; font-size: 1.05rem; }
 .tool-legacy-content a { text-decoration-color: var(--phase-accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }

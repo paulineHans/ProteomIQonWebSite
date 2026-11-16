@@ -22,8 +22,8 @@ New ions are the transferred ions without a PSM based quantification in the run.
 The tool learns from overlap ions: ions that a run identified and quantified itself and that were also transferred to it. For them the run's own PSM based peak is the reference. Let z be the distance between the transferred peak and the own peak, in units of the own peak's standard deviation.
 
 | Label | Condition  | Use | 
-| ... | ,,, | ,,, | 
-| Right | z ≤ `PositiveRtSdFactor` and |log2 (transferred / own quantity)| ≤ `MaxAbsLog2QuantRatio` | training | 
+| --- | --- | --- |
+| Right | z ≤ `PositiveRtSdFactor` and \|log2 (transferred / own quantity)\| ≤ `MaxAbsLog2QuantRatio` | training |
 | Ambiguous |  `PositiveRtSdFactor` < z ≤ `NegativeRtSdFactor`, same quantity bound | left out of training | 
 | Wrong | everything else | training | 
 
@@ -33,13 +33,13 @@ Overlap ions whose own peak cannot serve as reference (no fitted peak, or a widt
 All features come from the transferred row of `AlignmentBasedQuantification` and the `.align row`. None uses the ion's own `PSM row`, so the features of an overlap peptide ion look like those of a new peptide ion.
 
 | Group | Features | 
-| ... | ...  | 
+| --- | --- |
 | Scan time | residual to `PredictedScanTime` (signed, absolute, per peak sd, per local alignment error), the local alignment error, peak width and its ratio to the source peak | 
 | Mass and isotopes | `ppm` of the monoisotopic peak, intensity weighted `ppm` over the isotope peaks, number of isotope peaks, similarity of the isotope pattern to the source, KL divergences to the theoretical pattern | 
 | Chromatogram | correlation with the source trace (around the peak and over the whole XIC), DTW distance to the source trace, competing peaks in the XIC, share of the XIC maximum at the apex, XIC length, relative SEO | 
 | Ion | source quantity and apex intensity, source scan time, m/z, charge
-| Selcetion | from `<run>.alignfeatures`: `Sel_NCandidates`, `Sel_IsoCorr`, `Sel_IsoRatioLog2`, `Sel_ShapeCorr`, `Sel_RtZ`, `Sel_ImZ`, `Sel_LogRelHeight`, `Sel_AbsLog2FwhmRatio`, and `Sel_CandidateProbability`, `Sel_CandidateMargin` when all runs used the same selection model | 
-| Ion Mobility | `|IonMobility − PredictedIonMobility| / PredictedIonMobilitySd` (timsTOF only) | 
+| Selection | from `<run>.alignfeatures`: `Sel_NCandidates`, `Sel_IsoCorr`, `Sel_IsoRatioLog2`, `Sel_ShapeCorr`, `Sel_RtZ`, `Sel_ImZ`, `Sel_LogRelHeight`, `Sel_AbsLog2FwhmRatio`, and `Sel_CandidateProbability`, `Sel_CandidateMargin` when all runs used the same selection model |
+| Ion Mobility | `\|IonMobility − PredictedIonMobility\| / PredictedIonMobilitySd` (timsTOF only) |
 
 - The local alignment error of an ion is the median `|own PSM    scan time − PredictedScanTime|` of the run's overlap ions predicted within ±2 min. Every run needs `<run>.alignfeatures` next to its aligned `.quant`.
 - `UseIntensityRatioFeatures` adds four features: 
@@ -51,17 +51,23 @@ They are off by default: a model that prefers a ratio near 1 penalises peptides 
 
 
 ## Model, calibration and Q-Values 
-1. **h1**
+1. **Split overlap ions into five folds**
+
     The overlap ions of all learning runs are pooled and split into 5 folds by peptide sequence, so the forms of a peptide stay together.
-2. **h2**
+2. **Train a model per fold**
+
     Per fold, a gradient boosted tree model (ML.NET FastTree) is trained on the right and wrong ions of the other four folds. Unless AbsentAnalyteFdr is Off, the decoys of the learning runs join this training as wrong examples, in the fold of their peptide. 
-3. **h3** 
+3. **Calibrate model scores**
+
     Per fold, an isotonic calibration (the share of right ions as a non-decreasing function of the raw score) is fitted on the right and wrong overlap ions of the held-out fold. It turns scores into probabilities. Below the lowest fitted score the probability follows a logistic fit of the label on the raw score. A fold with fewer than 200 such ions, or with one label only, is calibrated on the held-out ions of all folds. If those are too few or of one label as well, the logistic fit alone is used. 
-4. **h4**
+4. **Calculate the alignment score**
+
     The `AlignmentScore` p of a new peptide ion is the mean of the calibrated probabilities of the 5 fold models.
-5. **h5** 
+5. **Estimate the Q-value**
+
     The posterior error probability of a new ion is 1 − p. Per run, the new ions are sorted by p in descending order. The `AlignmentQValue` of an ion is the mean posterior error probability of all new ions with at least its p, made monotone. 
-6. **h6** 
+6. **Account for absent analytes**
+
     Unless AbsentAnalyteFdr is Off, the absent-analyte rate at the ion's score (see Absent analytes) is added to the q-value, which is made monotone again.
 
 The highest probability the isotonic calibration can give grows with the number of right and wrong overlap ions it is fitted on: about 0.99 up to 2,000 ions, 0.999 from 20,000. With few overlap ions a cutoff of q ≤ 0.01 can therefore keep few or no transferred ions.
@@ -69,7 +75,7 @@ The highest probability the isotonic calibration can give grows with the number 
 The log reports an out-of-fold check. Each overlap ion is scored by the fold model that did not see it and calibrated on the held-out ions of the other folds (by the logistic fit alone if those are too few or of one label). The true share of wrong peaks is given at q ≤ 0.01, 0.05 and 0.1, once with the ambiguous ions counted as wrong and once without them.
 
 ## Absent analytes 
-The overlap ions are present in the run, so they cannot show how the model scores an ion whose analyte is absent. The decoy transfers of AlignmentBasedQuantification (<run>.aligndecoy) are used for that. Per run, the absent-analyte rate at score t is
+The overlap ions are present in the run, so they cannot show how the model scores an ion whose analyte is absent. The decoy transfers of AlignmentBasedQuantification (`<run>.aligndecoy`) are used for that.
 
 The false discovery rate (FDR) for absent analytes is calculated as follows:
 
@@ -84,20 +90,20 @@ $$
 
 Where:
 
-- **\(N_{\text{new}}\):** Total number of new ions in the run.
-- **\(\pi\):** Fraction of new ions whose analyte is absent.
-- **\(t\):** Score threshold.
-- **\(p\):** Score used to evaluate an ion or decoy.
+- **$N_{\text{new}}$:** Total number of new ions in the run.
+- **$\pi$:** Fraction of new ions whose analyte is absent.
+- **$t$:** Score threshold.
+- **$p$:** Score used to evaluate an ion or decoy.
 
-Two methods are available to determine \(\pi\):
+Two methods are available to determine $\pi$:
 
-- **`Estimated`:** Estimates \(\pi\) separately for each run using Storey's method with \(\lambda = 0.5\).
-- **`Conservative`:** Sets \(\pi = 1\).
+- **`Estimated`:** Estimates $\pi$ separately for each run using Storey's method with $\lambda = 0.5$.
+- **`Conservative`:** Sets $\pi = 1$.
 
 **Additional considerations:**
 
 - Runs with fewer than 200 decoys use the combined decoys from all runs for scoring.
-- Decoys without a fitted peak and new ions without an alignment row are assigned \(p = 0\).
+- Decoys without a fitted peak and new ions without an alignment row are assigned $p = 0$.
 - If a run lacks a corresponding `<run>.aligndecoy` file next to its aligned `.quant` file, or if no decoy has a fitted peak, the tool issues a warning and behaves as `Off`. This also applies when `AlignmentBasedQuantification` was run with `DecoyFraction = 0`.
 
 ## Inputs
@@ -126,10 +132,10 @@ These inputs are needed to execute the tool:
 
 ## Parameters 
 | Parameter | Default | Description | 
-| ... | ... | ... | 
+| --- | --- | --- |
 | PositiveRtSdFactor | `1.0`| A peak within this many own peak sd is right. | 
 | NegativeRtSdFactor | `3.0`| Up to this many sd a peak is ambiguous, beyond it wrong. | 
-| MaxAbsLog2QuantRatio | `1.0` | Right and ambiguous peaks need |log2 (transferred / own quantity)| at most this. | 
+| MaxAbsLog2QuantRatio | `1.0` | Right and ambiguous peaks need \|log2 (transferred / own quantity)\| at most this. |
 | UseIntensityRatioFeatures | `false`| Add target to source intensity ratios as features. | 
 | UseIonMobility | `true`| Add the ion mobility feature when the rows have a finite `IonMobility` and the `.align` file a `PredictedIonMobilitySd` above 0. | 
 | NumberOfFolds | `5`| Cross-validation folds. | 

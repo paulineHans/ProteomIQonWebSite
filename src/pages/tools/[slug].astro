@@ -17,6 +17,7 @@ export async function getStaticPaths() {
 const { entry, previousTool, nextTool, siblings } = Astro.props;
 const { Content } = await render(entry);
 const phase = getPhase(entry.data.phase);
+const isAlignmentTool = ['quant-based-alignment', 'alignment-based-quantification', 'alignment-based-quant-statistics'].includes(entry.id);
 ---
 
 <Layout title={`${entry.data.name} · ProteomIQon`} description={entry.data.summary} mainClass="tool-page-wide">
@@ -40,7 +41,7 @@ const phase = getPhase(entry.data.phase);
 
 		<main class="tool-detail">
 			<section class="tool-detail-hero"><p class="eyebrow"><span class="eyebrow-dot"></span> {phase.number} / {phase.label}</p><h1>{breakCamelCase(entry.data.name).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}</h1></section>
-			<article class="legacy-content tool-legacy-content prose max-w-none prose-a:font-semibold prose-code:before:content-none prose-code:after:content-none"><Content /></article>
+			<article class:list={['legacy-content tool-legacy-content prose max-w-none prose-a:font-semibold prose-code:before:content-none prose-code:after:content-none', { 'tool-alignment-content': isAlignmentTool }]}><Content /></article>
 			<nav class="tool-pagination" aria-label="Browse tools">
 				{previousTool ? <a href={toolHref(previousTool.id)}><small>Previous tool</small><span>← {previousTool.data.name}</span></a> : <span></span>}
 				{nextTool ? <a class="next" href={toolHref(nextTool.id)}><small>Next tool</small><span>{nextTool.data.name} →</span></a> : <a class="next" href={withBase('/tools/')}><small>Directory</small><span>Back to all tools →</span></a>}
