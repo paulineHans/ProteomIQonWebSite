@@ -79,7 +79,6 @@ This Output is generated
 
 2. **Execute**
 
-   - Running the tool
 
      ```sh
      proteomiqon-proteininference -i path/to/run.qpsm -d path/to/database.db -o path/to/output -p path/to/ProteinInferenceParams.json

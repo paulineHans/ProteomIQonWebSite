@@ -82,6 +82,8 @@ The program merges the mobility scans of each MS2 spectrum, selects candidate pe
 | `-f` | Maximum indexed fragment mass, in Da | Default: largest precursor window + 1 Da |
 | `--mobility-merge-ppm` | m/z grouping width when combining mobility scans, in ppm | Default: `FragmentTolerancePPM` |
 
+- `-i`, `-d`, `-o` and `-p` are mandatory. The input directory search is not recursive.
+
 **Input restrictions:** Directory scanning is not recursive. An mzML input path produces an error; only mzlite inputs are supported.
 
 ## Parameters
@@ -184,8 +186,6 @@ The output folder also contains `PeptideSpectrumMatchingTIMs_log.txt` and one `<
    ```
 
 2. **Execute**
-
-   - Running the tool
 
      ```sh
      proteomiqon-peptidespectrummatchingtims -i path/to/run.mzlite -d path/to/AraTest.db -o path/to/output -p path/to/peptideSpectrumMatchingTIMsParams.json

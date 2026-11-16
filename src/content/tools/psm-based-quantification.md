@@ -14,11 +14,11 @@ PSMBasedQuantification turns the identifications from [PSMStatistics](./psm-stat
 
 1. **XIC Extraction**
 
-   For every identified peptide ion (sequence, modification state and charge) it takes the scan times of its MS/MS identifications, extracts an ion chromatogram of the monoisotopic m/z in a window around them, detects the peaks in that trace and fits the peak closest to the identification
+   For every identified peptide ion (sequence, modification state and charge) it takes the scan times of its MS/MS identifications, extracts an ion chromatogram of the monoisotopic m/z in a window around them, detects the peaks in that trace and fits the peak that contains the weighted scan time of its identifications (see `CentrePSMs` and `RequirePeakAtScanTime`). The fitted area is the reported `quantity`.
 
 2. **Metabolic labelling**
 
-   The fitted area is the reported quantity. For metabolically labeled samples the tool computes the m/z of the partner ion (the heavy form of a light identification, or the other way round) and quantifies that trace as well, so every row can carry a light and a heavy value.
+   For metabolically labeled samples the tool computes the m/z of the partner ion (the heavy form of a light identification, or the other way round) and quantifies that trace as well, so every row can carry a light and a heavy value.
 
 ![Overview of the quantification process](../../assets/images/LabeledQuant.png)
 
@@ -73,18 +73,18 @@ These inputs are needed to execute the tool:
 | `XicExtraction.XicProcessing` | `XicProcessing.Gabor3D gaborParams` | Locates peaks in the retention-time/ion-mobility grid with the Gabor settings listed below. `Wavelet` and `SecondDerivative` instead use the one-dimensional processing from PSMBasedQuantification. |
 | `XicExtraction.TopKPSMs` | `None` | `Some k` limits peak placement to the k identifications with the highest `Hyperscore` for each peptide ion. |
 
-### Gabor filter parameters
-
-The kernel size must be greater than zero. Widths must be positive and finite; frequency and angle must also be finite.
-
+### Wavelet parameters
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `sizeX` | `41` | Kernel size along retention time, in grid bins. Half the size is the kernel radius, which expands the search area around the expected peak. |
-| `sizeY` | `41` | Kernel size along ion mobility, in grid bins. |
-| `sigmaX` | `8.0` | Gaussian envelope width along the first kernel axis, in bins. |
-| `sigmaY` | `8.0` | Gaussian envelope width along the second kernel axis, in bins. |
-| `frequency` | `2.0` | Frequency of the cosine wave inside the kernel. |
-| `theta` | `0.06` | Kernel rotation in the plane, in radians. |
+| Borderpadding | `None` | Number of points padded at both ends of the trace. `None` derives it from the data. |
+| BorderPadMethod | `Padding.BorderPaddingMethod.Random` | How the border points are filled (`Random` or `Zero`).| 
+| InternalPaddingMethod | `Padding.InternalPaddingMethod.LinearInterpolation` | How small gaps inside the trace are filled. |
+| HugeGapPaddingMethod | `Padding.HugeGapPaddingMethod.Zero` | How gaps longer than `HugeGapPaddingDistance` are filled. |
+| HugeGapPaddingDistance | `100.` | Gap length from which a gap counts as huge.|
+| MinPeakDistance | `Some 0.1` | Smallest peak width the wavelet scales start at. |
+| MaxPeakLength | `1.5` | Largest peak width the wavelet scales go up to. |
+| NoiseQuantile  | `0.01` | Quantile of the wavelet correlation used as noise level.| 
+| MinSNR | `0.01`|  A peak needs a correlation above `MinSNR` times the noise level. |
 
 **Default parameter file:** [Default JSON File](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/QuantificationParams.json)
 
@@ -174,6 +174,12 @@ Alignment scores and associated q-values
 | `AlignmentScore` | Actual known alignments compared with the observed alignments |
 | `AlignmentQValue` | Q-value, which is calculated based on the alignment score |
 
+### Ion Mobility 
+| Column | Description |
+| --- | --- |
+|IonMobility | Ion mobility of the identifications, weighted by their matched fragment intensity, NaN without ion mobility |
+| IonMobilityCentre | Ion mobility the XIC of the row is summed around, NaN without an ion mobility window |
+
 ## Installing and executing the tool
 
 1. **Installing**
@@ -185,8 +191,6 @@ Alignment scores and associated q-values
    ```
 
 2. **Execute**
-
-   - Running the tool
 
      ```sh
      proteomiqon-psmbasedquantification -i path/to/run.mzlite -ii path/to/run.qpsm -d path/to/database.db -o path/to/output -p path/to/QuantificationParams.json

@@ -30,8 +30,6 @@ These inputs are needed to execute the tool:
 | --- | --- | --- |
 | `-i` | one or more `psm.tsv` files, or a directory that is searched for `*.tsv` | MSFragger (FragPipe) |
 | `-ii` | the matching `.mzlite` files, or a directory that is searched for `*.mzlite` | - |
-| `-p` | the parameter file in JSON | [Github ProteomIQon Core](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/mzMLToMzLiteParams.json) |
-| `-c` | number of files converted at the same time, default 1, no effect on a single file | [MzMLToMzLiteIonMobility](./mzml-to-mzlite-ion-mobility.md) |
 | `-o` | the output directory, created when missing | - |
 | `-d` | The Peptide Database | [PeptideDB](./peptide-db.md) |
 | `-c` | number of pairs converted at the same time, default 1 | - |

@@ -12,13 +12,15 @@ PSMBasedQuantificationTIMs is the PSMBasedQuantification variant for timsTOF run
 
 ## How does PSMBasedQuantificationTIMs work?
 
-1. **Diffrences to normal quantification**
+1. **XIC Point Calculation and Ion Mobility Window**
 
-   On these instruments a peptide ion is a peak in two dimensions, retention time and ion mobility, so the tool extracts an intensity grid over that plane around every identification instead of a one dimensional ion chromatogram.
+   An XIC point is the sum of the intensity of all peaks inside the m/z window (`MzWindow_Da`) and inside the ion mobility window (`IonMobilityWindow`), so both widths are part of the quantity.
+   With `IonMobilityWindow` set to `Window.Fixed v`, the ion mobility window is ±v around the ion mobility centre of the ion. The centre is the intensity weighted ion mobility of the signal within v of the weighted ion mobility of the identifications, around their weighted scan time (see `CentrePSMs`). Without such signal it is the weighted ion mobility of the identifications.
 
-2. **Detection type**
-
-   By default it locates the peak on the grid with a Gabor filter (a Gaussian envelope multiplied with a cosine wave, tuned in size, width, frequency and angle), then fits and integrates it.
+2. **Peak Detection and Quantification**
+   The points form a retention time ion chromatogram.
+   As PSMBasedQuantification does, the tool detects the peaks on the trace and fits and integrates the peak that contains the weighted scan time of the identifications.
+   The measured isotope pattern of a row (the `KLDiv` and `IsotopicPattern` columns) is read with the same windows, on the spectrum closest to the fitted scan time.
 
 3. **Output**
 
@@ -55,8 +57,10 @@ The parameter record is shared with PSMBasedQuantification. The following defaul
 | Parameter | Default | Meaning |
 | --- | --- | --- |
 | `PerformLabeledQuantification` | `Labeling.Unlabeled` | Label-free quantification of the identified ion. The three labeled modes follow PSMBasedQuantification and also quantify the corresponding partner ion. |
-| `FragPipe` | `true` | Indicates that the qpsm file uses the FragPipe format produced by MsFraggerToPSM. Keep this setting at `true`. |
-| `BaseLineCorrection` | `None` | Disables baseline subtraction. `Some { MaxIterations = 10; Lambda = 6; P = 0.05 }` enables asymmetric least-squares baseline correction. |
+| `BaseLineCorrection` | `Some { MaxIterations = 10; Lambda = 6; P = 0.05 }` | Asymmetric least squares baseline subtraction before peak detection. `None` skips it. |
+| QualityFilterLog2Limit | `2.0`| The quality filter keeps rows with -limit < log2 ((area / median area) / (apex / median apex)) < limit. Rows with a non-finite or non-positive area, apex or ratio are dropped. | The quality filter keeps rows that satisfy the following condition: $$ -\text{limit} < \log_2\left(\frac{\frac{\text{area}}{\text{median area}}}{\frac{\text{apex}}{\text{median apex}}}\right) < \text{limit}$$ Rows with a non-finite or non-positive area, apex, or ratio are dropped.| 
+| CenterPSMs | `3` | Number of identifications per peptide ion with an ion mobility, ranked by the summed intensity of their matched fragment ions, whose intensity weighted scan time and ion mobility locate the trace. It is applied after `TopKPSMs`, which ranks by `ModelScore`. At least 1.|
+| RequirePeakAtScanTime | `true` | true quantifies only a peak that contains the weighted scan time of the identifications, so an ion without such a peak gets no row. `false` takes the peak with the closest apex when no peak contains it. |
 
 ### XIC extraction
 
@@ -65,20 +69,22 @@ The parameter record is shared with PSMBasedQuantification. The following defaul
 | `XicExtraction.ScanTimeWindow` | `2.0` | Half-width of the retention-time interval extracted around the identification, in the run's scan-time unit. |
 | `XicExtraction.MzWindow_Da` | `Window.Estimate` | Half-width of the m/z window in Da. `Estimate` uses four times the MS1 mass error of the identifications; `Window.Fixed 0.07` specifies 0.07 Da. |
 | `XicExtraction.XicProcessing` | `XicProcessing.Gabor3D gaborParams` | Locates peaks in the retention-time/ion-mobility grid with the Gabor settings listed below. `Wavelet` and `SecondDerivative` instead use the one-dimensional processing from PSMBasedQuantification. |
-| `XicExtraction.TopKPSMs` | `None` | `Some k` limits peak placement to the k identifications with the highest `Hyperscore` for each peptide ion. |
+| `XicExtraction.TopKPSMs` | `None` | `Some k ` keeps only the k identifications with the highest `ModelScore` per peptide ion when placing the peak.|
+| XicExtraction.IonMobilityWindow | `Window.Fixed 0.025` | Half width v of the ion mobility window around the ion mobility centre of the ion, in 1/K0. `Window.Estimate` is not available here and stops the tool with an error that asks for `Fixed`. |
 
-### Gabor filter parameters
-
-The kernel size must be greater than zero. Widths must be positive and finite; frequency and angle must also be finite.
-
+### Wavelet Parameters 
 | Parameter | Default | Meaning |
 | --- | --- | --- |
-| `sizeX` | `41` | Kernel size along retention time, in grid bins. Half the size is the kernel radius, which expands the search area around the expected peak. |
-| `sizeY` | `41` | Kernel size along ion mobility, in grid bins. |
-| `sigmaX` | `8.0` | Gaussian envelope width along the first kernel axis, in bins. |
-| `sigmaY` | `8.0` | Gaussian envelope width along the second kernel axis, in bins. |
-| `frequency` | `2.0` | Frequency of the cosine wave inside the kernel. |
-| `theta` | `0.06` | Kernel rotation in the plane, in radians. |
+| Borderpadding | `None` | Number of points padded at both ends of the trace. `None` derives it from the data. |
+| BorderPadMethod | `Padding.BorderPaddingMethod.Random` | How the border points are filled (`Random` or `Zero`).| 
+| InternalPaddingMethod | `Padding.InternalPaddingMethod.LinearInterpolation` | How small gaps inside the trace are filled. |
+| HugeGapPaddingMethod | `Padding.HugeGapPaddingMethod.Zero` | How gaps longer than `HugeGapPaddingDistance` are filled. |
+| HugeGapPaddingDistance | `100.` | Gap length from which a gap counts as huge.|
+| MinPeakDistance | `Some 0.1` | Smallest peak width the wavelet scales start at. |
+| MaxPeakLength | `1.5` | Largest peak width the wavelet scales go up to. |
+| NoiseQuantile  | `0.01` | Quantile of the wavelet correlation used as noise level.| 
+| MinSNR | `0.01`|  A peak needs a correlation above `MinSNR` times the noise level. |
+
 
 **Default parameter file:** [Default JSON File](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/QuantificationTIMsParams.json)
 
@@ -168,6 +174,11 @@ Alignment scores and associated q-values
 | `AlignmentScore` | Actual known alignments compared with the observed alignments |
 | `AlignmentQValue` | Q-value, which is calculated based on the alignment score |
 
+### Ion Mobility 
+| Column | Description |
+| --- | --- |
+|IonMobility | Ion mobility of the identifications, weighted by their matched fragment intensity, NaN without ion mobility |
+| IonMobilityCentre | Ion mobility the XIC of the row is summed around, NaN without an ion mobility window |
 ## Installing and executing the tool
 
 1. **Installing**
@@ -179,8 +190,6 @@ Alignment scores and associated q-values
    ```
 
 2. **Execute**
-
-   - Running the tool
 
      ```sh
      proteomiqon-psmbasedquantificationtims -i path/to/run.mzlite -ii path/to/run.qpsm -d path/to/database.db -o path/to/output -p path/to/QuantificationTIMsParams.json

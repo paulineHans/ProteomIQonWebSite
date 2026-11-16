@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../style.css';
+import '../styles/responsive.css';
 import { withBase } from '../lib/site';
 import SiteHeader from '../components/layout/SiteHeader.astro';
 import SiteFooter from '../components/layout/SiteFooter.astro';
@@ -9,12 +10,14 @@ interface Props {
 	title?: string;
 	description?: string;
 	showFooter?: boolean;
+	mainClass?: string;
 }
 
 const {
 	title = 'ProteomIQon - Documentation',
 	description = 'Knowledgebase, Tutorials and more.',
 	showFooter = true,
+	mainClass,
 } = Astro.props;
 ---
 
@@ -35,7 +38,7 @@ const {
 	<body>
 		<div class="site-shell">
 			<SiteHeader />
-			<main>
+			<main class={mainClass}>
 				<slot />
 			</main>
 			{showFooter && <SiteFooter />}

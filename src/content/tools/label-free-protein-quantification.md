@@ -36,7 +36,7 @@ If charge-state aggregation is disabled, differently charged versions of the sam
 | --- | --- | --- |
 | `-i` | One or more `.quantAndProt` input files containing peptide quantification and protein-group assignments. | [JoinQuantPepIonsWithProteins](./join-quant-with-peptide-ions.md) |
 | `-o` | Directory in which the aggregation results are written. | Chosen output location |
-| `-p` | Path to a JSON file specifying modification filtering and aggregation settings. | [Default parameter file ↗](https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams.json) |
+| `-p` | Path to a JSON file specifying modification filtering and aggregation settings. | [Default parameter file](https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams.json) |
 
 **Important:** The input must already combine peptide-level quantification with protein inference. The tool does not perform those upstream steps itself.
 
@@ -44,12 +44,65 @@ If charge-state aggregation is disabled, differently charged versions of the sam
 
 ### General settings
 
-| Parameter | Default / type | Meaning |
+| Parameter | Default | Description |
 | --- | --- | --- |
-| `ModificationFilter` | `UseModifiedPeptides.All` | Specifies which modified peptides can be used in the aggregation stages. |
-| `AggregatePeptideChargeStatesParams` | `None` in the minimal JSON preset; otherwise `Some AggregationParams` | Optional settings for combining differently charged versions of a peptide. Enabled in the charge-aggregation presets. |
-| `AggregateModifiedPeptidesParams` | `None` in the minimal and charge-only JSON presets; otherwise `Some AggregationParams` | Optional settings for combining differently modified versions of a peptide. Enabled in the charge-and-modification preset. |
-| `AggregateToProteinGroupsParams` | `AggregationParams` (required) | Settings for the final aggregation of peptide intensities to protein groups. |
+| Alignment_QValue | `Some 0.05`| Rows that came from `alignment` and have an alignment Q-value at or above this value are dropped. [PSM based quantifications](./psm-based-quantification.md) carry the Q-value 0, and rows without an alignment Q-value are kept. None keeps every row. | 
+| ModificationFilter | `UseModifiedPeptides.All` | Which peptides enter the aggregation. All keeps every peptide, No drops every peptide with a modification, UseOnly mods keeps unmodified peptides and peptides whose modifications are all in the list. | 
+| AggregatePeptideChargeStatesParams | `None` | Some params runs the charge step with the given `AggregationParams`. `None` skips it. | 
+| AggregateModifiedPeptidesParams | `None` | Some params runs the modification step. None skips it. | 
+| AggregateToProteinGroupsParams | `{ Transform = None; SingleFilters = None; GroupFilters = None; Aggregation = { Light = Mean } }` | The protein step, always run.| 
+
+An AggregationParams record describes one step.
+|Parameter |Default | Description | 
+| ... | ... | ... | 
+| Transform  | `None` | Some { Light = Some Log2 } applies a NumericTransform (Log2, Add, Substract, MultiplyBy, DivideBy) to every intensity before filtering and aggregation. |
+| SingleFilters |  `None`  | Some { Light = Some (seq [IsBiggerThan 4.0]) } keeps only intensities that pass every NumericFilter (IsBiggerThan, IsSmallerThan). | 
+| GroupFilters | `None` | Some { Light = Some (seq [Tukey 1.5]) } removes outliers within each group before aggregation. GroupFilter is Tukey factor, Stdev factor or TopX count. | 
+|Aggregation | `{ Light = Mean }`| How the remaining values of a group are combined. NumericAggregation is Mean, Median or Sum.
+
+
+**Four default files exists** 
+1. [LablefreeQuantification Params](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams.json) only runs the protein step.
+
+2. [LabelFreeQuantificationParams_ChargeAgg.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams_ChargeAgg.json) adds the chrage step with Mean. 
+
+3. [LabelFreeQuantificationParams_ChargeAgg_ModAgg.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams_ChargeAgg_ModAgg.json) adds the charge and the modification step, both with Mean. 
+
+4. [LabelFreeQuantificationParams_Transform_Filter_Sum.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabelFreeQuantificationParams_Transform_Filter_Sum.json) runs only the protein step, but log2 transforms the intensities, keeps those above 4.0 and sums them. 
+
+## Running the tool 
+1. **Installing**
+
+   Install the Tool with the following command inside the choosen Command-Line
+
+   ```sh
+   dotnet tool install --global ProteomIQon.LabelFreeProteinQuantification
+   ```
+
+2. **Several runs in one table, from a list or from a directory**
+
+
+     ```sh
+      proteomiqon-labelfreeproteinquantification -i path/to/run1.quantAndProt path/to/run2.quantAndProt -o path/to/output -p path/to/LabelFreeQuantificationParams.json
+      proteomiqon-labelfreeproteinquantification -i path/to/quantAndProt -o path/to/output -p path/to/LabelFreeQuantificationParams.json
+     ```
+
+3. **All Flags**
+
+   ```sh
+    proteomiqon-labelfreeproteinquantification --help
+     ```
+
+
+
+
+
+
+
+
+
+
+
 
 **Modification filter options:** `UseModifiedPeptides.All` (use all), `UseModifiedPeptides.No` (exclude modified peptides), or `UseModifiedPeptides.UseOnly` (allow specified modifications).
 

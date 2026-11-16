@@ -23,6 +23,8 @@ This is the Astro-powered documentation site for the ProteomIQon proteomics tool
 - Link to other pages with relative `.md` paths, for example `./peptide-db.md`.
 - Add images with relative paths into `src/assets/images`.
 - A link to a missing page is reported as a `[content-links]` warning in the build output.
+- Small-screen layouts are defined in `src/styles/responsive.css`. Tables show labelled fields on phones; `src/plugins/responsive-tables.mjs` adds these labels when rendering, so the content files stay plain Markdown.
+- All tool pages share the wide layout, typography, numbered workflow steps and collapsible Inputs, Outputs and Parameters sections. `src/plugins/tool-content.mjs` adds the presentation to Markdown when rendering; colours follow the phase in each tool's frontmatter via `src/lib/phases.ts` and the phase variables in `src/style.css`.
 
 ## Commands
 

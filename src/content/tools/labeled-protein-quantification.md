@@ -2,255 +2,177 @@
 name: "Labeled Protein Quantification"
 phase: protein-quantification
 order: 2
-summary: "LabeledProteinQuantification aggregates peptide quantification results to protein groups using both light and heavy peptide signals."
+summary: "LabeledProteinQuantification combines light and heavy peptide-ion intensities into protein-group intensities and light-to-heavy ratios for each run."
 inputsFrom: [join-quant-with-peptide-ions]
 ---
 
 ## Tool Description
 
-LabeledProteinQuantification aggregates peptide quantification results to protein groups using both light and heavy peptide signals. The first mandatory stage combines the labeled versions of a peptide and calculates their light/heavy intensity ratio. Charge-state and modification aggregation are optional; the final stage aggregates peptides to protein groups.
+In **15N metabolic labeling**, a sample containing heavy (15N-labeled) peptides is mixed with a light (14N) sample. Both forms are measured in the same mass spectrometry run. Comparing their intensities makes it possible to quantify differences between the two samples.
 
-The tool requires a `.quantAndProt` file produced by [JoinQuantPepIonsWithProteins](./join-quant-with-peptide-ions.md), which combines results from [ProteinInference](./protein-inference.md) and [PSMBasedQuantification](./psm-based-quantification.md).
+After [JoinQuantPepIonsWithProteins](./join-quant-with-peptide-ions.md), each quantified peptide ion is assigned to a protein group. **LabeledProteinQuantification** combines the light and heavy peptide intensities and calculates a light-to-heavy ratio for each protein group and run.
 
-Aggregation proceeds from matched light and heavy peptide forms to optional charge-state and modification aggregation, and finally to protein groups. Each performed stage writes its results as a tab-separated file. Optional stages can be skipped without stopping the following protein-level aggregation.
+The results can be passed to [RatioLFQ](https://csbiology.github.io/ProteomIQon/tools/RatioLFQ.html) for further analysis.
 
 ## How does Labeled Protein Quantification work?
 
-The labeled workflow begins by combining light and heavy versions of a peptide. Further aggregation steps use the preceding available results. When a charge-state or modification step is skipped, its input is passed to the next enabled step.
+The tool processes peptide-ion quantifications in **four aggregation steps**. The first and last steps are mandatory; the two intermediate steps are optional.
 
-1. **Aggregate light and heavy peptide forms (required)**
+1. **Aggregate light and heavy peptide forms (mandatory)**
 
-   Peptides sharing the same sequence, modifications and charge are combined across their labeling states. The tool aggregates light and heavy intensities and calculates the light/heavy ratio. The stage is controlled by `AggregateGlobalModificationsParams`.
+   For each peptide ion, the tool calculates `Ratio_LightByHeavy` from the light and heavy intensities. It also combines rows identified from the light and heavy versions of the same peptide ion.
 
-2. **Aggregate charge states and modifications (optional)**
+   An optional correlation threshold can remove rows whose light and heavy elution profiles do not agree sufficiently.
 
-   Optionally combine differently charged forms of a peptide and then differently modified forms of the same sequence. Each stage can be enabled independently using `AggregateModifiedPeptidesParams`; the charge-state stage uses AggregatePeptideChargeStatesParams.
+2. **Aggregate peptide charge states (optional)**
 
-3. **Aggregate peptides to protein groups (required)**
+   Peptide ions with the same sequence and modifications but different precursor charge states can be combined into one set of light, heavy and ratio values.
 
-   Finally, combine the quantified peptide information into protein-level values for both labeling channels and their ratio. This mandatory stage is specified by `AggregateToProteinGroupsParams`.
+3. **Aggregate modified peptides (optional)**
 
-### What happens when optional stages are skipped?
+   Different modified versions of the same peptide sequence can be combined. The `ModificationFilter` determines which peptide modifications are included in the analysis.
 
-If charge-state aggregation is disabled, the downstream stage still receives peptide forms with different charges. If modification aggregation is disabled, differently modified forms remain separate. When both are skipped, protein aggregation receives the direct result of light/heavy matching, including peptide sequences occurring with multiple charges or modifications.
+4. **Aggregate to protein groups (mandatory)**
+
+   The remaining peptide-level measurements are combined for each protein group and run, producing aggregated light intensity, heavy intensity and light-to-heavy ratio.
+
+Each aggregation step can **transform values, filter individual measurements, remove outliers within groups and aggregate the remaining values**. These operations are configured separately for the light, heavy and ratio series.
+
+### What happens when stages are skipped?
+
+If charge-state aggregation is disabled, charge states remain separate during the following steps. If modification aggregation is disabled, modified forms are not merged at that stage. When both are disabled, protein-group aggregation works directly on the results of the mandatory light/heavy aggregation step.
 
 ## Inputs
 
-The labeled protein quantification tool expects the following command-line arguments:
-
 | Flag | Meaning | Comes from |
 | --- | --- | --- |
-| `-i` | One or more `.quantAndProt` input files combining peptide-ion intensities with protein group assignments. | [JoinQuantPepIonsWithProteins](./join-quant-with-peptide-ions.md) |
-| `-o` | Directory for the generated tab-separated aggregation results. | Chosen output location |
-| `-p` | Path to a JSON parameter file specifying the correlation threshold, modification filter and all aggregation stages. | [Default labeled parameter file ↗](https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabeledQuantificationParams.json) |
+| `-i` | One or more `.quantAndProt` files, or a directory containing these files. Each row contains peptide quantification together with a protein-group assignment. | [JoinQuantPepIonsWithProteins](./join-quant-with-peptide-ions.md) |
+| `-o` | Directory in which the output tables and log files are saved. The directory is created if necessary. | Chosen output location |
+| `-p` | JSON parameter file controlling filtering, transformations and aggregation. | [Default parameter file](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabeledQuantificationParams.json) |
 
-**Important:** The input must be a combined quantification-and-protein-inference result. This tool aggregates existing peptide signals and does not identify peptides or infer proteins itself.
+**Important:** Protein-group assignments must already be present in the `.quantAndProt` input. The tool does not perform peptide identification or protein inference itself.
 
 ## Parameter file
 
-The parameters are passed as JSON. The main record is `LabeledQuantificationParams`; every performed aggregation stage uses the `LabeledProteinQuantification.AggregationParams` record with light, heavy and ratio settings.
-
 ### General settings
 
-| Parameter | Default / type | Meaning |
+| Parameter | Default | Description |
 | --- | --- | --- |
-| `AggregateGlobalModificationsParams` | `LabeledProteinQuantification.AggregationParams (required)` | First, combine light and heavy versions of a peptide with the same sequence, modifications and charge; determine their intensity ratio. |
-| `AggregatePeptideChargeStatesParams` | `Some LabeledProteinQuantification.AggregationParams` (documented default); the minimal preset sets this optional stage to `None` | Optional aggregation of differently charged versions of the same peptide. Use None/null to skip. |
-| `AggregateModifiedPeptidesParams` | `Some LabeledProteinQuantification.AggregationParams` (documented default); this optional stage is `None` unless modification aggregation is enabled | Optional aggregation across different peptide modifications. Use None/null to skip. |
-| `AggregateToProteinGroupsParams` | `LabeledProteinQuantification.AggregationParams` (required) | Final mandatory aggregation of quantified peptides to protein groups. |
+| `Correlation_Light_Heavy_Threshold` | `None` | Optional minimum correlation between light and heavy elution profiles. For example, `Some 0.9` retains rows with a correlation above 0.9. The filter runs during the first aggregation step. |
+| `Alignment_QValue` | `None` in the documentation; `Some 0.05` in the linked JSON presets | Optional filter for rows originating from alignment. Rows with alignment Q-values at or above the threshold are excluded; `None` disables this filter. |
+| `ModificationFilter` | `UseModifiedPeptides.All` | Controls which peptides are included. `All` accepts all peptides, `No` excludes modified peptides, and `UseOnly` accepts unmodified peptides plus peptides carrying only the specified modifications. |
+| `AggregateGlobalModificationsParams` | Mean for light, heavy and ratio; no transformations or filters | Settings for combining identifications of the light and heavy versions of each ion. This step always runs. |
+| `AggregatePeptideChargeStatesParams` | `None` | When set to `Some AggregationParams`, combines different charge states. `None` skips this step. |
+| `AggregateModifiedPeptidesParams` | `None` | When set to `Some AggregationParams`, combines different modified peptide forms. `None` skips this step. |
+| `AggregateToProteinGroupsParams` | Mean for light, heavy and ratio; no transformations or filters | Settings for the final protein-group aggregation. This step always runs. |
 
-**Additional top-level parameters:** Correlation_Light_Heavy_Threshold (documented default: Some 0.0) sets an optional minimum light/heavy correlation. ModificationFilter defaults to `UseModifiedPeptides.All`; alternatives include `UseModifiedPeptides.No` or `UseModifiedPeptides.UseOnly` for selected modifications.
+**Note about defaults:** The published documentation shows `Alignment_QValue = None`, but the official JSON presets linked below contain `Some 0.05`. Check the preset you actually use rather than assuming that this filter is disabled.
 
-**About the presets:** The minimal JSON uses null for the correlation threshold and both optional stages; `Some AggregationParams` activates an optional step. The *minimal* preset skips them, while a correlation-filter preset uses 0.9 (charge presets use 0.0). The optional JSON fields use `null` when disabled.
+### Light/heavy aggregation
 
-### Light/heavy label aggregation
+`AggregateGlobalModificationsParams` controls the **mandatory first step**. It combines peptide-ion identifications originating from either labeled form and produces three measurements:
 
-This mandatory first step matches light and heavy peptide versions having the same sequence, modifications and charge. `AggregatePeptideChargeStatesParams` controls a separate optional charge-stage, not the label-matching step. Labeled aggregation is configured by AggregateGlobalModificationsParams, with `Some` transformation/filter options or default *Shared aggregation settings*. To omit optional filters and transformations use `None` / JSON `null`.
+- `Quant_Light`: Intensity of the light peptide form.
+- `Quant_Heavy`: Intensity of the heavy peptide form.
+- `Ratio_LightByHeavy`: Ratio calculated from light and heavy intensities.
 
-In all four supplied JSON presets, light intensity, heavy intensity and ratio are each aggregated with NumericAggregation.Mean, without additional transformations or filters.
+The optional `Correlation_Light_Heavy_Threshold` is applied at this stage.
 
-### Optional peptide aggregation
+### Charge-state aggregation
 
-The charge-state step groups peptides of the same sequence and modifications that have different charges (AggregatePeptideChargeStatesParams). The modification step combines versions of a peptide that have different modifications. Set `AggregateModifiedPeptidesParams` to `Some` with aggregation settings to activate the modification step; `None` / JSON `null` skips it.
+Set `AggregatePeptideChargeStatesParams` to `Some AggregationParams` to merge measurements of the same modified peptide across different charge states.
 
-The minimal and correlation-only presets skip both optional steps. The charge preset enables charge aggregation; the most extensive preset enables charge and modification aggregation. All enabled steps use Mean for light, heavy and ratio values.
+Set it to `None` (JSON `null`) to skip this step. The official charge-aggregation presets use the **mean** of light, heavy and ratio values without additional filtering or transformations.
+
+### Modification aggregation
+
+Set `AggregateModifiedPeptidesParams` to `Some AggregationParams` to merge different modified forms of the same peptide sequence.
+
+Set it to `None` (JSON `null`) to skip the step. In the supplied preset that enables both optional stages, the light, heavy and ratio series are each aggregated using the **mean**.
 
 ### Protein-group aggregation
 
-At the last stage, the tool combines quantified peptide results for a protein group. Unlike charge-state and modification aggregation, `AggregateToProteinGroupsParams` is required and cannot be set to None.
+`AggregateToProteinGroupsParams` controls the **mandatory final step**. Peptide measurements associated with the same protein group and run are combined into protein-level light, heavy and ratio values.
 
-In every supplied labeled JSON preset, the protein aggregation uses NumericAggregation.Mean separately for the light and heavy intensities and for the light/heavy ratio, with no transformations or filters.
+Unlike the two optional intermediate stages, this parameter must contain an aggregation configuration.
 
 ### Shared aggregation settings
 
-All enabled stages use the four fields of `LabeledProteinQuantification.AggregationParams`:
+Every enabled stage uses the same four-field `LabeledProteinQuantification.AggregationParams` structure. Each setting can be configured independently for **Light**, **Heavy** and **Ratio**.
 
-| Parameter | Default | Meaning |
+| Parameter | Default | Description |
 | --- | --- | --- |
-| `LabeledTransform` | `None` | Optional transformations of the light intensity, heavy intensity or their ratio. |
-| `LabeledSingleFilters` | `None` | Optional minimum or maximum filter criteria applied to individual intensities or ratios. |
-| `LabeledGroupFilters` | `None` | Optional filtering of intensity and ratio values within a group before aggregation. |
-| `LabeledAggregation` | `{Light = Mean; Heavy = Mean; Ratio = Mean}` | Aggregation methods applied separately to light and heavy intensities and the light/heavy ratio. |
+| `LabeledTransform` | `None` | Optional numeric transformation applied before filtering. Supported operations: `Log2`, `Add`, `Substract`, `MultiplyBy` and `DivideBy`. A series set to `None` remains unchanged. |
+| `LabeledSingleFilters` | `None` | Filters individual measurements using `IsBiggerThan` or `IsSmallerThan`. A value must satisfy every configured filter for its series. |
+| `LabeledGroupFilters` | `None` | Removes or selects measurements within each aggregation group, using `Tukey`, `Stdev` or `TopX`. |
+| `LabeledAggregation` | `{ Light = Mean; Heavy = Mean; Ratio = Mean }` | Specifies how the remaining values are combined independently for each series. Choices: `Mean`, `Median` and `Sum`. |
 
-**Available numeric aggregation methods:** `NumericAggregation.Mean`, `NumericAggregation.Median` and `NumericAggregation.Sum`. The labeled aggregation configuration assigns a method to Light, Heavy and Ratio separately.
+**JSON format:** Optional F# values set to `None` are stored as `null`. An aggregation choice such as `Mean` is represented by an object like `{"Case": "Mean"}`.
 
-In JSON, optional `None` values become `null`. The default mean settings are encoded under `"LabeledAggregation": {"Light": {"Case": "Mean"}, "Heavy": {"Case": "Mean"}, "Ratio": {"Case": "Mean"}}`.
+### Default parameter files
 
-**Default parameter files:** Four official presets exist: minimal, correlation-filtered, correlation + charge, and correlation + charge + modification. The charge-only preset is available at github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabeledQuantificationParams_CorrFilter_ChargeAgg.json.
+The repository provides **five presets**:
 
-- [LabeledQuantificationParams.json: minimal labeled aggregation ↗](https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabeledQuantificationParams.json)
-- [LabeledQuantificationParams_withCorrFilter.json: correlation filter ↗](https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabeledQuantificationParams_withCorrFilter.json)
-- [LabeledQuantificationParams_CorrFilter_ChargeAgg_ModAgg.json: charge + modification aggregation ↗](https://github.com/CSBiology/ProteomIQon/blob/main/src/ProteomIQon/defaultParams/LabeledQuantificationParams_CorrFilter_ChargeAgg_ModAgg.json)
+1. [LabeledQuantificationParams.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabeledQuantificationParams.json) — Runs the mandatory light/heavy and protein-group aggregation steps, using the mean for each series.
+2. [LabeledQuantificationParams_withCorrFilter.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabeledQuantificationParams_withCorrFilter.json) — Adds a light/heavy correlation threshold of `0.9`.
+3. [LabeledQuantificationParams_CorrFilter_ChargeAgg.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabeledQuantificationParams_CorrFilter_ChargeAgg.json) — Uses a correlation threshold of `0.0` and enables charge-state aggregation with the mean.
+4. [LabeledQuantificationParams_CorrFilter_ChargeAgg_ModAgg.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabeledQuantificationParams_CorrFilter_ChargeAgg_ModAgg.json) — Uses a correlation threshold of `0.0` and enables both charge-state and modification aggregation with the mean.
+5. [LabeledQuantificationParams_Transform_Filter_Sum.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/LabeledQuantificationParams_Transform_Filter_Sum.json) — Applies `Log2` to light, heavy and ratio in the first step, retains log2 ratios below `0.0`, and aggregates protein-level light and heavy values with `Sum` while ratios use `Mean`.
 
-## Parameter generation
+All five linked presets specify an alignment Q-value threshold of `0.05`.
 
-Use an official labeled JSON preset or generate your own with F#. The documentation defines `ProteomIQon.Dto` records and serializes them using `Json.serialize`. Labeled parameters include a mandatory label-matching stage.
-
-### Minimal labeled JSON example
-
-```json
-{
-  "Correlation_Light_Heavy_Threshold": null,
-  "ModificationFilter": {"Case": "All"},
-  "AggregateGlobalModificationsParams": {
-    "LabeledTransform": null,
-    "LabeledSingleFilters": null,
-    "LabeledGroupFilters": null,
-    "LabeledAggregation": {
-      "Light": {"Case": "Mean"},
-      "Heavy": {"Case": "Mean"},
-      "Ratio": {"Case": "Mean"}
-    }
-  },
-  "AggregatePeptideChargeStatesParams": null,
-  "AggregateModifiedPeptidesParams": null,
-  "AggregateToProteinGroupsParams": {
-    "LabeledTransform": null,
-    "LabeledSingleFilters": null,
-    "LabeledGroupFilters": null,
-    "LabeledAggregation": {
-      "Light": {"Case": "Mean"},
-      "Heavy": {"Case": "Mean"},
-      "Ratio": {"Case": "Mean"}
-    }
-  }
-}
-```
-
-### F# parameter-generation example
-
-The script follows the documented labeled aggregation types. Optional charge-state and modification aggregation can be disabled with `None` or enabled using `Some chargeParams` and `Some modParams`. The serialized result can be saved as JSON.
-
-```text
-#r "nuget: ProteomIQon, 0.0.7"
-
-open ProteomIQon
-open ProteomIQon.Dto
-
-let globalModParams : Common.LabeledProteinQuantification.AggregationParams =
-{
-LabeledTransform     = None
-LabeledSingleFilters = None
-LabeledGroupFilters  = None
-LabeledAggregation   = {
-Light = NumericAggregation.Mean
-Heavy = NumericAggregation.Mean
-Ratio = NumericAggregation.Mean
-}
-}
-
-let chargeParams : Common.LabeledProteinQuantification.AggregationParams =
-{
-LabeledTransform     = None
-LabeledSingleFilters = None
-LabeledGroupFilters  = None
-LabeledAggregation   = {
-Light = NumericAggregation.Mean
-Heavy = NumericAggregation.Mean
-Ratio = NumericAggregation.Mean
-}
-}
-
-let modParams : Common.LabeledProteinQuantification.AggregationParams =
-{
-LabeledTransform     = None
-LabeledSingleFilters = None
-LabeledGroupFilters  = None
-LabeledAggregation   = {
-Light = NumericAggregation.Mean
-Heavy = NumericAggregation.Mean
-Ratio = NumericAggregation.Mean
-}
-}
-
-let protParams : Common.LabeledProteinQuantification.AggregationParams =
-{
-LabeledTransform     = None
-LabeledSingleFilters = None
-LabeledGroupFilters  = None
-LabeledAggregation   = {
-Light = NumericAggregation.Mean
-Heavy = NumericAggregation.Mean
-Ratio = NumericAggregation.Mean
-}
-}
-
-let parameters : Dto.LabeledQuantificationParams =
-{
-Correlation_Light_Heavy_Threshold = Some 0.0
-ModificationFilter = UseModifiedPeptides.All
-AggregateGlobalModificationsParams = globalModParams
-AggregatePeptideChargeStatesParams = Some chargeParams // or None
-AggregateModifiedPeptidesParams = Some modParams      // or None
-AggregateToProteinGroupsParams = protParams
-}
-
-let serialized = parameters |> Json.serialize
-System.IO.File.WriteAllText("LabeledQuantificationParams.json", serialized)
-```
-
-**Documentation note:** This F# sample uses the parameters shown in the published documentation. `Some modParams` applies the modification aggregation, whereas *Some chargeParams* applies charge aggregation. The `chargeParams` record and `Some chargeParams` are used together; replace either optional stage with None to skip it.
 
 ## Outputs
 
-The labeled tool writes a tab-separated result for each performed aggregation stage. The mandatory light/heavy stage produces quantitative values and ratios; the final stage reports aggregated protein-level values.
+The tool writes **three mandatory** and **up to two optional** tab-separated result tables.
 
-| Stage | Output content | When produced |
+| File | Output content | When produced |
 | --- | --- | --- |
-| Light/heavy aggregation | Light and heavy versions of the same peptide are combined; light intensity, heavy intensity and their ratio are aggregated. | Always after `AggregateGlobalModificationsParams` is applied. |
-| Optional charge and modification aggregation | Charge-state aggregation combines peptide forms with different charges; modification aggregation can then combine differently modified forms. | When `AggregatePeptideChargeStatesParams` and/or modification aggregation is enabled. |
-| Protein-group aggregation | Aggregated light and heavy peptide quantities and their ratios at protein-group level. | Always performed last. |
+| `GlobModAggregation.txt` | Peptide-ion values after combining light/heavy identifications, including `Quant_Light`, `Quant_Heavy` and `Ratio_LightByHeavy`. | Always |
+| `ChargeAggregation.txt` | Measurements after aggregation across charge states. | Only if `AggregatePeptideChargeStatesParams` is enabled |
+| `ModificationAggregation.txt` | Measurements after aggregation across modified peptide forms. | Only if `AggregateModifiedPeptidesParams` is enabled |
+| `ProteinAggregation.txt` | One row per protein group and run, with aggregated light, heavy and ratio values. Includes the number of observations used, coefficient of variation (CV), standard deviation and standard error of the mean (SEM) for each series. | Always |
+| `LabeledQuant.txt` | Protein-group results in a wide table: one row per protein group and a set of columns for each input run. Column names follow patterns such as `<run>.Ratio_LightByHeavy` and `<run>.Quant_Heavy`. | Always |
 
-**Output format:** Each performed step produces a tab-separated file. The official labeled documentation does not provide exact output filenames or column names, so none are invented here.
+**Next step:** [RatioLFQ](https://csbiology.github.io/ProteomIQon/tools/RatioLFQ.html) uses `LabeledQuant.txt` to derive comparable run-level intensities from the ratios.
 
-## Executing the tool
+### Log files
 
-Process a `.quantAndProt` input, specifying the output directory and labeled JSON parameter file. The executable is proteomiqon-labeledproteinquantification.
+Two additional files are written to the output directory:
 
-### Convert one run
+| File | Description |
+| --- | --- |
+| `LabeledProteinQuantification_log.txt` | Log messages from the protein quantification tool. |
+| `LabeledQuantification_log.txt` | Additional log messages from the labeled quantification process. |
 
-```text
-proteomiqon-labeledproteinquantification \
--i "path/to/your/run.quantAndProt" \
--o "path/to/your/outDirectory" \
--p "path/to/your/params.json"
-```
+## Installing and executing the tool
 
-### Convert multiple runs
+1. **Installing**
 
-```text
-proteomiqon-labeledproteinquantification \
--i "path/to/your/run1.quantAndProt" \
-"path/to/your/run2.quantAndProt" \
-"path/to/your/run3.quantAndProt" \
--o "path/to/your/outDirectory" \
--p "path/to/your/params.json"
-```
+   Install the tool globally with the .NET CLI:
 
-In the original multi-run example, `-o` is omitted before the output directory. The example above includes it, consistently with the single-run command.
+   ```sh
+   dotnet tool install --global ProteomIQon.LabeledProteinQuantification
+   ```
 
-### All command-line options
+2. **Execute a single run**
 
-```text
-proteomiqon-labeledproteinquantification --help
-```
+   ```sh
+   proteomiqon-labeledproteinquantification -i path/to/run.quantAndProt -o path/to/output -p path/to/LabeledQuantificationParams.json
+   ```
+
+3. **Several runs in one table, from a list or from a directory**
+
+   Provide several input files or a directory containing `.quantAndProt` files:
+
+   ```sh
+   proteomiqon-labeledproteinquantification -i path/to/run1.quantAndProt path/to/run2.quantAndProt -o path/to/output -p path/to/LabeledQuantificationParams.json
+
+   proteomiqon-labeledproteinquantification -i path/to/quantAndProt -o path/to/output -p path/to/LabeledQuantificationParams.json
+   ```
+
+4. **All flags**
+
+   ```sh
+   proteomiqon-labeledproteinquantification --help
+   ```

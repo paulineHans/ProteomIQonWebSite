@@ -21,16 +21,16 @@ const entryPoints = [
 <Layout title="ProteomIQon · Proteomics toolchain" description="Explore the ProteomIQon toolchain, its processing tools, documentation and its tutorials." showFooter={false}>
 	<div>
 		<Banner>This website is a construction site and not finished yet</Banner>
-		<section class="relative overflow-hidden flex min-h-[575px] items-center justify-between pt-[78px] pb-[70px] max-md:block max-md:min-h-0 max-md:pt-14 max-md:pb-12 max-[520px]:pt-[47px]">
+		<section class="home-intro relative overflow-hidden flex min-h-[575px] items-center justify-between pt-[78px] pb-[70px] max-md:block max-md:min-h-0 max-md:pt-14 max-md:pb-12 max-[520px]:pt-[47px]">
 			<div class="relative z-2 w-[min(630px,100%)]">
 				<Eyebrow class="mb-[17px]">Open-source proteomics toolchain</Eyebrow>
 				<h1 class="mb-6 text-[clamp(3rem,6.2vw,5.75rem)]! [text-shadow:0_0_18px_rgba(247,249,251,.92),0_2px_0_rgba(247,249,251,.72)]">Proteom<em class="text-steel not-italic">IQ</em>on</h1>
 				<p class="max-w-[570px] text-[1.07rem] leading-[1.75] text-steel max-[520px]:text-base">a modular collection of tools for moving from mass-spectrometry data to identifications and quantitative results.</p>
-				<div class="mt-[33px] flex flex-wrap items-center gap-6 max-[520px]:flex-col max-[520px]:items-start max-[520px]:gap-[18px]">
+				<div class="home-intro-actions mt-[33px] flex flex-wrap items-center gap-6 max-[520px]:flex-col max-[520px]:items-start max-[520px]:gap-[18px]">
 					<Button href={withBase('/guide/getting-started/')}>New here? Start with the guide</Button>
 				</div>
 			</div>
-			<div class="pointer-events-none absolute top-[42%] right-0 z-1 aspect-[1630/756] w-[min(700px,62vw)] -translate-y-1/2 opacity-[.34] max-md:relative max-md:top-auto max-md:right-auto max-md:mx-auto max-md:-mt-2.5 max-md:w-[min(100%,410px)] max-md:translate-y-0 max-[520px]:w-[calc(100vw-32px)]" aria-label="A diagram showing data moving through a proteomics pipeline">
+			<div class="home-intro-visual pointer-events-none absolute top-[42%] right-0 z-1 aspect-[1630/756] w-[min(700px,62vw)] -translate-y-1/2 opacity-[.34] max-md:relative max-md:top-auto max-md:right-auto max-md:mx-auto max-md:-mt-2.5 max-md:w-[min(100%,410px)] max-md:translate-y-0 max-[520px]:w-[calc(100vw-32px)]" aria-label="A diagram showing data moving through a proteomics pipeline">
 				<img class="block size-full object-contain object-center" src={withBase('/images/PillarsOfCompProt.png')} alt="ProteomIQon" />
 			</div>
 		</section>
@@ -48,7 +48,7 @@ const entryPoints = [
 				id="entry-title"
 				note="Five entry points keep the documentation focused, whether you are running a workflow or building a new tool."
 			/>
-			<nav class="grid grid-cols-5 gap-3 max-md:grid-cols-2 max-[520px]:grid-cols-1" aria-label="Documentation sections">
+			<nav class="documentation-entries grid grid-cols-5 gap-3 max-md:grid-cols-2 max-[520px]:grid-cols-1" aria-label="Documentation sections">
 				{entryPoints.map((entry) => <EntryCard {...entry} />)}
 			</nav>
 		</section>

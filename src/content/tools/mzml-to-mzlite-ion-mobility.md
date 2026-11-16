@@ -52,6 +52,8 @@ These inputs are needed to execute the tool:
 | `MS1PeakPicking` | PeakPicking.Centroid (CentroidizationMode.Wavelet ms1Wavelet) | Same field as in [MzMLToMzLite](./mzml-to-mzlite.md). The default file carries the wavelet record shown in the script below, and the MS1 peaks are copied as they are. |
 | `MS2PeakPicking` | PeakPicking.Centroid (CentroidizationMode.Wavelet ms2Wavelet) | Same field as in [MzMLToMzLite](./mzml-to-mzlite.md), with padding settings in the default file. The MS2 peaks are copied as they are. |
 
+- The wavelet parameters are explained on the [MzMLToMzLite page](./mzml-to-mzlite.md). The default file is [TIMsMzMLtoMzLiteParams.json](https://github.com/CSBiology/ProteomIQon/blob/dev/src/ProteomIQon/defaultParams/TIMsMzMLtoMzLiteParams.json).
+
 ## Installing and executing the tool
 
 1. **Installing**

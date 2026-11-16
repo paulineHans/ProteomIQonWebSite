@@ -22,9 +22,9 @@ const isAncestor = (href: string) => currentPath !== href && currentPath.startsW
 const link = 'group relative py-1 text-[.8rem] whitespace-nowrap no-underline transition-colors duration-200 hover:text-navy!';
 ---
 
-<header class:list={['mx-auto flex w-[min(1180px,calc(100%-48px))] items-center justify-between gap-x-6 border-b border-line pt-6 pb-5 max-md:w-[min(100%-32px,640px)] max-[520px]:block', className]}>
+<header class:list={['site-masthead mx-auto flex w-[min(1180px,calc(100%-48px))] items-center justify-between gap-x-6 border-b border-line pt-6 pb-5 max-md:w-[min(100%-32px,640px)] max-[520px]:block', className]}>
 	<Brand />
-	<nav class="flex items-center gap-[25px] max-[520px]:mt-[18px] max-[520px]:flex-wrap max-[520px]:gap-x-4 max-[520px]:gap-y-2" aria-label="Main navigation">
+	<nav class="desktop-site-nav flex items-center gap-[25px] max-[520px]:mt-[18px] max-[520px]:flex-wrap max-[520px]:gap-x-4 max-[520px]:gap-y-2" aria-label="Main navigation">
 		{navigation.map((item) => {
 			const exact = isExact(item.href);
 			const active = exact || isAncestor(item.href);
@@ -40,4 +40,28 @@ const link = 'group relative py-1 text-[.8rem] whitespace-nowrap no-underline tr
 			);
 		})}
 	</nav>
+	<details class="mobile-site-nav">
+		<summary>
+			<span>Menu</span>
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+		</summary>
+		<nav aria-label="Main navigation">
+			{navigation.map((item) => (
+				<a href={item.href} aria-current={isExact(item.href) ? 'page' : isAncestor(item.href) ? 'true' : undefined}>{item.label}</a>
+			))}
+		</nav>
+	</details>
 </header>
+
+<script>
+	const menu = document.querySelector<HTMLDetailsElement>('.mobile-site-nav');
+	document.addEventListener('click', (event) => {
+		if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) menu.open = false;
+	});
+	menu?.addEventListener('keydown', (event) => {
+		if (event.key === 'Escape') {
+			menu.open = false;
+			menu.querySelector('summary')?.focus();
+		}
+	});
+</script>

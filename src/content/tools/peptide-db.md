@@ -80,8 +80,6 @@ These inputs are needed to execute the tool:
 
 2. **Execute**
 
-   - Running the tool
-
      ```sh
      proteomiqon-peptidedb -i path/to/proteome.fasta -o path/to/output -p path/to/peptideDBParams.json
      ```

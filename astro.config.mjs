@@ -4,6 +4,8 @@ import { satteri } from '@astrojs/markdown-satteri';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import { contentLinks } from './src/plugins/content-links.mjs';
+import { toolContent } from './src/plugins/tool-content.mjs';
+import { responsiveTables } from './src/plugins/responsive-tables.mjs';
 
 const base = '/ProteomIQonWebSite';
 
@@ -14,7 +16,7 @@ export default defineConfig({
   markdown: {
     processor: satteri({
       features: { smartPunctuation: false },
-      hastPlugins: [contentLinks({ base, contentDir: fileURLToPath(new URL('./src/content', import.meta.url)) })],
+      hastPlugins: [contentLinks({ base, contentDir: fileURLToPath(new URL('./src/content', import.meta.url)) }), toolContent(), responsiveTables()],
     }),
   },
   vite: { plugins: [tailwindcss()] },

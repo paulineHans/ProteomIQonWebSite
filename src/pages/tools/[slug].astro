@@ -19,15 +19,23 @@ const { Content } = await render(entry);
 const phase = getPhase(entry.data.phase);
 ---
 
-<Layout title={`${entry.data.name} · ProteomIQon`} description={entry.data.summary}>
+<Layout title={`${entry.data.name} · ProteomIQon`} description={entry.data.summary} mainClass="tool-page-wide">
 	<div class:list={['tool-detail-layout', `phase-${phase.id}`]}>
 		<aside class="tool-sidebar">
 			<a class="back-link" href={withBase('/tools/')}>← All tools</a><div class="sidebar-rule"></div><p class="sidebar-label">In this stage</p>
 			<nav aria-label={`${phase.label} tools`}>
 				{siblings.map((candidate) => (
-					<a class:list={{ active: candidate.id === entry.id }} href={toolHref(candidate.id)}>{candidate.data.name}</a>
+					<a class:list={{ active: candidate.id === entry.id }} aria-current={candidate.id === entry.id ? 'page' : undefined} href={toolHref(candidate.id)}>{candidate.data.name}</a>
 				))}
 			</nav>
+			<details class="mobile-stage-navigation">
+				<summary>In this stage <span>{siblings.length} tools</span></summary>
+				<nav aria-label={`${phase.label} tools`}>
+					{siblings.map((candidate) => (
+						<a class:list={{ active: candidate.id === entry.id }} aria-current={candidate.id === entry.id ? 'page' : undefined} href={toolHref(candidate.id)}>{candidate.data.name}</a>
+					))}
+				</nav>
+			</details>
 		</aside>
 
 		<main class="tool-detail">

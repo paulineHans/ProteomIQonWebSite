@@ -68,3 +68,25 @@ This Output is generated
 | TargetScore | Target Score calculated based on the individual peptide scores of PSM |
 | DecoyScore | Decoy Score calculated based on the individual peptide scores of PSM |
 | QValue | Q-value (False-Discovery-Rate) for every identified protein |
+
+## Running the tool 
+1. **Installing**
+
+   Install the Tool with the following command inside the choosen Command-Line
+
+   ```sh
+   dotnet tool install --global ProteomIQon.AddDeducedPeptides
+   ```
+
+2. **All runs of an experiment. Every .prot file in the directory is read, and every .quant file gets a new .prot file**
+
+
+     ```sh
+      proteomiqon-adddeducedpeptides -i path/to/quant -ii path/to/prot -o path/to/output
+     ```
+
+3. **Help**
+
+   ```sh
+    proteomiqon-alignmentbasedquantification --help
+     ```
