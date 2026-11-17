@@ -79,3 +79,63 @@
 .prose p { margin-top: 1.25em; }
 .prose table { display: block; overflow-x: auto; }
 .prose td:first-child code { font-family: var(--font-mono); }
+
+.copy-command-block {
+	--command-bg: color-mix(in srgb, var(--line) 58%, var(--paper));
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 50px;
+	align-items: stretch;
+	width: 100%;
+	margin: .9rem 0;
+	border: 1px solid color-mix(in srgb, var(--line) 78%, var(--paper));
+	border-radius: 8px;
+	background: var(--command-bg);
+	overflow: hidden;
+}
+.copy-command-block > pre {
+	min-width: 0;
+	max-width: 100%;
+	margin: 0;
+	padding-right: 1rem;
+	border-radius: 0;
+	overflow-x: auto;
+	background-color: transparent !important;
+	color: var(--ink) !important;
+}
+.copy-command-block > pre code span[style*="#B392F0"] { color: #70469c !important; }
+.copy-command-block > pre code span[style*="#9ECBFF"] { color: #275f8c !important; }
+.copy-command-block > pre code span[style*="#79B8FF"] { color: #17699e !important; }
+.copy-command-button {
+	display: inline-flex;
+	width: 36px;
+	height: 36px;
+	min-height: 0;
+	align-self: center;
+	justify-self: center;
+	align-items: center;
+	justify-content: center;
+	padding: 8px;
+	border: 1px solid color-mix(in srgb, var(--line) 82%, var(--muted));
+	border-radius: 8px;
+	background: var(--surface-muted);
+	color: var(--ink);
+	opacity: .94;
+	cursor: pointer;
+	transition: opacity .16s ease, border-color .16s ease, background-color .16s ease;
+}
+.copy-command-button svg {
+	display: block;
+	width: 18px;
+	height: 18px;
+}
+.copy-command-button:hover,
+.copy-command-button:focus-visible {
+	border-color: color-mix(in srgb, var(--line) 72%, var(--muted));
+	background: var(--line);
+	opacity: 1;
+}
+
+@media (max-width: 600px) {
+	.copy-command-block { grid-template-columns: minmax(0, 1fr) 46px; }
+	.copy-command-button { width: 34px; height: 34px; padding: 6px; }
+}
