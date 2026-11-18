@@ -4,12 +4,13 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
-	--paper: #f7f9fb;
+	--paper: #e7eee3;
 	--surface: #ffffff;
 	--surface-muted: #eef2f5;
 	--ink: #042c58;
 	--muted: #507289;
 	--line: #d0d6dd;
+	--color-violet: #9278b6;
 }
 
 :root[data-theme="dark"] {

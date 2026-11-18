@@ -1,6 +1,7 @@
 ---
 name: "MzMLToMzLiteIonMobility"
 phase: preprocessing
+subgroup: File conversion
 order: 2
 summary: "MzMLToMzLiteIonMobility converts mzML files from ion mobility instruments such as the Bruker timsTOF into mzlite files."
 inputsFrom: []

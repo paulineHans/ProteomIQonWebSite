@@ -1,6 +1,7 @@
 ---
 name: "PeptideSpectrumMatchingTIMs"
 phase: peptide-identification
+subgroup: Spectrum matching
 order: 2
 summary: "PeptideSpectrumMatchingTIMs identifies peptides from timsTOF runs using precursor ion mobility data."
 inputsFrom: [mzml-to-mzlite-ion-mobility, peptide-db]

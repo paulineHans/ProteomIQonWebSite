@@ -1,7 +1,7 @@
 ---
 name: "Alignment-BasedQuantStatistics"
-phase: peptide-quantification
-order: 5
+phase: alignment
+order: 3
 summary: "AlignmentBasedQuantStatistics gives every transferred quantification an alignment score and an alignment Q-value."
 inputsFrom: [psm-based-quantification, quant-based-alignment, alignment-based-quantification]
 ---

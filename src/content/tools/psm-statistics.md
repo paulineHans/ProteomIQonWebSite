@@ -1,6 +1,7 @@
 ---
 name: "PSMStatistics"
 phase: peptide-identification
+subgroup: PSM statistics
 order: 3
 summary: "PSMStatistics learns one combined score from the per-spectrum scores reported by PeptideSpectrumMatching."
 inputsFrom: [peptide-spectrum-matching, peptide-db]

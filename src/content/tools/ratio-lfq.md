@@ -1,7 +1,8 @@
 ---
 name: "Ratio LFQ"
 phase: protein-quantification
-order: 3
+subgroup: Ratio LFQ
+order: 4
 summary: "RatioLFQ turns the light to heavy ratios of different runs into one intensity per run and protein, the way label free quantification would report it."
 inputsFrom: []
 ---

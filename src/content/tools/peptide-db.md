@@ -1,6 +1,7 @@
 ---
 name: "PeptideDB"
 phase: preprocessing
+subgroup: Peptide database
 order: 3
 summary: "PeptideDB digests the proteins of a FASTA file in silico and stores the resulting peptides, with their masses and modifications, in a SQLite database."
 inputsFrom: []

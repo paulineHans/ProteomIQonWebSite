@@ -1,7 +1,8 @@
 ---
 name: "Label-Free Protein Quantification"
 phase: protein-quantification
-order: 1
+subgroup: Label-free and labeled quantification
+order: 2
 summary: "LabelFreeProteinQuantification turns peptide ion intensities into one intensity per protein group and run."
 inputsFrom: [join-quant-with-peptide-ions]
 ---

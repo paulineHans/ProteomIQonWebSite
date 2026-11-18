@@ -1,6 +1,7 @@
 ---
 name: "PeptideSpectrumMatching"
 phase: peptide-identification
+subgroup: Spectrum matching
 order: 1
 summary: "PeptideSpectrumMatching identifies the peptides behind the MS/MS spectra of a run."
 inputsFrom: [mzml-to-mzlite, peptide-db]

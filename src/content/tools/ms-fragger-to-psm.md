@@ -1,6 +1,7 @@
 ---
 name: "MSFragger to PSM"
 phase: peptide-identification
+subgroup: MSFragger import
 order: 4
 summary: "MsFraggerToPSM turns the psm.tsv result of an MSFragger search, as written by FragPipe, into the .qpsm files that PSMBasedQuantificationTIMs reads."
 inputsFrom: [mzml-to-mzlite-ion-mobility, peptide-db]

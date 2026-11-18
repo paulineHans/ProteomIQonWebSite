@@ -1,7 +1,8 @@
 ---
 name: "JoinQuantWithPepIons"
-phase: peptide-quantification
-order: 7
+phase: protein-quantification
+subgroup: Join quantification
+order: 1
 summary: "JoinQuantPepIonsWithProteins joins the peptide ion intensities of a .quant file with the protein groups of a .prot file into one .quantAndProt file per run."
 inputsFrom: [psm-based-quantification, psm-based-quantification-tims, alignment-based-quantification, alignment-based-quant-statistics, protein-inference, add-deduced-peptides]
 ---

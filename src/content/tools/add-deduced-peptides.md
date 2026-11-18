@@ -1,7 +1,7 @@
 ---
 name: "Add Deduced Peptides"
-phase: peptide-quantification
-order: 6
+phase: alignment
+order: 4
 summary: "AddDeducedPeptides assigns the protein groups of the combined inference to every peptide present in each aligned .quant file."
 inputsFrom: [alignment-based-quantification, protein-inference]
 ---

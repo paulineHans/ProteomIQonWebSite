@@ -1,7 +1,7 @@
 ---
 name: "Alignment-Based Quantification"
-phase: peptide-quantification
-order: 4
+phase: alignment
+order: 2
 summary: "AlignmentBasedQuantification quantifies a peptide ion identified in another run at the place in this run where QuantBasedAlignment predicts it to elute."
 inputsFrom: []
 ---

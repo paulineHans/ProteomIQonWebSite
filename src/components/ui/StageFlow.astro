@@ -12,7 +12,7 @@ const arrows =
 ---
 
 <div class:list={['pipeline-flow-scroll overflow-x-auto pt-[3px] pb-[9px]', className]}>
-	<div class="pipeline-flow mx-auto grid w-[min(1300px,100%)] min-w-[980px] grid-cols-5 gap-[26px] max-md:min-w-[900px]" role="list" aria-label="ProteomIQon processing stages">
+	<div class="pipeline-flow mx-auto grid w-[min(1300px,100%)] min-w-[980px] grid-cols-[repeat(var(--stage-count),minmax(0,1fr))] gap-[26px] max-md:min-w-[900px]" style={`--stage-count: ${phases.length}`} role="list" aria-label="ProteomIQon processing stages">
 		{phases.map((phase) => (
 			<div class:list={['pipeline-flow-item relative min-w-0', arrows]} role="listitem">
 				<div class="pipeline-stage min-h-[124px] rounded-lg border-2 px-[15px] pt-4 pb-[15px] text-navy">

@@ -1,7 +1,8 @@
 ---
 name: "Labeled Protein Quantification"
 phase: protein-quantification
-order: 2
+subgroup: Label-free and labeled quantification
+order: 3
 summary: "LabeledProteinQuantification combines light and heavy peptide-ion intensities into protein-group intensities and light-to-heavy ratios for each run."
 inputsFrom: [join-quant-with-peptide-ions]
 ---

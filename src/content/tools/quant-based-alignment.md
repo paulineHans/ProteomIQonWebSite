@@ -1,7 +1,7 @@
 ---
 name: "Quant-Based Alignment"
-phase: peptide-quantification
-order: 3
+phase: alignment
+order: 1
 summary: "Run alignment maps the scan time of one run onto another, so that a later tool can look for the peptide where it should elute."
 inputsFrom: []
 ---

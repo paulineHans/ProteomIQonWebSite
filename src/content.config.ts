@@ -8,6 +8,7 @@ const tools = defineCollection({
 	schema: z.object({
 		name: z.string(),
 		phase: z.enum(phaseIds),
+		subgroup: z.string().min(1).optional(),
 		order: z.number().int().positive(),
 		summary: z.string().min(10),
 		inputsFrom: z.array(reference('tools')).default([]),

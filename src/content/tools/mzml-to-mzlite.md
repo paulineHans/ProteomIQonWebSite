@@ -1,6 +1,7 @@
 ---
 name: "MzMLToMzLite"
 phase: preprocessing
+subgroup: File conversion
 order: 1
 summary: "MzMLToMzLite converts an mzML file into an mzlite file."
 inputsFrom: []
