@@ -4,7 +4,7 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root {
-	--paper: #e7eee3;
+	--paper: #f3efe6;
 	--surface: #ffffff;
 	--surface-muted: #eef2f5;
 	--ink: #042c58;

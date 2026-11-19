@@ -33,7 +33,7 @@ const snapshotPath = `${base}structures/ferredoxin.molx`;
 				const target = container.querySelector('.molecule-canvas');
 				const snapshotUrl = container.dataset.snapshot;
 				if (!target || !snapshotUrl) throw new Error('Missing Mol* viewer target or snapshot URL.');
-				const siteBackground = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#e7eee3';
+				const siteBackground = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#f3efe6';
 				const siteBackgroundColor = Number.parseInt(siteBackground.replace('#', ''), 16);
 
 				const viewer = await window.molstar.Viewer.create(target, {

@@ -1,92 +1,75 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import Eyebrow from '../../components/ui/Eyebrow.astro';
-import { phases, type PhaseId } from '../../lib/phases';
+import { getPhase, phases } from '../../lib/phases';
 import { getSortedTools, toolHref } from '../../lib/tools';
 import { breakCamelCase } from '../../lib/text';
+import { workflowEdges, workflowNodes } from '../../lib/tool-network-layout';
 
-type Point = readonly [number, number];
-type Positions = { desktop: Point; mobile: Point };
-
-const positions = {
-	preprocessing: { desktop: [11, 38], mobile: [26, 15] },
-	'peptide-identification': { desktop: [25, 69], mobile: [74, 15] },
-	'peptide-quantification': { desktop: [40, 38], mobile: [26, 50] },
-	'protein-identification': { desktop: [58, 69], mobile: [26, 83] },
-	alignment: { desktop: [85, 38], mobile: [74, 83] },
-	'protein-quantification': { desktop: [64, 14], mobile: [74, 50] },
-} satisfies Record<PhaseId, Positions>;
-
-const connections: [PhaseId, PhaseId][] = [
-	['preprocessing', 'peptide-identification'],
-	['peptide-identification', 'peptide-quantification'],
-	['peptide-quantification', 'protein-identification'],
-	['peptide-quantification', 'alignment'],
-	['peptide-quantification', 'protein-quantification'],
-	['protein-identification', 'alignment'],
-	['alignment', 'protein-quantification'],
-];
-
-const pointStyle = (name: string, [x, y]: Point) => `--${name}-x: ${x}%; --${name}-y: ${y}%`;
-const positionStyle = ({ desktop, mobile }: Positions) =>
-	[pointStyle('desktop', desktop), pointStyle('mobile', mobile)].join('; ');
-
-const tools = await getSortedTools();
-const branches = phases.map((phase) => ({
-	phase,
-	accent: `var(--color-${phase.tone})`,
-	entries: tools.filter((tool) => tool.data.phase === phase.id),
-}));
+const tools = new Map((await getSortedTools()).map((tool) => [tool.id, tool]));
+const mobilityOnlyNodes = new Set(workflowNodes.filter((node) => node.mobilityOnly).map((node) => node.id));
+const nodes = workflowNodes.map(({ id, tool, variant, position: [x, y] }) => {
+	const standard = tools.get(tool);
+	const alternative = variant ? tools.get(variant) : undefined;
+	if (!standard || (variant && !alternative)) {
+		throw new Error(`Missing tool documentation for workflow node ${id}.`);
+	}
+	const phase = getPhase(standard.data.phase);
+	return {
+		id,
+		phase: phase.id,
+		style: `left: ${x}%; top: ${y}%; --tool-accent: var(--color-${phase.tone})`,
+		faces: alternative ? [standard, alternative] : [standard],
+	};
+});
 ---
 
-<Layout title="Tools · ProteomIQon" description="Browse the ProteomIQon tools by processing stage." mainClass="tool-network-page">
+<Layout title="Tools · ProteomIQon" description="Browse the ProteomIQon tools by processing stage.">
 	<section class="tool-directory" aria-labelledby="directory-title">
 		<header class="network-heading">
-			<Eyebrow dotTone="orange">Interactive tool network</Eyebrow>
 			<h1 id="directory-title">Explore the Toolchain.</h1>
-			<p class="page-intro">Navigate through six interconnected workflow stages and discover the tools behind ProteomIQon.</p>
+			<label class="workflow-mode">
+				<span>Ion Mobility</span>
+				<input class="sr-only" type="checkbox" role="switch" aria-controls="tool-workflow" />
+				<span class="mode-switch" aria-hidden="true"></span>
+			</label>
 		</header>
 
-		<div class="network-scroll">
-			<div class="phase-map" role="group" aria-label="Tool phases">
-				{connections.map(([from, to]) => (
-					<span class="map-line phase-edge" aria-hidden="true" data-from={from} data-to={to}></span>
-				))}
+		<div class="network-scroll" tabindex="0" role="region" aria-label="Interactive tool workflow">
+			<div class="tool-network" id="tool-workflow">
+				<svg class="category-regions" aria-hidden="true">
+					{phases.map((phase) => (
+						<g class="category-region" data-phase={phase.id} style={`--category-tone: var(--color-${phase.tone})`}>
+							<path class="category-fill" />
+							<text class="category-label" x="0" y="0">
+								{phase.label.includes(' ') ? phase.label.split(' ').map((word, index) => (
+									<tspan x="0" dy={index ? '1.18em' : undefined}>{word}</tspan>
+								)) : phase.label}
+							</text>
+						</g>
+					))}
+				</svg>
 
-				{branches.map(({ phase, accent, entries }) => (
-					<Fragment>
-						<button
-							type="button"
-							class="map-node phase-button"
-							id={`select-${phase.id}`}
-							data-phase={phase.id}
-							data-accent={accent}
-							aria-controls={`tools-${phase.id}`}
-							aria-expanded="false"
-							style={`${positionStyle(positions[phase.id])}; --phase-accent: ${accent}`}
-						>
-							{phase.label}
-						</button>
-						<div
-							class="tool-branch"
-							id={`tools-${phase.id}`}
-							role="group"
-							aria-labelledby={`select-${phase.id}`}
-							style={`${positionStyle(positions[phase.id])}; --phase-accent: ${accent}`}
-							inert
-						>
-							{entries.map((tool, index) => (
-								<div class="tool-satellite" data-outside-label={tool.data.name.length > 19 ? "" : undefined} style={`--stagger: ${index * 45}ms`}>
-									<span class="map-line tool-line" aria-hidden="true"></span>
-									<a class="map-node tool-link" href={toolHref(tool.id)}>
-										<span class="tool-label">{breakCamelCase(tool.data.name).map((part, index) => (
-											<Fragment>{index > 0 && <wbr />}{part}</Fragment>
-										))}</span>
-									</a>
-								</div>
-							))}
-						</div>
-					</Fragment>
+				<svg class="workflow-edges" aria-hidden="true">
+					<defs>
+						<marker id="tool-direction" viewBox="0 0 7 6" refX="7" refY="3" markerWidth="7" markerHeight="6" markerUnits="userSpaceOnUse" orient="auto">
+							<path d="M 0 0 L 7 3 L 0 6 Z" fill="context-stroke" />
+						</marker>
+					</defs>
+					{workflowEdges.map(([from, to]) => (
+						<path class="workflow-edge" data-from={from} data-to={to} data-mobility-only={mobilityOnlyNodes.has(from) || mobilityOnlyNodes.has(to) || undefined} marker-end="url(#tool-direction)" />
+					))}
+				</svg>
+
+				{nodes.map(({ id, phase, style, faces }) => (
+					<div class="tool-node" data-node={id} data-phase={phase} data-mobility-only={mobilityOnlyNodes.has(id) || undefined} style={style}>
+						{faces.map((tool, index) => (
+							<a class="tool-face" href={toolHref(tool.id)} data-variant={index > 0 || undefined} inert={index > 0}>
+								<span class="tool-label">{breakCamelCase(tool.data.name).map((part, index) => (
+									<Fragment>{index > 0 && <wbr />}{part}</Fragment>
+								))}</span>
+							</a>
+						))}
+					</div>
 				))}
 			</div>
 		</div>
@@ -94,167 +77,135 @@ const branches = phases.map((phase) => ({
 </Layout>
 
 <script>
-	import { placeCollapsedDots, placeToolSatellites } from '../../lib/tool-network-layout';
+	import { connectToolCircles } from '../../lib/tool-network-layout';
+	import { layoutCategoryRegions } from '../../lib/tool-network-regions';
 
-	const map = document.querySelector<HTMLElement>('.phase-map');
-	if (map) initializeMap(map);
+	const graph = document.querySelector<HTMLElement>('.tool-network');
+	if (graph) initializeGraph(graph);
 
-	function initializeMap(map: HTMLElement) {
-		type Stage = { button: HTMLButtonElement; branch: HTMLElement };
-		const stages = [...map.querySelectorAll<HTMLButtonElement>('.phase-button')].map((button) => ({
-			button,
-			branch: document.getElementById(button.getAttribute('aria-controls') ?? '')!,
-		}));
-		const byPhase = new Map(stages.map((stage, index) => [stage.button.dataset.phase, index]));
-		const edges = [...map.querySelectorAll<HTMLElement>('.phase-edge')].map((element) => ({
+	function initializeGraph(graph: HTMLElement) {
+		const nodes = [...graph.querySelectorAll<HTMLElement>('.tool-node')];
+		const edges = [...graph.querySelectorAll<SVGPathElement>('.workflow-edge')];
+		const regions = [...graph.querySelectorAll<SVGGElement>('.category-region')].map((element) => ({
 			element,
-			from: byPhase.get(element.dataset.from)!,
-			to: byPhase.get(element.dataset.to)!,
+			nodeIds: nodes.filter((node) => node.dataset.phase === element.dataset.phase).map((node) => node.dataset.node),
+			fill: element.querySelector<SVGPathElement>('.category-fill')!,
+			label: element.querySelector<SVGTextElement>('.category-label')!,
 		}));
-		let active: Stage | undefined;
-		let hovered: Stage | undefined;
-		let focused: Stage | undefined;
+		const mobility = graph.closest('.tool-directory')?.querySelector<HTMLInputElement>('.workflow-mode input');
+		const pairs = nodes.flatMap((node) => {
+			const variant = node.querySelector<HTMLAnchorElement>('.tool-face[data-variant]');
+			return variant ? [{ standard: node.querySelector<HTMLAnchorElement>('.tool-face:not([data-variant])')!, variant }] : [];
+		});
+		let hovered: HTMLElement | undefined;
+		let focused: HTMLElement | undefined;
 
-		function highlightEdges() {
-			const button = (hovered ?? focused)?.button;
-			map.style.setProperty('--highlight-color', button?.dataset.accent ?? 'var(--slate)');
-			map.toggleAttribute('data-emphasis', !!button);
-			for (const { element, from, to } of edges) {
-				element.toggleAttribute('data-highlighted', !!button && (stages[from].button === button || stages[to].button === button));
+		function updateMode() {
+			const showMobility = mobility?.checked ?? false;
+			graph.toggleAttribute('data-ion-mobility', showMobility);
+			for (const { standard, variant } of pairs) {
+				standard.inert = showMobility;
+				variant.inert = !showMobility;
 			}
+		}
+
+		mobility?.addEventListener('change', updateMode);
+		updateMode();
+
+		function highlight() {
+			const active = hovered ?? focused;
+			const id = active?.dataset.node;
+			graph.toggleAttribute('data-emphasis', !!active);
+			for (const node of nodes) node.toggleAttribute('data-highlighted', node === active);
+			for (const region of regions) {
+				region.element.toggleAttribute('data-highlighted', active?.dataset.phase === region.element.dataset.phase);
+			}
+			for (const edge of edges) {
+				edge.toggleAttribute('data-highlighted', !!id && (id === edge.dataset.from || id === edge.dataset.to));
+			}
+		}
+
+		for (const node of nodes) {
+			node.addEventListener('pointerenter', (event) => {
+				if (event.pointerType !== 'touch') {
+					hovered = node;
+					highlight();
+				}
+			});
+			node.addEventListener('pointerleave', () => {
+				if (hovered === node) {
+					hovered = undefined;
+					highlight();
+				}
+			});
+			node.addEventListener('focusin', () => {
+				focused = node;
+				highlight();
+			});
+			node.addEventListener('focusout', (event) => {
+				const next = event.relatedTarget;
+				if (focused === node && (!(next instanceof Node) || !node.contains(next))) {
+					focused = undefined;
+					highlight();
+				}
+			});
+
 		}
 
 		function layout() {
-			const canvas = { width: map.clientWidth, height: map.clientHeight };
-			const phases = stages.map(({ button }) => {
-				const style = getComputedStyle(button);
+			const circles = new Map(nodes.map((node) => {
+				const style = getComputedStyle(node);
+				return [node.dataset.node, { x: parseFloat(style.left), y: parseFloat(style.top), radius: node.offsetWidth / 2 }];
+			}));
+
+			const width = graph.clientWidth;
+			const height = graph.clientHeight;
+			const segments = edges.map((edge) => {
+				const from = circles.get(edge.dataset.from)!;
+				const to = circles.get(edge.dataset.to)!;
+				edge.setAttribute('d', connectToolCircles(from, to));
+				return [from, to] as [typeof from, typeof to];
+			});
+			const groupGeometry = regions.map(({ label, nodeIds }) => {
+				const bounds = label.getBBox();
 				return {
-					center: { x: parseFloat(style.left), y: parseFloat(style.top) },
-					radius: button.offsetWidth / 2,
+					circles: nodeIds.map((id) => circles.get(id)!),
+					label: { width: bounds.width, height: bounds.height },
+					bounds,
 				};
 			});
-
-			for (const { element, from, to } of edges) {
-				const start = phases[from];
-				const end = phases[to];
-				const dx = end.center.x - start.center.x;
-				const dy = end.center.y - start.center.y;
-				const angle = Math.atan2(dy, dx);
-				element.style.left = `${start.center.x + Math.cos(angle) * start.radius}px`;
-				element.style.top = `${start.center.y + Math.sin(angle) * start.radius}px`;
-				element.style.width = `${Math.max(0, Math.hypot(dx, dy) - start.radius - end.radius)}px`;
-				element.style.transform = `translateY(-50%) rotate(${angle}rad)`;
+			const categoryGeometry = layoutCategoryRegions({ width, height }, groupGeometry, segments);
+			for (const [index, { element, fill, label }] of regions.entries()) {
+				const { path, labelPosition } = categoryGeometry[index];
+				fill.setAttribute('d', path);
+				if (labelPosition) {
+					const previous = groupGeometry[index].bounds;
+					const x = String(Number(label.getAttribute('x')) + labelPosition.x - previous.x);
+					label.setAttribute('x', x);
+					for (const line of label.querySelectorAll('tspan')) line.setAttribute('x', x);
+					label.setAttribute('y', String(Number(label.getAttribute('y')) + labelPosition.y - previous.y));
+				}
+				label.style.visibility = labelPosition ? 'visible' : 'hidden';
+				element.setAttribute('data-ready', '');
 			}
 
-			stages.forEach(({ branch }, index) => {
-				const origin = phases[index];
-				const satellites = [...branch.querySelectorAll<HTMLElement>('.tool-satellite')];
-				const sizes = satellites.map((satellite) => {
-					const link = satellite.querySelector<HTMLAnchorElement>('.tool-link')!;
-					const label = satellite.querySelector<HTMLElement>('.tool-label')!;
-					return {
-						radius: link.offsetWidth / 2,
-						label: satellite.hasAttribute('data-outside-label') ? { width: label.offsetWidth, height: label.offsetHeight } : undefined,
-					};
-				});
-				const dots = placeCollapsedDots(origin, satellites.length, canvas, index);
-				const positions = placeToolSatellites(canvas, origin, sizes, dots, phases.filter((_, i) => i !== index));
-
-				branch.style.setProperty('--phase-radius', `${origin.radius}px`);
-				satellites.forEach((satellite, toolIndex) => {
-					const dot = dots[toolIndex];
-					const placement = positions[toolIndex];
-					satellite.style.setProperty('--dot-x', `${dot.x - origin.center.x}px`);
-					satellite.style.setProperty('--dot-y', `${dot.y - origin.center.y}px`);
-					satellite.style.setProperty('--tool-radius', `${sizes[toolIndex].radius}px`);
-					satellite.style.setProperty('--dot-scale', `${4 / sizes[toolIndex].radius}`);
-					if (!placement) return;
-					satellite.style.setProperty('--expanded-x', `${placement.point.x - origin.center.x}px`);
-					satellite.style.setProperty('--expanded-y', `${placement.point.y - origin.center.y}px`);
-					satellite.toggleAttribute('data-label-above', placement.above);
-				});
-			});
-			map.setAttribute('data-ready', '');
 		}
 
-		function setExpanded(stage: Stage, expanded: boolean) {
-			stage.button.setAttribute('aria-expanded', String(expanded));
-			stage.branch.inert = !expanded;
-			stage.branch.toggleAttribute('data-open', expanded);
-		}
-
-		function select(next?: Stage) {
-			if (active) setExpanded(active, false);
-			active = next;
-			map.toggleAttribute('data-focused', !!active);
-			if (active) setExpanded(active, true);
-		}
-
-		for (const stage of stages) {
-			const { button } = stage;
-			button.addEventListener('pointerenter', (event) => {
-				if (event.pointerType === 'touch') return;
-				hovered = stage;
-				highlightEdges();
-			});
-			button.addEventListener('pointerleave', () => {
-				if (hovered !== stage) return;
-				hovered = undefined;
-				highlightEdges();
-			});
-			button.addEventListener('focus', () => {
-				if (!button.matches(':focus-visible')) return;
-				focused = stage;
-				highlightEdges();
-			});
-			button.addEventListener('blur', () => {
-				if (focused !== stage) return;
-				focused = undefined;
-				highlightEdges();
-			});
-			button.addEventListener('click', () => select(active === stage ? undefined : stage));
-		}
-
-		map.addEventListener('keydown', (event) => {
-			if (event.key !== 'Escape' || !active) return;
-			const button = active.button;
-			select();
-			button.focus({ preventScroll: true });
-		});
-
-		new ResizeObserver(layout).observe(map);
+		new ResizeObserver(layout).observe(graph);
 		document.fonts.ready.then(layout);
 		layout();
 	}
 </script>
 
 <style>
-	@property --constellation-x {
-		syntax: '<length>';
-		inherits: true;
-		initial-value: 0px;
+	.tool-directory { padding: clamp(14px, 3vh, 34px) 0 22px; }
+
+	.network-heading {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px 20px;
 	}
-
-	@property --constellation-y {
-		syntax: '<length>';
-		inherits: true;
-		initial-value: 0px;
-	}
-
-	@property --constellation-scale {
-		syntax: '<number>';
-		inherits: true;
-		initial-value: 1;
-	}
-
-	:global(html:has(.tool-network-page)) { scrollbar-gutter: stable; }
-
-	:global(.site-shell > main.tool-network-page) {
-		width: min(1180px, calc(100% - clamp(32px, 6vw, 72px)));
-		max-width: none;
-	}
-
-	.tool-directory { padding: clamp(26px, 5.5vh, 58px) 0 22px; }
 
 	.network-heading > h1 {
 		margin: 10px 0 12px;
@@ -262,219 +213,152 @@ const branches = phases.map((phase) => ({
 		font-size: clamp(2.35rem, 5.4vw, 4.7rem);
 	}
 
-	.network-heading > .page-intro { margin-bottom: 6px; }
-
-	.network-scroll { overflow-x: auto; overscroll-behavior-inline: contain; }
-
-	.phase-map {
-		--map-line: color-mix(in srgb, var(--slate) 54%, var(--paper));
-		--ease: cubic-bezier(.22, .7, .3, 1);
-		position: relative;
-		isolation: isolate;
-		container-type: size;
-		min-inline-size: 285px;
-		block-size: clamp(530px, 69svh, 655px);
-	}
-
-	.map-line {
-		position: absolute;
-		height: 1.5px;
-		border-radius: 1px;
-		pointer-events: none;
-		transform-origin: left center;
-	}
-
-	.phase-edge {
-		background: var(--map-line);
-		transition: background-color 240ms ease, opacity 240ms ease;
-	}
-
-	.phase-map[data-emphasis]:not([data-focused]) .phase-edge:not([data-highlighted]) { opacity: .46; }
-	.phase-edge[data-highlighted] { background: color-mix(in srgb, var(--highlight-color) 78%, var(--navy)); }
-	.phase-map[data-focused] .phase-edge { opacity: .18; }
-	.phase-map[data-focused] .phase-edge[data-highlighted] { opacity: .30; }
-
-	.map-node {
-		--accent-ink: color-mix(in srgb, var(--phase-accent) 63%, var(--navy));
-		--glass-surface: linear-gradient(151deg, color-mix(in srgb, var(--surface) 66%, transparent), transparent 49%),
-			color-mix(in srgb, var(--phase-accent) var(--glass-tint, 22%), color-mix(in srgb, var(--paper) 91%, transparent));
-		--glass-shadow: inset 0 1px 2px color-mix(in srgb, var(--surface) 88%, transparent),
-			inset 0 -2px 5px color-mix(in srgb, var(--phase-accent) 17%, transparent),
-			0 4px 12px color-mix(in srgb, var(--navy) 9%, transparent);
-		display: grid;
-		place-items: center;
-		position: absolute;
-		aspect-ratio: 1;
-		border: 1.2px solid var(--accent-ink);
-		border-radius: 50%;
+	.workflow-mode {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		min-height: 44px;
+		margin-inline-start: auto;
 		color: var(--navy);
+		font-size: .875rem;
 		font-weight: 600;
-		line-height: 1.2;
-		text-align: center;
-		text-decoration: none;
-	}
-
-	.phase-button, .tool-branch {
-		--phase-x: var(--desktop-x);
-		--phase-y: var(--desktop-y);
-		position: absolute;
-		left: var(--phase-x);
-		top: var(--phase-y);
-	}
-
-	.phase-button {
-		z-index: 2;
-		width: clamp(90px, 9.3cqw, 108px);
-		padding: 6px;
-		background: var(--glass-surface);
-		box-shadow: var(--glass-shadow);
-		backdrop-filter: blur(7px);
-		font-size: clamp(.72rem, 1.17cqw, .86rem);
-		text-wrap: balance;
-		transform: translate(-50%, -50%) scale(var(--zoom, 1));
-		transition: opacity 250ms ease, transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
 		cursor: pointer;
 	}
 
-	.phase-button:is(:hover, :focus-visible) {
-		--zoom: 1.035;
-		--glass-tint: 32%;
-		box-shadow: var(--glass-shadow), 0 0 15px color-mix(in srgb, var(--phase-accent) 30%, transparent);
+	.mode-switch {
+		position: relative;
+		inline-size: 46px;
+		block-size: 26px;
+		border: 1px solid var(--line);
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--slate) 7%, var(--paper));
+		transition: background-color 200ms ease;
 	}
 
-	.phase-button[aria-expanded="true"] {
-		--glass-tint: 33%;
-		z-index: 5;
-		box-shadow: var(--glass-shadow), 0 0 19px color-mix(in srgb, var(--phase-accent) 30%, transparent);
+	.mode-switch::before {
+		content: '';
+		position: absolute;
+		inset: 3px auto auto 3px;
+		inline-size: 18px;
+		block-size: 18px;
+		border: 1px solid var(--slate);
+		border-radius: 50%;
+		background: var(--paper);
+		pointer-events: none;
+		transition: transform 200ms ease;
 	}
 
-	.map-node:focus-visible,
-	.phase-button[aria-expanded="true"] {
-		outline: 2px solid var(--accent-ink);
+	.workflow-mode input:checked + .mode-switch {
+		background: color-mix(in srgb, var(--color-teal) 42%, var(--paper));
+	}
+	.workflow-mode input:checked + .mode-switch::before { transform: translateX(20px); }
+	.workflow-mode input:focus-visible + .mode-switch { outline: 2px solid var(--navy); outline-offset: 3px; }
+
+	.network-scroll {
+		position: relative;
+		left: 50%;
+		width: min(1720px, calc(100vw - clamp(36px, 4vw, 72px)));
+		transform: translateX(-50%);
+		overflow-x: auto;
+		overscroll-behavior-inline: contain;
+	}
+
+	.tool-network {
+		--node-size: clamp(114px, 7.55cqw, 128px);
+		--map-line: color-mix(in srgb, var(--slate) 60%, var(--paper));
+		position: relative;
+		isolation: isolate;
+		container-type: inline-size;
+		min-inline-size: 1320px;
+		block-size: clamp(555px, 67vh, 640px);
+	}
+
+	[data-mobility-only] { visibility: hidden; }
+	.tool-network[data-ion-mobility] [data-mobility-only] { visibility: visible; }
+	.tool-node[data-mobility-only] { transition-property: none; }
+
+	.category-regions, .workflow-edges {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.category-regions { width: 100%; height: 100%; }
+	.category-region:not([data-ready]) { visibility: hidden; }
+
+	.category-fill {
+		fill: var(--category-tone);
+		fill-opacity: .055;
+		pointer-events: visibleFill;
+		transition: fill-opacity 300ms ease;
+	}
+
+	.category-region:is(:hover, [data-highlighted]) .category-fill { fill-opacity: .095; }
+
+	.category-label {
+		fill: color-mix(in srgb, var(--category-tone) 48%, var(--navy));
+		font-size: 12px;
+		font-weight: 500;
+		letter-spacing: .055em;
+		text-transform: uppercase;
+	}
+
+	.workflow-edges { width: 100%; height: 100%; }
+
+	.workflow-edge {
+		fill: none;
+		stroke: var(--map-line);
+		stroke-width: 1.5px;
+		stroke-linecap: round;
+		transition: stroke 200ms ease, opacity 200ms ease;
+	}
+
+	.tool-network[data-emphasis] .workflow-edge:not([data-highlighted]) { opacity: .45; }
+	.workflow-edge[data-highlighted] { stroke: var(--slate); }
+
+	.tool-node {
+		position: absolute;
+		inline-size: var(--node-size);
+		block-size: var(--node-size);
+		transform: translate(-50%, -50%);
+	}
+
+	.tool-face {
+		display: grid;
+		place-items: center;
+		position: absolute;
+		inset: 0;
+		border: 3px solid var(--tool-accent);
+		border-radius: 50%;
+		background: linear-gradient(145deg, var(--paper) 20%, color-mix(in srgb, var(--tool-accent) var(--tint, 10%), var(--paper)));
+		color: var(--navy);
+		text-decoration: none;
+		text-align: center;
+		transition: box-shadow 200ms ease;
+	}
+
+	.tool-face[data-variant] { --tint: 17%; }
+	.tool-face[inert] { display: none; }
+
+	.tool-node[data-highlighted] .tool-face {
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--tool-accent) 24%, transparent);
+	}
+
+	.tool-face:focus-visible {
+		outline: 2px solid var(--navy);
 		outline-offset: 3px;
 	}
 
-	.tool-branch {
-		z-index: 1;
-		pointer-events: none;
-		transition: opacity 250ms ease;
-	}
-
-	.phase-map:not([data-ready]) .tool-branch { visibility: hidden; }
-	.tool-branch[data-open] { z-index: 4; }
-
-	.phase-map[data-focused] .phase-button[aria-expanded="false"],
-	.phase-map[data-focused] .tool-branch:not([data-open]) { opacity: .18; }
-
-	.phase-map[data-focused] .phase-button[aria-expanded="false"]:is(:hover, :focus-visible),
-	.phase-map[data-focused] .phase-button[aria-expanded="false"]:is(:hover, :focus-visible) + .tool-branch { opacity: .85; }
-
-	.tool-satellite {
-		--constellation-x: var(--dot-x, 0px);
-		--constellation-y: var(--dot-y, 0px);
-		--constellation-scale: var(--dot-scale, .1);
-		--angle: atan2(var(--constellation-y), var(--constellation-x));
-		position: absolute;
-		transition: --constellation-x 390ms var(--ease), --constellation-y 390ms var(--ease),
-			--constellation-scale 390ms var(--ease);
-	}
-
-	.tool-branch[data-open] .tool-satellite {
-		--constellation-x: var(--expanded-x, var(--dot-x));
-		--constellation-y: var(--expanded-y, var(--dot-y));
-		--constellation-scale: 1;
-		transition-duration: 545ms;
-		transition-delay: var(--stagger);
-	}
-
-	.tool-link {
-		z-index: 1;
-		left: var(--constellation-x);
-		top: var(--constellation-y);
-		width: clamp(80px, 8.4cqw, 100px);
-		background: color-mix(in srgb, var(--phase-accent) var(--dot-tint, 70%), var(--paper));
-		font-size: .78rem;
-		transform: translate(-50%, -50%) scale(var(--constellation-scale));
-		transition: background-color 230ms ease, box-shadow 230ms ease;
-		pointer-events: none;
-	}
-
-	.phase-button:is(:hover, :focus-visible) + .tool-branch:not([data-open]) { --dot-tint: 97%; }
-
-	.tool-branch[data-open] .tool-link {
-		background: var(--glass-surface);
-		box-shadow: var(--glass-shadow);
-		backdrop-filter: blur(6px);
-		pointer-events: auto;
-	}
-
-	.tool-branch[data-open] .tool-link:is(:hover, :focus-visible) {
-		--glass-tint: 32%;
-		box-shadow: var(--glass-shadow), 0 0 14px color-mix(in srgb, var(--phase-accent) 34%, transparent);
-	}
-
-	.tool-line {
-		left: calc(cos(var(--angle)) * var(--phase-radius));
-		top: calc(sin(var(--angle)) * var(--phase-radius));
-		width: max(0px, hypot(var(--constellation-x), var(--constellation-y)) - var(--phase-radius) - var(--tool-radius) * var(--constellation-scale));
-		background: color-mix(in srgb, var(--phase-accent) 67%, var(--slate));
-		opacity: 0;
-		transform: translateY(-50%) rotate(var(--angle));
-		transition: opacity 200ms ease, background-color 220ms ease;
-	}
-
-	.tool-branch[data-open] .tool-line { opacity: .83; transition-delay: var(--stagger), 0s; }
-
-	.tool-satellite:has(.tool-link:is(:hover, :focus-visible)) .tool-line {
-		background: color-mix(in srgb, var(--phase-accent) 68%, var(--navy));
-		opacity: 1;
-	}
-
 	.tool-label {
-		max-width: 84%;
-		opacity: 0;
+		max-width: 7.35em;
+		font-size: .8rem;
+		font-weight: 600;
+		line-height: 1.2;
 		text-wrap: balance;
 		overflow-wrap: anywhere;
-		transition: opacity 130ms ease;
-	}
-
-	.tool-branch[data-open] .tool-label { opacity: 1; transition: opacity 220ms ease calc(280ms + var(--stagger)); }
-
-	.tool-satellite[data-outside-label] .tool-label {
-		position: absolute;
-		top: calc(100% + 8px);
-		left: 50%;
-		width: clamp(100px, 16cqw, 152px);
-		max-width: none;
-		transform: translateX(-50%);
-	}
-
-	.tool-satellite[data-outside-label][data-label-above] .tool-label {
-		top: auto;
-		bottom: calc(100% + 8px);
-	}
-
-	.tool-link:is(:hover, :focus-visible) .tool-label {
-		text-decoration: underline;
-		text-underline-offset: 3px;
-	}
-
-	@media (max-width: 760px) {
-		.phase-map { block-size: 700px; }
-		.phase-button, .tool-branch {
-			--phase-x: var(--mobile-x);
-			--phase-y: var(--mobile-y);
-		}
-		.phase-button { width: clamp(84px, 23cqw, 96px); font-size: .72rem; }
-		.tool-link { font-size: .75rem; }
-		.tool-satellite[data-outside-label] .tool-label { width: clamp(90px, 27cqw, 124px); }
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.phase-edge, .phase-button, .tool-branch, .tool-satellite, .tool-branch[data-open] .tool-satellite,
-		.tool-link, .tool-line, .tool-branch[data-open] .tool-line, .tool-label, .tool-branch[data-open] .tool-label {
-			transition: none;
-		}
-		.phase-button:is(:hover, :focus-visible) { --zoom: 1; }
+		.mode-switch, .mode-switch::before, .category-fill, .tool-face, .workflow-edge { transition: none; }
 	}
 </style>

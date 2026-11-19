@@ -2,28 +2,24 @@
 import Layout from '../layouts/Layout.astro';
 import { withBase } from '../lib/site';
 import Banner from '../components/ui/Banner.astro';
-import Eyebrow from '../components/ui/Eyebrow.astro';
 import EntryCard from '../components/ui/EntryCard.astro';
 import SectionHeading from '../components/ui/SectionHeading.astro';
-import TextLink from '../components/ui/TextLink.astro';
 import Ferredoxin from '../components/ferredoxin.astro';
 
 const entryPoints = [
 	{ number: '01', title: 'Explore the tools', text: 'Browse each processing step, from mzML conversion to protein inference and quantification.', href: withBase('/tools/'), label: '18 tools in the directory', tone: 'red' },
 	{ number: '02', title: 'Install the pipeline', text: 'Set up the complete pipeline or install individual .NET tools from NuGet.', href: withBase('/guide/installation/'), label: 'Installation guide', tone: 'sky' },
 	{ number: '03', title: 'Get started', text: 'Find the first steps for running ProteomIQon as a beginner or advanced user.', href: withBase('/guide/getting-started/'), label: 'Start here', tone: 'green' },
-	{ number: '04', title: 'Understand the system', text: 'Learn how tools are built, connected, documented and published.', href: withBase('/guide/further-information/'), label: 'Developer notes', tone: 'orange' },
+	{ number: '04', title: 'Understand the system', text: 'Learn how tools are built, connected, documented and published.', href: withBase('/guide/developer-information/'), label: 'Developer notes', tone: 'orange' },
 	{ number: '05', title: 'Find support', text: 'Report issues, contribute ideas or connect with the people behind the project.', href: withBase('/guide/help/'), label: 'Community & help', tone: 'violet' },
 ] as const;
 ---
 
-<Layout title="ProteomIQon · Proteomics toolchain" description="Explore the ProteomIQon toolchain, its processing tools, documentation and its tutorials." showFooter={false}>
+<Layout title="ProteomIQon · Proteomics toolchain" description="Explore the ProteomIQon toolchain, its processing tools, documentation and its tutorials.">
 	<div>
 		<section class="home-intro relative overflow-hidden flex min-h-[450px] items-center justify-between pt-[78px] pb-[70px] max-md:block max-md:min-h-0 max-md:pt-14 max-md:pb-12 max-[520px]:pt-[47px]">
 			<div class="relative z-2 w-[min(560px,51%)] max-md:w-full">
-				<Eyebrow class="mb-[17px] text-[.82rem]! tracking-[.13em]!" dotTone="orange">Open-source proteomics toolchain</Eyebrow>
 				<h1 class="mb-6 text-[clamp(3.4rem,6.8vw,6.25rem)]! [text-shadow:0_0_18px_rgba(247,249,251,.92),0_2px_0_rgba(247,249,251,.72)]">Proteom<em class="text-orange not-italic">IQ</em>on</h1>
-				<Eyebrow class="mb-3 text-[.82rem]! tracking-[.13em]!" dot={false}>Built for reproducible research</Eyebrow>
 				<p class="max-w-[570px] text-[1.2rem] leading-[1.65] text-steel max-[520px]:text-lg">a set of command line tools for the analysis of mass spectrometry based proteomics data</p>
 			</div>
 			<div class="home-intro-visual absolute top-1/2 right-[clamp(20px,3vw,48px)] z-1 w-[min(560px,47%)] -translate-y-1/2 opacity-90 max-md:relative max-md:top-auto max-md:right-auto max-md:mx-auto max-md:-mt-2.5 max-md:w-[min(100%,410px)] max-md:translate-y-0 max-[520px]:w-[calc(100vw-32px)]" aria-label="Interactive 3D ferredoxin structure">
@@ -34,32 +30,12 @@ const entryPoints = [
 		<section class="home-overview -mt-[34px] pt-[46px] pb-[20px] max-md:-mt-[20px] max-md:pt-[44px] max-md:pb-[32px]" aria-labelledby="entry-title">
 			<SectionHeading
 				class="!mb-[28px]"
-				eyebrow="Choose your next step"
-				dot={false}
 				title="Overview."
 				id="entry-title"
 			/>
 			<nav class="documentation-entries grid grid-cols-5 gap-3 max-md:grid-cols-2 max-[520px]:grid-cols-1" aria-label="Documentation sections">
 				{entryPoints.map((entry) => <EntryCard {...entry} />)}
 			</nav>
-		</section>
-
-		<section class="home-footer-note">
-			<div class="home-footer-branding">
-				<img
-					src={withBase('/images/RPTU%20Logo_1c-1.svg')}
-					alt="Logo der RPTU"
-					class="h-[82px] w-[250px] shrink-0 object-cover object-center max-[520px]:h-[66px] max-[520px]:w-[min(200px,46vw)]"
-					loading="lazy"
-				/>
-			</div>
-			<img
-				src={withBase('/images/csb-narrow-black.svg')}
-				alt="CSB-Logo"
-				class="home-footer-csb h-[52px] w-[124px] object-contain max-[520px]:h-[48px] max-[520px]:w-[min(112px,29vw)]"
-				loading="lazy"
-			/>
-			<TextLink class="home-footer-github" href="https://github.com/CSBiology/ProteomIQon/" external tone="red">View the project on GitHub</TextLink>
 		</section>
 	</div>
 </Layout>

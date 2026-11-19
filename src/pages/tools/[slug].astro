@@ -40,7 +40,7 @@ const isAlignmentTool = ['quant-based-alignment', 'alignment-based-quantificatio
 		</aside>
 
 		<main class="tool-detail">
-			<section class="tool-detail-hero"><p class="eyebrow"><span class="eyebrow-dot"></span> {phase.number} / {phase.label}</p><h1>{breakCamelCase(entry.data.name).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}</h1></section>
+			<section class="tool-detail-hero"><h1>{breakCamelCase(entry.data.name).map((part, i) => (<Fragment>{i > 0 && <wbr />}{part}</Fragment>))}</h1></section>
 			<article class:list={['legacy-content tool-legacy-content prose max-w-none prose-a:font-semibold prose-code:before:content-none prose-code:after:content-none', { 'tool-alignment-content': isAlignmentTool }]}><Content /></article>
 			<nav class="tool-pagination" aria-label="Browse tools">
 				{previousTool ? <a href={toolHref(previousTool.id)}><small>Previous tool</small><span>← {previousTool.data.name}</span></a> : <span></span>}
