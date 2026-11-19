@@ -12,6 +12,7 @@ interface Props {
 	title?: string;
 	description?: string;
 	showFooter?: boolean;
+	bodyClass?: string;
 	mainClass?: string;
 }
 
@@ -19,6 +20,7 @@ const {
 	title = 'ProteomIQon - Documentation',
 	description = 'Knowledgebase, Tutorials and more.',
 	showFooter = true,
+	bodyClass,
 	mainClass,
 } = Astro.props;
 ---
@@ -37,7 +39,7 @@ const {
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
+	<body class={bodyClass}>
 		<div class="site-shell">
 			<SiteHeader />
 			<main class={mainClass}>

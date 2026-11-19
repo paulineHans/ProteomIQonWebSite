@@ -33,7 +33,7 @@ const snapshotPath = `${base}structures/ferredoxin.molx`;
 				const target = container.querySelector('.molecule-canvas');
 				const snapshotUrl = container.dataset.snapshot;
 				if (!target || !snapshotUrl) throw new Error('Missing Mol* viewer target or snapshot URL.');
-				const siteBackground = getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#f3efe6';
+				const siteBackground = getComputedStyle(container).getPropertyValue('--paper').trim() || '#f3efe6';
 				const siteBackgroundColor = Number.parseInt(siteBackground.replace('#', ''), 16);
 
 				const viewer = await window.molstar.Viewer.create(target, {
@@ -93,11 +93,9 @@ const snapshotPath = `${base}structures/ferredoxin.molx`;
 	.molecule-scene {
 		position: relative;
 		width: 100%;
-		max-width: 600px;
-		height: min(460px, 38vw);
-		min-height: 300px;
-		overflow: visible;
-		clip-path: inset(10px 0 0);
+		aspect-ratio: 6 / 5;
+		max-height: 460px;
+		contain: layout paint;
 		background: var(--paper);
 	}
 
@@ -167,9 +165,4 @@ const snapshotPath = `${base}structures/ferredoxin.molx`;
 		display: none !important;
 	}
 
-	@media (max-width: 768px) {
-		.molecule-scene {
-			height: 370px;
-		}
-	}
 </style>

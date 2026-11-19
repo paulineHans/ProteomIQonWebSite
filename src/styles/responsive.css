@@ -53,7 +53,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     padding: 8px 12px;
     border: 1px solid var(--line);
     border-radius: 6px;
-    background: var(--surface);
+    background: var(--paper);
     font-size: .95rem;
     font-weight: 500;
     list-style: none;
@@ -64,7 +64,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
   .mobile-site-nav[open] > summary {
     border-color: var(--sky);
-    background: var(--surface-muted);
   }
 
   .mobile-site-nav nav {
@@ -78,7 +77,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     padding: 10px;
     border: 1px solid var(--line);
     border-radius: 10px;
-    background: var(--surface);
+    background: var(--paper);
     box-shadow: 0 12px 28px rgb(4 44 88 / 12%);
   }
 
@@ -177,10 +176,9 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .tool-legacy-content > h2 { font-size: clamp(1.4rem, 6vw, 1.8rem); }
   .tool-legacy-content > h3 { font-size: 1.15rem; }
 
-  .home-intro { display: block; min-height: 0; padding: 40px 0; }
+  .home-intro { padding: 40px 0; }
   .home-intro h1 { font-size: clamp(2.5rem, 10.5vw, 3.75rem) !important; }
   .home-intro-actions a { min-height: 48px; max-width: calc(100% - 6px); font-size: .95rem; }
-  .home-intro-visual { position: relative; top: auto; right: auto; width: 100%; margin: 24px 0 0; transform: none; }
   .documentation-entries { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .documentation-entry { min-height: 0; padding: 20px; }
   .documentation-entry h3 { margin-top: 16px !important; }
@@ -238,7 +236,6 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 @media (min-width: 641px) and (max-height: 900px) {
   .home-intro {
-    min-height: 0;
     padding-top: clamp(16px, 3vh, 30px);
     padding-bottom: clamp(16px, 3vh, 30px);
   }

@@ -22,6 +22,10 @@
 	--line: #23405f;
 }
 
+.home-page {
+	--paper: #e7eee3;
+}
+
 @theme {
 	--color-navy: #042c58;
 	--color-steel: #507289;

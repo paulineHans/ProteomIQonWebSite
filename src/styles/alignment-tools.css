@@ -54,7 +54,7 @@
   padding: clamp(10px, 1.8vw, 20px);
   border: 1px solid var(--phase-border);
   border-radius: 8px;
-  background: var(--surface);
+  background: var(--paper);
 }
 
 .tool-alignment-content .alignment-figure img {

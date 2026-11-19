@@ -65,7 +65,6 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 /* Landing page */
 .hero, .page-hero { display: flex; align-items: center; justify-content: space-between; gap: 64px; }
 .home-hero { position: relative; min-height: 575px; padding: 78px 0 70px; overflow: hidden; }
-.home-intro { overflow: visible; }
 .hero-copy { position: relative; z-index: 2; width: min(630px, 100%); }
 .hero-copy h1 { text-shadow: 0 0 18px rgba(247,249,251,.92), 0 2px 0 rgba(247,249,251,.72); }
 .hero-copy h1 em, .page-hero h1 em { color: var(--slate); font-style: normal; }
@@ -212,7 +211,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 .sidebar-label { margin-bottom: 11px; color: var(--slate); font-size: .62rem; }
 .tool-sidebar nav { display: grid; gap: 4px; }
 .tool-sidebar nav a { padding: 6px 8px; border-left: 2px solid transparent; color: var(--slate); font-size: .77rem; line-height: 1.35; text-decoration: none; }
-.tool-sidebar nav a:hover, .tool-sidebar nav a.active { border-color: var(--red); color: var(--navy); background: var(--surface); }
+.tool-sidebar nav a:hover, .tool-sidebar nav a.active { border-color: var(--red); color: var(--navy); background: var(--paper); }
 .tool-detail-hero { container-type: inline-size; padding: 9px 0 23px; border-bottom: 1px solid var(--line); text-align: left; }
 .tool-detail-layout .back-link { color: var(--phase-accent); }
 .tool-detail-layout .tool-sidebar nav a:hover,
@@ -905,7 +904,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 }
 
 .tool-legacy-content .accordion-header:hover {
-  background: color-mix(in srgb, var(--phase-accent) 18%, white);
+  background: color-mix(in srgb, var(--phase-accent) 18%, var(--paper));
 }
 
 .tool-legacy-content .accordion-icon {
@@ -924,6 +923,7 @@ h2 { font-size: clamp(2rem, 3.8vw, 3.2rem); font-weight: 600; }
 
 .tool-legacy-content .tool-io-accordion {
 	margin: 1.7rem 0;
+	background: var(--paper);
 }
 
 .tool-legacy-content .tool-io-accordion .accordion-header {

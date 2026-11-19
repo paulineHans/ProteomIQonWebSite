@@ -15,19 +15,19 @@ const entryPoints = [
 ] as const;
 ---
 
-<Layout title="ProteomIQon · Proteomics toolchain" description="Explore the ProteomIQon toolchain, its processing tools, documentation and its tutorials.">
+<Layout title="ProteomIQon · Proteomics toolchain" description="Explore the ProteomIQon toolchain, its processing tools, documentation and its tutorials." bodyClass="home-page">
 	<div>
-		<section class="home-intro relative overflow-hidden flex min-h-[450px] items-center justify-between pt-[78px] pb-[70px] max-md:block max-md:min-h-0 max-md:pt-14 max-md:pb-12 max-[520px]:pt-[47px]">
-			<div class="relative z-2 w-[min(560px,51%)] max-md:w-full">
+		<section class="home-intro flex items-center justify-between gap-6 pt-8 pb-8 max-md:flex-col max-md:pt-14 max-md:pb-8 max-[520px]:pt-[47px]">
+			<div class="min-w-0 flex-1 max-md:w-full">
 				<h1 class="mb-6 text-[clamp(3.4rem,6.8vw,6.25rem)]! [text-shadow:0_0_18px_rgba(247,249,251,.92),0_2px_0_rgba(247,249,251,.72)]">Proteom<em class="text-orange not-italic">IQ</em>on</h1>
 				<p class="max-w-[570px] text-[1.2rem] leading-[1.65] text-steel max-[520px]:text-lg">a set of command line tools for the analysis of mass spectrometry based proteomics data</p>
 			</div>
-			<div class="home-intro-visual absolute top-1/2 right-[clamp(20px,3vw,48px)] z-1 w-[min(560px,47%)] -translate-y-1/2 opacity-90 max-md:relative max-md:top-auto max-md:right-auto max-md:mx-auto max-md:-mt-2.5 max-md:w-[min(100%,410px)] max-md:translate-y-0 max-[520px]:w-[calc(100vw-32px)]" aria-label="Interactive 3D ferredoxin structure">
+			<div class="w-[min(560px,47%)] shrink-0 opacity-90 max-md:w-[min(100%,410px)]" aria-label="Interactive 3D ferredoxin structure">
 				<Ferredoxin />
 			</div>
 		</section>
 
-		<section class="home-overview -mt-[34px] pt-[46px] pb-[20px] max-md:-mt-[20px] max-md:pt-[44px] max-md:pb-[32px]" aria-labelledby="entry-title">
+		<section class="home-overview pt-3 pb-[20px] max-md:pb-[32px]" aria-labelledby="entry-title">
 			<SectionHeading
 				class="!mb-[28px]"
 				title="Overview."
