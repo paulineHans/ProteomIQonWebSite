@@ -22,10 +22,6 @@
 	--line: #23405f;
 }
 
-.home-page {
-	--paper: #e7eee3;
-}
-
 @theme {
 	--color-navy: #042c58;
 	--color-steel: #507289;
@@ -107,7 +103,9 @@
 	background-color: transparent !important;
 	color: var(--ink) !important;
 }
-.copy-command-block > pre code span[style*="#B392F0"] { color: #70469c !important; }
+.copy-command-block > pre code span[style*="#E1E4E8"] { color: var(--ink) !important; }
+.copy-command-block > pre code span[style*="#B392F0"],
+.copy-command-block > pre[data-language="fsharp"] code span[style*="#E1E4E8"] { color: #70469c !important; }
 .copy-command-block > pre code span[style*="#9ECBFF"] { color: #275f8c !important; }
 .copy-command-block > pre code span[style*="#79B8FF"] { color: #17699e !important; }
 .copy-command-button {

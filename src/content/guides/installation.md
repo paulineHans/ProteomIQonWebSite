@@ -1,17 +1,17 @@
 ---
 title: "Installation Guide"
 eyebrow: "Set up the toolchain"
-intro: "Install the full pipeline or choose individual ProteomIQon tools."
-description: "Install ProteomIQon as a complete pipeline or as individual tools."
+intro: "Install the ProteomIQon library or choose individual tools."
+description: "Install the ProteomIQon library or individual command-line tools."
 order: 2
 ---
 
-## Installtion of ProteomIQon as Pipeline
+## Installation of ProteomIQon as a Library
 
-To install ProteomIQon as a whole Pipeline with all the tools [overview ProteomIQon Tools](../tools/) the easiest way is to use Nuget.org [ProteomIQon Nuget.org](https://www.nuget.org/packages/ProteomIQon/). Alternatively, you can install ProteomIQon as a whole Pipeline with all the tools from the command line using the following command:
+The [ProteomIQon package on NuGet](https://www.nuget.org/packages/ProteomIQon/) installs only the library. To load it in an F# script or F# Interactive, use the following directive.
 
-```sh
-dotnet add package ProteomIQon --version 0.0.11
+```fsharp
+#r "nuget: ProteomIQon, 0.1.0"
 ```
 
 This approach is for Linux and Windows suitable.
